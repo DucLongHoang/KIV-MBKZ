@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.ui.main.plans.PlansFragment;
+import com.example.fitnessapptabbed.ui.main.plans.PlansHolderFragment;
 import com.example.fitnessapptabbed.ui.main.stats.StatsFragment;
 import com.example.fitnessapptabbed.ui.main.train.TrainFragment;
 
@@ -36,7 +37,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch(position) {
-            case 0: return PlansFragment.newInstance();
+            case 0: return PlansHolderFragment.newInstance();
             case 1: return TrainFragment.newInstance();
             case 2: return StatsFragment.newInstance();
             default: throw new RuntimeException("This shouldn't happen");

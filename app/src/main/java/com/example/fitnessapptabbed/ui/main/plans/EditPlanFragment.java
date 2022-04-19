@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fitnessapptabbed.databinding.FragmentCreatePlanBinding;
+import com.example.fitnessapptabbed.databinding.FragmentEditPlanBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +18,7 @@ import com.example.fitnessapptabbed.databinding.FragmentCreatePlanBinding;
  * create an instance of this fragment.
  */
 public class EditPlanFragment extends Fragment {
-    private FragmentCreatePlanBinding binding;
+    private FragmentEditPlanBinding binding;
 
     /**
      * Use this factory method to create a new instance of
@@ -37,7 +37,7 @@ public class EditPlanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentCreatePlanBinding.inflate(inflater, container, false);
+        binding = FragmentEditPlanBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

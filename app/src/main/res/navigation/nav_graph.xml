@@ -19,6 +19,6 @@
         android:id="@+id/editPlanFragment"
         android:name="com.example.fitnessapptabbed.ui.main.plans.EditPlanFragment"
         android:label="fragment_create_plan"
-        tools:layout="@layout/fragment_create_plan" />
+        tools:layout="@layout/fragment_edit_plan" />
 
 </navigation>

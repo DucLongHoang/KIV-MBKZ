@@ -15,12 +15,16 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavHost;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.databinding.FragmentPlansBinding;
 import com.example.fitnessapptabbed.ui.main.PlansDatabaseHelper;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -31,7 +35,6 @@ import java.util.List;
  */
 public class PlansFragment extends Fragment {
     private FragmentPlansBinding binding;
-    private FloatingActionButton fab;
     private PlanAdapter adapter;
     private RecyclerView recyclerView;
     private List<TrainingPlan> trainingPlans;
@@ -81,6 +84,7 @@ public class PlansFragment extends Fragment {
         adapter.setItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                editPlan(position);
             }
 
             @Override
@@ -93,6 +97,11 @@ public class PlansFragment extends Fragment {
                 editTitleAndDescription(position, "Changed " + position);
             }
         });
+    }
+
+    private void editPlan(int position) {
+        NavHostFragment.findNavController(PlansFragment.this)
+                .navigate(R.id.action_plansFragment_to_editPlanFragment);
     }
 
     /**
