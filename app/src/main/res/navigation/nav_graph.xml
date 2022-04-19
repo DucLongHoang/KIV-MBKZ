@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/plansFragment">
+
+    <fragment
+        android:id="@+id/plansFragment"
+        android:name="com.example.fitnessapptabbed.ui.main.plans.PlansFragment"
+        android:label="fragment_plans"
+        tools:layout="@layout/fragment_plans" >
+        <action
+            android:id="@+id/action_plansFragment_to_editPlanFragment"
+            app:destination="@id/editPlanFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPlanFragment"
+        android:name="com.example.fitnessapptabbed.ui.main.plans.EditPlanFragment"
+        android:label="fragment_create_plan"
+        tools:layout="@layout/fragment_create_plan" />
+
+</navigation>
