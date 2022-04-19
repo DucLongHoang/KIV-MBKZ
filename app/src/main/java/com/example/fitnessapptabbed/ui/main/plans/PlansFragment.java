@@ -15,9 +15,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavHost;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +33,6 @@ import java.util.List;
 public class PlansFragment extends Fragment {
     private FragmentPlansBinding binding;
     private PlanAdapter adapter;
-    private RecyclerView recyclerView;
     private List<TrainingPlan> trainingPlans;
     private PlansDatabaseHelper databaseHelper;
 
@@ -99,6 +95,11 @@ public class PlansFragment extends Fragment {
         });
     }
 
+    /**
+     * Method navigates to a new Fragment,
+     * where editing Exercises is happening
+     * @param position of the TrainingPlan to be edited
+     */
     private void editPlan(int position) {
         NavHostFragment.findNavController(PlansFragment.this)
                 .navigate(R.id.action_plansFragment_to_editPlanFragment);

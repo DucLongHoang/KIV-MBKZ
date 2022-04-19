@@ -19,7 +19,7 @@ import java.util.List;
  * @author Long
  * @version 1.0
  */
-public class PlanAdapter extends RecyclerView.Adapter {
+public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<TrainingPlan> TRAINING_PLANS;
     private OnItemClickListener itemClickListener;
 
@@ -42,7 +42,7 @@ public class PlanAdapter extends RecyclerView.Adapter {
     @NonNull @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.plan_item, parent, false);
+                .inflate(R.layout.item_plan, parent, false);
         return new PlanViewHolder(view, this.itemClickListener);
     }
 

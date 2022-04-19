@@ -7,12 +7,15 @@
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/content_main.xml" value="0.18568840579710144" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/content_plans.xml" value="0.264" />
+        <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/exercise_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/fragment_create_plan.xml" value="0.264" />
+        <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/fragment_edit_plan.xml" value="0.264" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/fragment_main.xml" value="0.2056159420289855" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/fragment_plans.xml" value="0.264" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/fragment_plans_holder.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/fragment_stats.xml" value="0.264" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/fragment_train.xml" value="0.264" />
+        <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/item_plan.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/plan_item.xml" value="0.264" />
         <entry key="..\:/Users/long1/AndroidStudioProjects/FitnessAppTabbed/app/src/main/res/layout/plans_list.xml" value="0.25416666666666665" />
       </map>
