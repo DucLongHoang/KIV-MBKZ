@@ -15,11 +15,10 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.databinding.FragmentPlansBinding;
 import com.example.fitnessapptabbed.ui.main.PlansDatabaseHelper;
 
@@ -74,20 +73,20 @@ public class PlansFragment extends Fragment {
 
     private void buildRecyclerView() {
         adapter = new PlanAdapter(trainingPlans);
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerView.setAdapter(adapter);
+        binding.plansRecyclerView.setHasFixedSize(true);
+        binding.plansRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.plansRecyclerView.setAdapter(adapter);
         adapter.setItemClickListener(new OnItemClickListener() {
             @Override
+            public void onAddClick(int position) { }
+            @Override
             public void onItemClick(int position) {
-                editPlan(position);
+                navigateToEditPlan(position);
             }
-
             @Override
             public void onDeleteClick(int position) {
                 deletePlan(position);
             }
-
             @Override
             public void onEditClick(int position) {
                 editTitleAndDescription(position, "Changed " + position);
@@ -100,9 +99,12 @@ public class PlansFragment extends Fragment {
      * where editing Exercises is happening
      * @param position of the TrainingPlan to be edited
      */
-    private void editPlan(int position) {
+    private void navigateToEditPlan(int position) {
+        TrainingPlan toPass = trainingPlans.get(position);
+        PlansFragmentDirections.ActionPlansToEditPlan action = PlansFragmentDirections
+                .actionPlansToEditPlan(toPass.getTitle(), toPass.getDescription());
         NavHostFragment.findNavController(PlansFragment.this)
-                .navigate(R.id.action_plansFragment_to_editPlanFragment);
+                .navigate(action);
     }
 
     /**
@@ -111,8 +113,9 @@ public class PlansFragment extends Fragment {
      */
     private void addPlan(TrainingPlan tp) {
         databaseHelper.insertPlanIntoDb(tp);
-        trainingPlans.add(tp);
-        adapter.notifyItemInserted(trainingPlans.size() - 1);
+        int index = trainingPlans.size();
+        trainingPlans.add(index, tp);
+        adapter.notifyItemInserted(index);
     }
 
     /**

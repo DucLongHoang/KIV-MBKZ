@@ -6,10 +6,11 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.fitnessapptabbed.ui.main.plans.Exercise
 import com.example.fitnessapptabbed.ui.main.plans.TrainingPlan
 
 /**
- * PlansDatabaseHelper class - helps with all database related stuff
+ * [PlansDatabaseHelper] class - helps with all database related stuff
  * @author Long
  * @version 1.0
  */
@@ -128,5 +129,18 @@ class PlansDatabaseHelper(
         val db: SQLiteDatabase = this.readableDatabase
         val selectQuery = "SELECT $COL_PLAN_TITLE, $COL_PLAN_DESC FROM $TABLE_PLAN "
         return db.rawQuery(selectQuery, null)
+    }
+
+    fun getExercisesOfPlanFromDb(plan: TrainingPlan?): MutableList<Exercise> {
+        val result: MutableList<Exercise> = ArrayList()
+        val c: Cursor? = getExercisesCursor()
+        result.add(Exercise("deadlift", 10, 10, 100))
+
+        return result
+    }
+
+    private fun getExercisesCursor(): Cursor? {
+        val db: SQLiteDatabase = this.readableDatabase
+        return null
     }
 }

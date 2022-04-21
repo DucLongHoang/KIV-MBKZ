@@ -13,6 +13,11 @@ interface OnItemClickListener {
     fun onItemClick(position: Int)
 
     /**
+     * Method processes adding an item at [position] in RecyclerView
+     */
+    fun onAddClick(position: Int)
+
+    /**
      * Method processes edit of item at [position] in RecyclerView
      */
     fun onEditClick(position: Int)

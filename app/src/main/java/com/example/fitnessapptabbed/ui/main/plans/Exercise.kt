@@ -1,7 +1,9 @@
 package com.example.fitnessapptabbed.ui.main.plans
 
 /**
- * Exercise data class - defines exercise
+ * [Exercise] data class - defines exercise,
+ * that consists of [name], [sets], [reps] and optionally [kgs]
+ *
  * @author Long
  * @version 1.0
  */

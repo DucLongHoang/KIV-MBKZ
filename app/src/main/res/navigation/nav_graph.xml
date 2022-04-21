@@ -11,7 +11,7 @@
         android:label="fragment_plans"
         tools:layout="@layout/fragment_plans" >
         <action
-            android:id="@+id/action_plansFragment_to_editPlanFragment"
+            android:id="@+id/action_plans_to_editPlan"
             app:destination="@id/editPlanFragment" />
     </fragment>
 
@@ -19,6 +19,16 @@
         android:id="@+id/editPlanFragment"
         android:name="com.example.fitnessapptabbed.ui.main.plans.EditPlanFragment"
         android:label="fragment_create_plan"
-        tools:layout="@layout/fragment_edit_plan" />
+        tools:layout="@layout/fragment_edit_plan" >
+        <action
+            android:id="@+id/action_editPlan_to_plans"
+            app:destination="@id/plansFragment" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="description"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

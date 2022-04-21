@@ -1,6 +1,5 @@
 package com.example.fitnessapptabbed.ui.main.plans;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import java.util.List;
  * @version 1.0
  */
 public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final List<TrainingPlan> TRAINING_PLANS;
+    private final List<TrainingPlan> trainingPlans;
     private OnItemClickListener itemClickListener;
 
     /**
@@ -28,7 +27,7 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param list data set
      */
     public PlanAdapter(List<TrainingPlan> list) {
-        this.TRAINING_PLANS = list;
+        this.trainingPlans = list;
     }
 
     /**
@@ -48,18 +47,16 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        TrainingPlan currentPlan = this.TRAINING_PLANS.get(position);
+        TrainingPlan currentPlan = this.trainingPlans.get(position);
         PlanViewHolder tvh = (PlanViewHolder) holder;
 
         tvh.title.setText(currentPlan.getTitle());
         tvh.description.setText(currentPlan.getDescription());
-        tvh.editFab.setBackgroundColor(Color.BLUE);
-        tvh.deleteFab.setBackgroundColor(Color.GREEN);
     }
 
     @Override
     public int getItemCount() {
-        return TRAINING_PLANS.size();
+        return trainingPlans.size();
     }
 
     /**
