@@ -3,6 +3,8 @@ package com.example.fitnessapptabbed.ui.main.plans;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -80,6 +82,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             reps = itemView.findViewById(R.id.repsSpinner);
             layout = itemView.findViewById(R.id.exerciseLayout);
 
+            setSpinner(itemView, sets, 5);
+            setSpinner(itemView, reps, 20);
+
             addFab.setOnClickListener(view -> {
                 if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
                     listener.onAddClick(getAdapterPosition());
@@ -102,6 +107,29 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             addFab.setVisibility(View.INVISIBLE);
             layout.setClickable(true);
             layout.setVisibility(View.VISIBLE);
+        }
+
+        private void setSpinner(@NonNull View itemView, Spinner spinner, int range) {
+            String[] values = new String[range];
+            for(int i = 0; i < range; i++) {
+                values[i] = String.valueOf(i);
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    itemView.getContext(), android.R.layout.simple_spinner_item, values);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            spinner.setAdapter(adapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
         }
     }
 }

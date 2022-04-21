@@ -126,5 +126,4 @@ public class EditPlanFragment extends Fragment {
         NavHostFragment.findNavController(EditPlanFragment.this)
                 .navigate(R.id.action_editPlan_to_plans);
     }
-
 }

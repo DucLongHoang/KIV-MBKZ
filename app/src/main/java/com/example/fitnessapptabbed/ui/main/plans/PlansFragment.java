@@ -151,6 +151,7 @@ public class PlansFragment extends Fragment {
 
         // add layout for fields
         LinearLayout layout = new LinearLayout(getContext());
+        layout.setPadding(4, 0, 4, 0);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(inputTitle);
         layout.addView(inputDescription);
