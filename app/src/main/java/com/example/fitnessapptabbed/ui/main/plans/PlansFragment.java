@@ -71,6 +71,10 @@ public class PlansFragment extends Fragment {
         databaseHelper.close();
     }
 
+    /**
+     * Method builds the RecyclerView of TrainingPlans
+     * and all the onItemClick actions
+     */
     private void buildRecyclerView() {
         adapter = new PlanAdapter(trainingPlans);
         binding.plansRecyclerView.setHasFixedSize(true);

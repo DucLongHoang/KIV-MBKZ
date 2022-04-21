@@ -32,10 +32,15 @@ class PlansDatabaseHelper(
         const val COL_EX_REPS: String = "reps"
         const val COL_EX_KGS: String = "kgs"
     }
+    // Exercise names
+    private val exercises: Array<String> = arrayOf(
+        "bench", "deadlift", "squat", "bicep curl", "tricep extensions",
+        "hamstring curls", "chest flies", "lat pulldown"
+    )
 
     override fun onCreate(db: SQLiteDatabase) {
         createTables(db)
-//        insertDefaultValues(db)
+        insertExercisesIntoDb(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -54,6 +59,19 @@ class PlansDatabaseHelper(
             contentValues.put(COL_PLAN_TITLE, plan.Title)
             contentValues.put(COL_PLAN_DESC, plan.Description)
             db.insert(TABLE_PLAN, null, contentValues)
+        }
+    }
+
+    /**
+     * Method inserts exercise names into the records table
+     * TODO - redo database layout
+     */
+    private fun insertExercisesIntoDb(db: SQLiteDatabase) {
+        val contentValues = ContentValues()
+        for (exercise in exercises) {
+            contentValues.put(COL_EX_NAME, exercise)
+            contentValues.put(COL_EX_KGS, 0)
+            db.insert(TABLE_RECORDS, null, contentValues)
         }
     }
 
@@ -123,12 +141,30 @@ class PlansDatabaseHelper(
     }
 
     /**
-     * Method queries the whole table and return a [Cursor] to it
+     * Method queries the whole [TABLE_PLAN] table and returns a [Cursor] to it
      */
     private fun getPlansCursor(): Cursor {
         val db: SQLiteDatabase = this.readableDatabase
         val selectQuery = "SELECT $COL_PLAN_TITLE, $COL_PLAN_DESC FROM $TABLE_PLAN "
         return db.rawQuery(selectQuery, null)
+    }
+
+    /**
+     * Method returns a [MutableList] of [Exercise] from the DB
+     */
+    @SuppressLint("Range")
+    fun getExercisesFromDb(): MutableList<Exercise> {
+        val result: MutableList<Exercise> = ArrayList()
+        val c: Cursor = getExercisesCursor()
+        var exName: String;
+
+        if(c.moveToFirst()) {
+            do {
+                exName = c.getString(c.getColumnIndex(COL_EX_NAME))
+                result.add(Exercise(exName, 0, 0))
+            } while (c.moveToNext())
+        }
+        return result
     }
 
     fun getExercisesOfPlanFromDb(plan: TrainingPlan?): MutableList<Exercise> {
@@ -139,8 +175,12 @@ class PlansDatabaseHelper(
         return result
     }
 
-    private fun getExercisesCursor(): Cursor? {
+    /**
+     * Method queries the whole [TABLE_RECORDS] table and returns a [Cursor] to it
+     */
+    private fun getExercisesCursor(): Cursor {
         val db: SQLiteDatabase = this.readableDatabase
-        return null
+        val selectQuery = "SELECT $COL_EX_NAME FROM $TABLE_RECORDS "
+        return db.rawQuery(selectQuery, null)
     }
 }

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnessapptabbed.R;
+import com.example.fitnessapptabbed.ui.main.PlansDatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -24,13 +25,16 @@ import java.util.List;
 public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<Exercise> exercises;
     private OnItemClickListener itemClickListener;
+    public PlansDatabaseHelper databaseHelper;
 
     /**
      * Constructor for ExerciseAdapter
+     * @param databaseHelper DatabaseHelper passed from fragment
      * @param list data set
      */
-    public ExerciseAdapter(List<Exercise> list) {
+    public ExerciseAdapter(PlansDatabaseHelper databaseHelper, List<Exercise> list) {
         this.exercises = list;
+        this.databaseHelper = databaseHelper;
     }
 
     /**
@@ -45,14 +49,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_exercise, parent, false);
-        return new ExerciseViewHolder(view, this.itemClickListener);
+        return new ExerciseViewHolder(view, this.itemClickListener, this.databaseHelper);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Exercise currentExercise = this.exercises.get(position);
         ExerciseViewHolder evh = (ExerciseViewHolder) holder;
-
     }
 
     @Override
@@ -73,7 +76,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @param itemView view of item, used to get references
          * @param listener listener for item clicking events
          */
-        public ExerciseViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+        public ExerciseViewHolder(@NonNull View itemView, final OnItemClickListener listener, final PlansDatabaseHelper databaseHelper) {
             super(itemView);
             addFab = itemView.findViewById(R.id.addExerciseFab);
             deleteFab = itemView.findViewById(R.id.deleteExerciseFab);
@@ -82,8 +85,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             reps = itemView.findViewById(R.id.repsSpinner);
             layout = itemView.findViewById(R.id.exerciseLayout);
 
+            setExerciseSpinner(itemView, databaseHelper);
             setSpinner(itemView, sets, 5);
-            setSpinner(itemView, reps, 20);
+            setSpinner(itemView, reps, 15);
 
             addFab.setOnClickListener(view -> {
                 if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
@@ -109,26 +113,60 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             layout.setVisibility(View.VISIBLE);
         }
 
+        /**
+         * Method to set Spinner items with number values
+         * @param itemView of Spinner
+         * @param spinner to add selectable items to
+         * @param range of items
+         */
         private void setSpinner(@NonNull View itemView, Spinner spinner, int range) {
-            String[] values = new String[range];
-            for(int i = 0; i < range; i++) {
-                values[i] = String.valueOf(i);
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    itemView.getContext(), android.R.layout.simple_spinner_item, values);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            spinner.setDropDownWidth(200);
+
+            // prepare values for spinner
+            Integer[] values = new Integer[range];
+            for(int i = 0; i < range; i++) { values[i] = i + 1; }
+
+            // set up adapter to pass values to spinner
+            ArrayAdapter<Integer> adapter = new ArrayAdapter<>(
+                    itemView.getContext(), android.R.layout.simple_spinner_dropdown_item, values);
             spinner.setAdapter(adapter);
 
+            // set listener for spinner
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                    spinner.setSelection(i);
                 }
-
                 @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
+                public void onNothingSelected(AdapterView<?> adapterView) { }
+            });
 
+        }
+
+        /**
+         * Method to set Spinner items with exercise name values
+         * @param itemView of Spinner
+         * @param databaseHelper to retrieve exercises from the database
+         */
+        private void setExerciseSpinner(View itemView, PlansDatabaseHelper databaseHelper) {
+            // prepare values for spinner
+            List<Exercise> exercises = databaseHelper.getExercisesFromDb();
+            String[] values = new String[exercises.size()];
+            for(int i = 0; i < exercises.size(); i++) { values[i] = exercises.get(i).getName(); }
+
+            // set up adapter for exercises spinner
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    itemView.getContext(), android.R.layout.simple_spinner_dropdown_item, values);
+            exercise.setAdapter(adapter);
+
+            // set listener for spinner
+            exercise.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    exercise.setSelection(i);
                 }
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) { }
             });
         }
     }

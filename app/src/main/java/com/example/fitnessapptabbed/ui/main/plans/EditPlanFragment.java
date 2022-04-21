@@ -63,7 +63,8 @@ public class EditPlanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHeader();
-        setButtons();
+        setCancelButton();
+        setSaveButton();
     }
 
     @Override
@@ -72,6 +73,10 @@ public class EditPlanFragment extends Fragment {
         databaseHelper.close();
     }
 
+    /**
+     * Method sets the header of the EditPlanFragment.
+     * Displays the title and description of the selected TrainingPlan
+     */
     private void setHeader() {
         String title = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
         String description = EditPlanFragmentArgs.fromBundle(getArguments()).getDescription();
@@ -79,8 +84,12 @@ public class EditPlanFragment extends Fragment {
         binding.textViewDescription.setText(description);
     }
 
+    /**
+     * Method builds the RecyclerView of Exercises
+     * and all the onItemClick actions
+     */
     private void buildRecyclerView() {
-        adapter = new ExerciseAdapter(exercises);
+        adapter = new ExerciseAdapter(databaseHelper, exercises);
         binding.exercisesRecyclerView.setHasFixedSize(true);
         binding.exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.exercisesRecyclerView.setAdapter(adapter);
@@ -91,7 +100,7 @@ public class EditPlanFragment extends Fragment {
             public void onEditClick(int position) { }
             @Override
             public void onAddClick(int position) {
-                addExercise(position);
+                addExercise();
             }
             @Override
             public void onDeleteClick(int position) {
@@ -100,28 +109,36 @@ public class EditPlanFragment extends Fragment {
         });
     }
 
-    private void addExercise(int position) {
+    /**
+     * Method adds an Exercise to the RecyclerView
+     */
+    private void addExercise() {
         Exercise ex = new Exercise("Bench", 10, 10);
         int index = exercises.size();
         exercises.add(index, ex);
         adapter.notifyItemInserted(index);
     }
 
+    /**
+     * Method deletes an Exercise from the Recycler View
+     * @param position at which an Exercise is deleted from
+     */
     private void deleteExercise(int position) {
         exercises.remove(position);
         adapter.notifyItemRemoved(position);
     }
 
-    private void setButtons() {
-        binding.cancelEditButton.setOnClickListener(view1 -> setCancelButton());
-        binding.saveEditButton.setOnClickListener(view1 -> setSaveButton());
-    }
-
+    /**
+     * Method sets cancel button functionality
+     */
     private void setCancelButton() {
         NavHostFragment.findNavController(EditPlanFragment.this)
                 .navigate(R.id.action_editPlan_to_plans);
     }
 
+    /**
+     * Method sets save button functionality
+     */
     private void setSaveButton() {
         NavHostFragment.findNavController(EditPlanFragment.this)
                 .navigate(R.id.action_editPlan_to_plans);
