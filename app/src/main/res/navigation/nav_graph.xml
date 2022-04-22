@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_plans" >
         <action
             android:id="@+id/action_plans_to_editPlan"
-            app:destination="@id/editPlanFragment" />
+            app:destination="@id/editPlanFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -22,7 +26,11 @@
         tools:layout="@layout/fragment_edit_plan" >
         <action
             android:id="@+id/action_editPlan_to_plans"
-            app:destination="@id/plansFragment" />
+            app:destination="@id/plansFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="title"
             app:argType="string" />

@@ -2,7 +2,7 @@
     <string name="app_name">FitnessApp</string>
     <string name="tab_plans">plans</string>
     <string name="tab_train">train</string>
-    <string name="tab_stats">stats</string>
+    <string name="tab_stats">records</string>
     <string name="start">start</string>
     <string name="stop">stop</string>
     <string name="reset">reset</string>
