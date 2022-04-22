@@ -214,12 +214,20 @@ class PlansDatabaseHelper(
         return db.rawQuery(selectQuery, arrayOf(planTitle))
     }
 
+    /**
+     * Method updates plan config from Db by deleting old config
+     * and inserting a new one, with the same name
+     */
+    fun updatePlanConfigInDb(title: String, exercises: MutableList<Exercise>) {
+        deletePlanConfigFromDb(title)
+        insertPlanConfigIntoDb(title, exercises)
+    }
 
     /**
      * Method inserts Training plan [title] with a
      * configuration of [exercises] into the database
      */
-    fun insertPlanConfigIntoDb(title: String, exercises: MutableList<Exercise>) {
+    private fun insertPlanConfigIntoDb(title: String, exercises: MutableList<Exercise>) {
         val db: SQLiteDatabase = this.writableDatabase
         var contentValues: ContentValues
 
@@ -234,5 +242,13 @@ class PlansDatabaseHelper(
         }
         db.setTransactionSuccessful()
         db.endTransaction()
+    }
+
+    /**
+     * Method deletes a plan config [title] from the DB
+     */
+    private fun deletePlanConfigFromDb(title: String) {
+        val database: SQLiteDatabase = this.writableDatabase
+        database.delete(TABLE_PLAN_CONFIG, "$COL_PLAN_TITLE=?", arrayOf(title))
     }
 }

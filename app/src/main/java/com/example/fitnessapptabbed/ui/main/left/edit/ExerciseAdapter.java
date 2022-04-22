@@ -26,7 +26,7 @@ import java.util.List;
  * @version 1.0
  */
 public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String NULL_EXERCISE = "------------------------";
+    public static final String NULL_EXERCISE = "------------------------";
     private static final int SETS_RANGE = 6;
     private static final int REPS_RANGE = 30;
 
@@ -64,7 +64,20 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        // Not implemented - not needed
+        Exercise currentEx = this.exercisesInPlan.get(position);
+        if(currentEx.isNullExercise()) return;
+
+        ExerciseViewHolder evh = (ExerciseViewHolder) holder;
+        // index numbers need to change, allExercises missing NULL exercise
+        // sets and reps starting from 1 but indexing from zero
+        int nameIndex = allExercises.indexOf(currentEx.getName());
+        int setsIndex = exercisesInPlan.get(position).getSets();
+        int repsIndex = exercisesInPlan.get(position).getReps();
+
+        evh.exerciseSpinner.setSelection(nameIndex + 1);
+        evh.setsSpinner.setSelection(setsIndex - 1);
+        evh.repsSpinner.setSelection(repsIndex - 1);
+        evh.changeExerciseAdded();
     }
 
     @Override
@@ -77,7 +90,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
         public FloatingActionButton addFab, deleteFab;
-        public Spinner exercise, sets, reps;
+        public Spinner exerciseSpinner, setsSpinner, repsSpinner;
         public LinearLayout layout;
 
         /**
@@ -85,18 +98,19 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @param itemView view of item, used to get references
          * @param listener listener for item clicking events
          */
-        public ExerciseViewHolder(@NonNull View itemView, final OnItemClickListener listener, final List<String> allExercises) {
+        public ExerciseViewHolder(@NonNull View itemView, final OnItemClickListener listener,
+                                  final List<String> allExercises) {
             super(itemView);
             addFab = itemView.findViewById(R.id.addExerciseFab);
             deleteFab = itemView.findViewById(R.id.deleteExerciseFab);
-            exercise = itemView.findViewById(R.id.exerciseSpinner);
-            sets = itemView.findViewById(R.id.setsSpinner);
-            reps = itemView.findViewById(R.id.repsSpinner);
+            exerciseSpinner = itemView.findViewById(R.id.exerciseSpinner);
+            setsSpinner = itemView.findViewById(R.id.setsSpinner);
+            repsSpinner = itemView.findViewById(R.id.repsSpinner);
             layout = itemView.findViewById(R.id.exerciseLayout);
 
             setExerciseSpinner(itemView, allExercises);
-            setSpinner(itemView, sets, SETS_RANGE);
-            setSpinner(itemView, reps, REPS_RANGE);
+            setSpinner(itemView, setsSpinner, SETS_RANGE);
+            setSpinner(itemView, repsSpinner, REPS_RANGE);
 
             addFab.setOnClickListener(view -> {
                 if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION) {
@@ -136,9 +150,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             addFab.setVisibility(View.VISIBLE);
             layout.setClickable(false);
             layout.setVisibility(View.INVISIBLE);
-            exercise.setSelection(0);
-            sets.setSelection(0);
-            reps.setSelection(0);
+            exerciseSpinner.setSelection(0);
+            setsSpinner.setSelection(0);
+            repsSpinner.setSelection(0);
         }
 
         /**
@@ -168,7 +182,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) { }
             });
-
         }
 
         /**
@@ -184,13 +197,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             // set up adapter for exercises spinner
             ArrayAdapter<String> adapter = new ArrayAdapter<>(itemView.getContext(),
                     android.R.layout.simple_spinner_dropdown_item, allPlusNullExercise);
-            exercise.setAdapter(adapter);
+            exerciseSpinner.setAdapter(adapter);
 
             // set listener for spinner
-            exercise.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            exerciseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    exercise.setSelection(i);
+                    exerciseSpinner.setSelection(i);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) { }

@@ -15,4 +15,9 @@ data class Exercise (
 )   {
     // empty secondary constructor with default values
     constructor() : this("", 0, 0, 0)
+
+    fun isNullExercise(): Boolean {
+        return (this == Exercise()) ||
+                (this.name == ExerciseAdapter.NULL_EXERCISE)
+    }
 }

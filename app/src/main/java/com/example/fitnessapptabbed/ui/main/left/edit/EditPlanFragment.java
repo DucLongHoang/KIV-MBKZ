@@ -58,6 +58,8 @@ public class EditPlanFragment extends Fragment {
         planTitle = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
         planDescription = EditPlanFragmentArgs.fromBundle(getArguments()).getDescription();
         exercises = databaseHelper.getPlanConfigFromDb(planTitle);
+        printExercises();
+
         buildRecyclerView();
 
         return binding.getRoot();
@@ -151,7 +153,8 @@ public class EditPlanFragment extends Fragment {
     }
 
     private void printExercises() {
-        for(Exercise ex: exercises) System.out.println(ex);
+        for(int i = 0; i < exercises.size() - 1; i++)
+            System.out.println(exercises.get(i));
     }
 
     /**
@@ -168,9 +171,9 @@ public class EditPlanFragment extends Fragment {
             v = rv.getChildAt(i);
             evh = (ExerciseAdapter.ExerciseViewHolder) rv.getChildViewHolder(v);
             exercise = exercises.get(i);
-            exercise.setName(evh.exercise.getSelectedItem().toString());
-            exercise.setSets((int)evh.sets.getSelectedItem());
-            exercise.setReps((int)evh.reps.getSelectedItem());
+            exercise.setName(evh.exerciseSpinner.getSelectedItem().toString());
+            exercise.setSets((int)evh.setsSpinner.getSelectedItem());
+            exercise.setReps((int)evh.repsSpinner.getSelectedItem());
         }
     }
 
@@ -204,6 +207,6 @@ public class EditPlanFragment extends Fragment {
      */
     private void savePlanConfig(List<Exercise> exercises) {
         String title = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
-        databaseHelper.insertPlanConfigIntoDb(title, exercises);
+        databaseHelper.updatePlanConfigInDb(title, exercises.subList(0, exercises.size() - 1));
     }
 }
