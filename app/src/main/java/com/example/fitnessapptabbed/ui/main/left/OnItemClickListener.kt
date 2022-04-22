@@ -1,7 +1,7 @@
 package com.example.fitnessapptabbed.ui.main.left
 
 /**
- * OnItemClickListener interface
+ * [OnItemClickListener] interface
  * provides items in recycler view with click actions
  * @author Long
  * @version 1.0

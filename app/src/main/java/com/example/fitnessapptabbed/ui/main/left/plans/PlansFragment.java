@@ -68,7 +68,7 @@ public class PlansFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        databaseHelper.close();
+        if(databaseHelper != null) databaseHelper.close();
     }
 
     /**

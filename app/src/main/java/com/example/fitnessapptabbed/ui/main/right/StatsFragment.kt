@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
+import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
 import kotlinx.android.synthetic.main.fragment_stats.*
 
 
@@ -30,6 +30,7 @@ class StatsFragment : Fragment() {
 
         databaseHelper = PlansDatabaseHelper(requireContext())
         statistics = databaseHelper.getExercisesFromDb()
+        databaseHelper.close()
 
         return binding.root
     }
