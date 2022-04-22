@@ -167,8 +167,6 @@ class PlansDatabaseHelper(
 
         if(c.moveToFirst()) {
             do {
-                println(c.toString())
-
                 exName = c.getString(c.getColumnIndex(COL_EX_NAME))
                 recordKgs = c.getInt(c.getColumnIndex(COL_EX_KGS))
                 date = c.getString(c.getColumnIndex(COL_DATE))

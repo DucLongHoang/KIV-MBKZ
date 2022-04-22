@@ -27,6 +27,9 @@ import java.util.List;
  */
 public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String NULL_EXERCISE = "------------------------";
+    private static final int SETS_RANGE = 6;
+    private static final int REPS_RANGE = 30;
+
     private final List<Exercise> exercisesInPlan;
     private final List<String> allExercises;
     private OnItemClickListener itemClickListener;
@@ -92,19 +95,21 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             layout = itemView.findViewById(R.id.exerciseLayout);
 
             setExerciseSpinner(itemView, allExercises);
-            setSpinner(itemView, sets, 5);
-            setSpinner(itemView, reps, 15);
+            setSpinner(itemView, sets, SETS_RANGE);
+            setSpinner(itemView, reps, REPS_RANGE);
 
             addFab.setOnClickListener(view -> {
-                if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                    listener.onAddClick(getAdapterPosition());
-                    changeExerciseItemLook();
+                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION) {
+                    listener.onAddClick(getAbsoluteAdapterPosition());
+                    changeExerciseAdded();
                 }
             });
 
             deleteFab.setOnClickListener(view -> {
-                if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
-                    listener.onDeleteClick(getAdapterPosition());
+                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION) {
+                    listener.onDeleteClick(getAbsoluteAdapterPosition());
+                    changeExerciseDeleted();
+                }
             });
         }
 
@@ -112,11 +117,28 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * Method changes the appearance of the add Exercise item
          * upon addFab click
          */
-        private void changeExerciseItemLook() {
+        private void changeExerciseAdded() {
             addFab.setClickable(false);
             addFab.setVisibility(View.INVISIBLE);
             layout.setClickable(true);
             layout.setVisibility(View.VISIBLE);
+        }
+
+        /**
+         * Method changes the appearance of the add Exercise item
+         * upon deleteFab click
+         *
+         * Important method, because the Recycler View
+         * is reusing ViewHolders and keeps their states
+         */
+        private void changeExerciseDeleted() {
+            addFab.setClickable(true);
+            addFab.setVisibility(View.VISIBLE);
+            layout.setClickable(false);
+            layout.setVisibility(View.INVISIBLE);
+            exercise.setSelection(0);
+            sets.setSelection(0);
+            reps.setSelection(0);
         }
 
         /**

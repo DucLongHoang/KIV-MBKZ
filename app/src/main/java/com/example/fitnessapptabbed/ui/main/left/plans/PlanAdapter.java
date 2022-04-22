@@ -80,18 +80,18 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             editFab = itemView.findViewById(R.id.editPlanFab);
 
             itemView.setOnClickListener(view -> {
-                if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
-                        listener.onItemClick(getAdapterPosition());
+                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
+                        listener.onItemClick(getAbsoluteAdapterPosition());
             });
 
             editFab.setOnClickListener(view -> {
-                if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
-                    listener.onEditClick(getAdapterPosition());
+                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
+                    listener.onEditClick(getAbsoluteAdapterPosition());
             });
 
             deleteFab.setOnClickListener(view -> {
-                if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
-                    listener.onDeleteClick(getAdapterPosition());
+                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
+                    listener.onDeleteClick(getAbsoluteAdapterPosition());
             });
         }
     }
