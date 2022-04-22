@@ -1,5 +1,6 @@
 package com.example.fitnessapptabbed.ui.main.left.edit;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,9 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class EditPlanFragment extends Fragment {
+    private static final String CANCEL_CONFIRM = "Do you really want to cancel editing?";
+    private static final String SAVE_CONFIRM = "Save training plan configuration?";
+
     private FragmentEditPlanBinding binding;
     private ExerciseAdapter adapter;
     private List<Exercise> exercises;
@@ -130,10 +134,7 @@ public class EditPlanFragment extends Fragment {
      * Method sets cancel button functionality
      */
     private void setCancelButton() {
-        binding.cancelEditButton.setOnClickListener(view ->
-                NavHostFragment.findNavController(EditPlanFragment.this)
-                        .navigate(R.id.action_editPlan_to_plans)
-        );
+        binding.cancelEditButton.setOnClickListener(view -> createDialog(false));
     }
 
     /**
@@ -143,8 +144,7 @@ public class EditPlanFragment extends Fragment {
         binding.saveEditButton.setOnClickListener(view -> {
             saveExercises();
             printExercises();
-//            NavHostFragment.findNavController(EditPlanFragment.this)
-//                    .navigate(R.id.action_editPlan_to_plans);
+            createDialog(true);
             }
         );
     }
@@ -153,6 +153,10 @@ public class EditPlanFragment extends Fragment {
         for(Exercise ex: exercises) System.out.println(ex);
     }
 
+    /**
+     * Method saves exercises from the Recycler View
+     * into a List to save them into the database
+     */
     private void saveExercises() {
         RecyclerView rv = binding.exercisesRecyclerView;
         ExerciseAdapter.ExerciseViewHolder evh;
@@ -167,5 +171,38 @@ public class EditPlanFragment extends Fragment {
             exercise.setSets((int)evh.sets.getSelectedItem());
             exercise.setReps((int)evh.reps.getSelectedItem());
         }
+    }
+
+    /**
+     * Method creates a dialog to either cancel or save editing
+     * One method to use for both CANCEL and SAVE buttons
+     * @param save true to save plan config, false to cancel editing
+     */
+    private void createDialog(boolean save) {
+        String confirmation = save ? SAVE_CONFIRM : CANCEL_CONFIRM;
+
+        // create dialog
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        dialogBuilder.setTitle(confirmation);
+
+        // setting options
+        dialogBuilder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+        dialogBuilder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            if(save) { savePlanConfig(exercises); }
+            NavHostFragment.findNavController(EditPlanFragment.this)
+                    .navigate(R.id.action_editPlan_to_plans); });
+
+        // show dialog
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
+    /**
+     * Method inserts the plan configuration into the database
+     * @param exercises to be inserted into the database
+     */
+    private void savePlanConfig(List<Exercise> exercises) {
+        String title = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
+        databaseHelper.insertPlanConfigIntoDb(title, exercises);
     }
 }

@@ -193,4 +193,11 @@ class PlansDatabaseHelper(
         val selectQuery = "SELECT $COL_EX_NAME, $COL_EX_KGS, $COL_DATE FROM $TABLE_EXERCISE"
         return db.rawQuery(selectQuery, null)
     }
+
+    /**
+     *
+     */
+    fun insertPlanConfigIntoDb(title: String, exercises: MutableList<Exercise>) {
+
+    }
 }
