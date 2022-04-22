@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.ui.main.PlansDatabaseHelper;
+import com.example.fitnessapptabbed.ui.main.stats.Statistic;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,9 +25,10 @@ import java.util.List;
  * @version 1.0
  */
 public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final List<Exercise> exercises;
+    private static final String NULL_EXERCISE = "------------------------";
+    private final List<Exercise> exercisesInPlan;
+    private final List<String> allExercises;
     private OnItemClickListener itemClickListener;
-    public PlansDatabaseHelper databaseHelper;
 
     /**
      * Constructor for ExerciseAdapter
@@ -33,8 +36,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param list data set
      */
     public ExerciseAdapter(PlansDatabaseHelper databaseHelper, List<Exercise> list) {
-        this.exercises = list;
-        this.databaseHelper = databaseHelper;
+        this.exercisesInPlan = list;
+        this.allExercises = new ArrayList<>();
+
+        List<Statistic> statistics = databaseHelper.getExercisesFromDb();
+        for(Statistic s : statistics) { allExercises.add(s.getExerciseName()); }
     }
 
     /**
@@ -49,24 +55,17 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_exercise, parent, false);
-        return new ExerciseViewHolder(view, this.itemClickListener, this.databaseHelper);
+        return new ExerciseViewHolder(view, this.itemClickListener, this.allExercises);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Exercise exercise = this.exercises.get(position);
-        ExerciseViewHolder evh = (ExerciseViewHolder) holder;
-
-//        exercise.setName(evh.exercise.getSelectedItem().toString());
-//        exercise.setSets((int)evh.sets.getSelectedItem());
-//        exercise.setReps((int)evh.reps.getSelectedItem());
-//
-//        System.out.println(exercise);
+        // Not implemented - not needed
     }
 
     @Override
     public int getItemCount() {
-        return exercises.size();
+        return exercisesInPlan.size();
     }
 
     /**
@@ -82,7 +81,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @param itemView view of item, used to get references
          * @param listener listener for item clicking events
          */
-        public ExerciseViewHolder(@NonNull View itemView, final OnItemClickListener listener, final PlansDatabaseHelper databaseHelper) {
+        public ExerciseViewHolder(@NonNull View itemView, final OnItemClickListener listener, final List<String> allExercises) {
             super(itemView);
             addFab = itemView.findViewById(R.id.addExerciseFab);
             deleteFab = itemView.findViewById(R.id.deleteExerciseFab);
@@ -91,7 +90,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             reps = itemView.findViewById(R.id.repsSpinner);
             layout = itemView.findViewById(R.id.exerciseLayout);
 
-            setExerciseSpinner(itemView, databaseHelper);
+            setExerciseSpinner(itemView, allExercises);
             setSpinner(itemView, sets, 5);
             setSpinner(itemView, reps, 15);
 
@@ -152,17 +151,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         /**
          * Method to set Spinner items with exercise name values
          * @param itemView of Spinner
-         * @param databaseHelper to retrieve exercises from the database
+         * @param allExercises List of all pre-defined exercises
          */
-        private void setExerciseSpinner(View itemView, PlansDatabaseHelper databaseHelper) {
-            // prepare values for spinner
-            List<String> exercises = databaseHelper.getExerciseNamesFromDb();
-            String[] values = new String[exercises.size()];
-            for(int i = 0; i < exercises.size(); i++) { values[i] = exercises.get(i); }
+        private void setExerciseSpinner(View itemView, List<String> allExercises) {
+            List<String> allPlusNullExercise = new ArrayList<>();
+            allPlusNullExercise.add(NULL_EXERCISE);
+            allPlusNullExercise.addAll(allExercises);
 
             // set up adapter for exercises spinner
             ArrayAdapter<String> adapter = new ArrayAdapter<>(itemView.getContext(),
-                    android.R.layout.simple_spinner_dropdown_item, values);
+                    android.R.layout.simple_spinner_dropdown_item, allPlusNullExercise);
             exercise.setAdapter(adapter);
 
             // set listener for spinner

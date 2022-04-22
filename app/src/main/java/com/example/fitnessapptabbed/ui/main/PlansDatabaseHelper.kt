@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.example.fitnessapptabbed.ui.main.plans.Exercise
 import com.example.fitnessapptabbed.ui.main.plans.TrainingPlan
+import com.example.fitnessapptabbed.ui.main.stats.Statistic
 
 /**
  * [PlansDatabaseHelper] class - helps with all database related stuff
@@ -32,11 +33,11 @@ class PlansDatabaseHelper(
         const val COL_EX_SETS: String = "sets"
         const val COL_EX_REPS: String = "reps"
         const val COL_EX_KGS: String = "kgs"
-        const val COL_DATE: String = "kgs"
+        const val COL_DATE: String = "date"
     }
     // Exercise names
     private val exercises: Array<String> = arrayOf(
-        "----------------------", "bench", "deadlift", "deadlift - sumo", "squat", "biceps curls",
+        "bench", "deadlift", "deadlift - sumo", "squat", "biceps curls",
         "hammer curls", "triceps extensions", "triceps kickbacks", "shoulder front raises",
         "shoulder side raises", "chest flies", "bent-over rows", "hamstring curls",
         "bulgarian split squats", "lunges", "calf raises", "ab exercise"
@@ -159,15 +160,19 @@ class PlansDatabaseHelper(
      * Method returns a [MutableList] of exercise names from the DB
      */
     @SuppressLint("Range")
-    fun getExerciseNamesFromDb(): MutableList<String> {
-        val result: MutableList<String> = ArrayList()
+    fun getExercisesFromDb(): MutableList<Statistic> {
+        val result: MutableList<Statistic> = ArrayList()
         val c: Cursor = getExercisesCursor()
-        var exName: String
+        var exName: String; var recordKgs: Int; var date: String
 
         if(c.moveToFirst()) {
             do {
+                println(c.toString())
+
                 exName = c.getString(c.getColumnIndex(COL_EX_NAME))
-                result.add(exName)
+                recordKgs = c.getInt(c.getColumnIndex(COL_EX_KGS))
+                date = c.getString(c.getColumnIndex(COL_DATE))
+                result.add(Statistic(exName, recordKgs, date))
             } while (c.moveToNext())
         }
         return result
@@ -187,7 +192,7 @@ class PlansDatabaseHelper(
      */
     private fun getExercisesCursor(): Cursor {
         val db: SQLiteDatabase = this.readableDatabase
-        val selectQuery = "SELECT $COL_EX_NAME FROM $TABLE_EXERCISE"
+        val selectQuery = "SELECT $COL_EX_NAME, $COL_EX_KGS, $COL_DATE FROM $TABLE_EXERCISE"
         return db.rawQuery(selectQuery, null)
     }
 }
