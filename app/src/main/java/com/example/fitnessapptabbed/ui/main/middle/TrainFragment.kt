@@ -1,4 +1,4 @@
-package com.example.fitnessapptabbed.ui.main.train
+package com.example.fitnessapptabbed.ui.main.middle
 
 import android.os.Bundle
 import android.os.SystemClock
@@ -26,7 +26,7 @@ class TrainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentTrainBinding.inflate(inflater, container, false)
         return binding.root

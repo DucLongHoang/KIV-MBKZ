@@ -1,15 +1,13 @@
-package com.example.fitnessapptabbed.ui.main.stats
+package com.example.fitnessapptabbed.ui.main.right
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.fitnessapptabbed.R
-import com.example.fitnessapptabbed.databinding.FragmentPlansHolderBinding
 import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
-import com.example.fitnessapptabbed.ui.main.PlansDatabaseHelper
+import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import kotlinx.android.synthetic.main.fragment_stats.*
 
 

@@ -1,4 +1,4 @@
-package com.example.fitnessapptabbed.ui.main.plans
+package com.example.fitnessapptabbed.ui.main.left
 
 import android.os.Bundle
 import android.view.LayoutInflater

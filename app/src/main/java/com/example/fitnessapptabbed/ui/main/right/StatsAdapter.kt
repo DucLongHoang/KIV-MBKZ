@@ -1,4 +1,4 @@
-package com.example.fitnessapptabbed.ui.main.stats
+package com.example.fitnessapptabbed.ui.main.right
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

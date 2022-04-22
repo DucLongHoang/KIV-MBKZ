@@ -1,4 +1,6 @@
-package com.example.fitnessapptabbed.ui.main.plans
+package com.example.fitnessapptabbed.ui.main.left.plans
+
+import com.example.fitnessapptabbed.ui.main.left.edit.Exercise
 
 /**
  * [TrainingPlan] class - represents a training plan,

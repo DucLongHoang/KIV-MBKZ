@@ -1,4 +1,4 @@
-package com.example.fitnessapptabbed.ui.main.plans
+package com.example.fitnessapptabbed.ui.main.left.edit
 
 /**
  * [Exercise] data class - defines exercise,

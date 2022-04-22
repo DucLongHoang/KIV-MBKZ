@@ -12,6 +12,7 @@ import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
     private static final long TWO_SECONDS = 2000;
+
     private long backPressedTime;
     private ActivityMainBinding binding;
 

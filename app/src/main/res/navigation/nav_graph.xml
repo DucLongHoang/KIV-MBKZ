@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/plansFragment"
-        android:name="com.example.fitnessapptabbed.ui.main.plans.PlansFragment"
+        android:name="com.example.fitnessapptabbed.ui.main.left.plans.PlansFragment"
         android:label="fragment_plans"
         tools:layout="@layout/fragment_plans" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/editPlanFragment"
-        android:name="com.example.fitnessapptabbed.ui.main.plans.EditPlanFragment"
+        android:name="com.example.fitnessapptabbed.ui.main.left.edit.EditPlanFragment"
         android:label="fragment_create_plan"
         tools:layout="@layout/fragment_edit_plan" >
         <action

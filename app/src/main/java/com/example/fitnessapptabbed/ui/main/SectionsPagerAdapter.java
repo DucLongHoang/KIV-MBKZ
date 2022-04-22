@@ -10,10 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.fitnessapptabbed.R;
-import com.example.fitnessapptabbed.ui.main.plans.PlansFragment;
-import com.example.fitnessapptabbed.ui.main.plans.PlansHolderFragment;
-import com.example.fitnessapptabbed.ui.main.stats.StatsFragment;
-import com.example.fitnessapptabbed.ui.main.train.TrainFragment;
+import com.example.fitnessapptabbed.ui.main.left.PlansHolderFragment;
+import com.example.fitnessapptabbed.ui.main.right.StatsFragment;
+import com.example.fitnessapptabbed.ui.main.middle.TrainFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -26,7 +25,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             R.string.tab_plans, R.string.tab_train, R.string.tab_stats
     };
     private final Context mContext;
-    private Fragment planHolderFragment;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);

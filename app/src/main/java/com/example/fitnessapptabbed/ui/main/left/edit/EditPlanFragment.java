@@ -1,4 +1,4 @@
-package com.example.fitnessapptabbed.ui.main.plans;
+package com.example.fitnessapptabbed.ui.main.left.edit;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,8 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnessapptabbed.R;
+import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.databinding.FragmentEditPlanBinding;
-import com.example.fitnessapptabbed.ui.main.PlansDatabaseHelper;
+import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;

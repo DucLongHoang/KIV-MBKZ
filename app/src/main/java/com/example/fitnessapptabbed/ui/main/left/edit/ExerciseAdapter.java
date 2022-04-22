@@ -1,4 +1,4 @@
-package com.example.fitnessapptabbed.ui.main.plans;
+package com.example.fitnessapptabbed.ui.main.left.edit;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnessapptabbed.R;
-import com.example.fitnessapptabbed.ui.main.PlansDatabaseHelper;
-import com.example.fitnessapptabbed.ui.main.stats.Statistic;
+import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
+import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
+import com.example.fitnessapptabbed.ui.main.right.Statistic;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

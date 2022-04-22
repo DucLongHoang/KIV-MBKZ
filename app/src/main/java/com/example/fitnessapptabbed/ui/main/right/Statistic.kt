@@ -1,4 +1,4 @@
-package com.example.fitnessapptabbed.ui.main.stats
+package com.example.fitnessapptabbed.ui.main.right
 
 /**
  * [Statistic] data class - defines a record statistic,
