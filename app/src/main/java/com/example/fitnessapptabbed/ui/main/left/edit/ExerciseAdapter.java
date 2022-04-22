@@ -43,7 +43,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.exercisesInPlan = list;
         this.allExercises = new ArrayList<>();
 
-        List<Statistic> statistics = databaseHelper.getExercisesFromDb();
+        List<Statistic> statistics = databaseHelper.getAllExercisesFromDb();
         for(Statistic s : statistics) { allExercises.add(s.getExerciseName()); }
     }
 

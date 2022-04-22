@@ -34,6 +34,7 @@ public class EditPlanFragment extends Fragment {
     private ExerciseAdapter adapter;
     private List<Exercise> exercises;
     private PlansDatabaseHelper databaseHelper;
+    private String planTitle, planDescription;
 
     /**
      * Use this factory method to create a new instance of
@@ -53,7 +54,10 @@ public class EditPlanFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentEditPlanBinding.inflate(inflater, container, false);
         databaseHelper = new PlansDatabaseHelper(requireContext());
-        exercises = databaseHelper.getExercisesOfPlanFromDb(null);
+
+        planTitle = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
+        planDescription = EditPlanFragmentArgs.fromBundle(getArguments()).getDescription();
+        exercises = databaseHelper.getPlanConfigFromDb(planTitle);
         buildRecyclerView();
 
         return binding.getRoot();
@@ -80,10 +84,8 @@ public class EditPlanFragment extends Fragment {
      * Displays the title and description of the selected TrainingPlan
      */
     private void setHeader() {
-        String title = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
-        String description = EditPlanFragmentArgs.fromBundle(getArguments()).getDescription();
-        binding.textViewTitle.setText(title);
-        binding.textViewDescription.setText(description);
+        binding.textViewTitle.setText(planTitle);
+        binding.textViewDescription.setText(planDescription);
     }
 
     /**
@@ -145,8 +147,7 @@ public class EditPlanFragment extends Fragment {
             saveExercises();
             printExercises();
             createDialog(true);
-            }
-        );
+        });
     }
 
     private void printExercises() {
@@ -163,7 +164,7 @@ public class EditPlanFragment extends Fragment {
         Exercise exercise; View v;
 
         // List length - 1 because don't want to save invisible default exercise
-        for(int i = 0; i < exercises.size(); i++) {
+        for(int i = 0; i < exercises.size() - 1; i++) {
             v = rv.getChildAt(i);
             evh = (ExerciseAdapter.ExerciseViewHolder) rv.getChildViewHolder(v);
             exercise = exercises.get(i);

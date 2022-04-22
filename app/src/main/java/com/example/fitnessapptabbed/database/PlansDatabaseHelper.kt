@@ -45,39 +45,10 @@ class PlansDatabaseHelper(
 
     override fun onCreate(db: SQLiteDatabase) {
         createTables(db)
-        insertExercisesIntoDb(db)
+        initExercisesInDb(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) { }
-
-    /**
-     * Method inserts 5 dummy values into database [db]
-     */
-    private fun insertDummyValues(db: SQLiteDatabase) {
-        val count = 5
-        val plans = TrainingPlan.createListOfTrainingPlans(count)
-        val contentValues = ContentValues()
-
-        for(plan in plans) {
-            contentValues.put(COL_PLAN_TITLE, plan.Title)
-            contentValues.put(COL_PLAN_DESC, plan.Description)
-            db.insert(TABLE_PLAN, null, contentValues)
-        }
-    }
-
-    /**
-     * Method inserts exercise names into the records table
-     * TODO - redo database layout
-     */
-    private fun insertExercisesIntoDb(db: SQLiteDatabase) {
-        val contentValues = ContentValues()
-        for (exercise in exercises) {
-            contentValues.put(COL_EX_NAME, exercise)
-            contentValues.put(COL_EX_KGS, 0)
-            contentValues.put(COL_DATE, "29.02.2020")
-            db.insert(TABLE_EXERCISE, null, contentValues)
-        }
-    }
 
     /**
      * Method creates tables of the database [db]
@@ -95,18 +66,31 @@ class PlansDatabaseHelper(
                 "$COL_DATE TEXT NOT NULL );")
 
         val createPlanConfigTableSql: String = ("CREATE TABLE $TABLE_PLAN_CONFIG (" +
+                "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_PLAN_TITLE TEXT NOT NULL, " +
                 "$COL_EX_NAME TEXT NOT NULL, " +
                 "$COL_EX_SETS INTEGER, " +
                 "$COL_EX_REPS INTEGER, " +
-                "$COL_EX_KGS INTEGER, " +
-                "PRIMARY KEY ($COL_PLAN_TITLE), " +
                 "FOREIGN KEY ($COL_PLAN_TITLE) REFERENCES $TABLE_PLAN($COL_PLAN_TITLE), " +
                 "FOREIGN KEY ($COL_EX_NAME) REFERENCES $TABLE_EXERCISE($COL_EX_NAME) );")
 
         db.execSQL(createPlanTableSql)
         db.execSQL(createExerciseTableSql)
         db.execSQL(createPlanConfigTableSql)
+    }
+
+    /**
+     * Method inserts exercise names into the records table
+     * TODO - redo database layout
+     */
+    private fun initExercisesInDb(db: SQLiteDatabase) {
+        val contentValues = ContentValues()
+        for (exercise in exercises) {
+            contentValues.put(COL_EX_NAME, exercise)
+            contentValues.put(COL_EX_KGS, 0)
+            contentValues.put(COL_DATE, "29.02.2020")
+            db.insert(TABLE_EXERCISE, null, contentValues)
+        }
     }
 
     /**
@@ -157,10 +141,24 @@ class PlansDatabaseHelper(
     }
 
     /**
-     * Method returns a [MutableList] of exercise names from the DB
+     * Method updates [COL_EX_KGS] and [COL_DATE]
+     * of table [TABLE_EXERCISE] in the database
+     */
+    fun updateRecord(statistic: Statistic) {
+        val db: SQLiteDatabase = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COL_EX_KGS, statistic.recordKgs)
+        contentValues.put(COL_DATE, statistic.dateOfRecord)
+
+        db.update(TABLE_EXERCISE, contentValues,
+            "$COL_EX_NAME=?", arrayOf(statistic.exerciseName))
+    }
+
+    /**
+     * Method returns a [MutableList] of exercises from the DB
      */
     @SuppressLint("Range")
-    fun getExercisesFromDb(): MutableList<Statistic> {
+    fun getAllExercisesFromDb(): MutableList<Statistic> {
         val result: MutableList<Statistic> = ArrayList()
         val c: Cursor = getExercisesCursor()
         var exName: String; var recordKgs: Int; var date: String
@@ -176,15 +174,6 @@ class PlansDatabaseHelper(
         return result
     }
 
-    // I need to add the first dummy Exercise so that the Recycler View works
-    fun getExercisesOfPlanFromDb(plan: TrainingPlan?): MutableList<Exercise> {
-        val result: MutableList<Exercise> = ArrayList()
-//        val c: Cursor? = getExercisesCursor()
-        result.add(Exercise())
-
-        return result
-    }
-
     /**
      * Method queries the whole [TABLE_EXERCISE] table and returns a [Cursor] to it
      */
@@ -194,10 +183,56 @@ class PlansDatabaseHelper(
         return db.rawQuery(selectQuery, null)
     }
 
+    // I need to add the first dummy Exercise so that the Recycler View works
+    @SuppressLint("Range")
+    fun getPlanConfigFromDb(planTitle: String): MutableList<Exercise> {
+        val result: MutableList<Exercise> = ArrayList()
+        val c: Cursor = getPlanConfigCursor(planTitle)
+        var exName: String; var sets: Int; var reps: Int
+
+        if(c.moveToFirst()) {
+            do {
+                exName = c.getString(c.getColumnIndex(COL_EX_NAME))
+                sets = c.getInt(c.getColumnIndex(COL_EX_SETS))
+                reps = c.getInt(c.getColumnIndex(COL_EX_REPS))
+                result.add(Exercise(exName, sets, reps, 0))
+            } while (c.moveToNext())
+        }
+
+        result.add(Exercise())
+
+        return result
+    }
+
     /**
-     *
+     * Method queries the whole [TABLE_PLAN_CONFIG] table and returns a [Cursor] to it
+     */
+    private fun getPlanConfigCursor(planTitle: String): Cursor {
+        val db: SQLiteDatabase = this.readableDatabase
+        val selectQuery = "SELECT $COL_EX_NAME, $COL_EX_SETS, $COL_EX_REPS " +
+                "FROM $TABLE_PLAN_CONFIG WHERE $COL_PLAN_TITLE=?"
+        return db.rawQuery(selectQuery, arrayOf(planTitle))
+    }
+
+
+    /**
+     * Method inserts Training plan [title] with a
+     * configuration of [exercises] into the database
      */
     fun insertPlanConfigIntoDb(title: String, exercises: MutableList<Exercise>) {
+        val db: SQLiteDatabase = this.writableDatabase
+        var contentValues: ContentValues
 
+        db.beginTransaction()
+        for(exercise: Exercise in exercises) {
+            contentValues = ContentValues()
+            contentValues.put(COL_PLAN_TITLE, title)
+            contentValues.put(COL_EX_NAME, exercise.name)
+            contentValues.put(COL_EX_SETS, exercise.sets)
+            contentValues.put(COL_EX_REPS, exercise.reps)
+            db.insert(TABLE_PLAN_CONFIG, null, contentValues)
+        }
+        db.setTransactionSuccessful()
+        db.endTransaction()
     }
 }

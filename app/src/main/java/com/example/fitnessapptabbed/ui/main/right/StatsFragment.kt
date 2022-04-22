@@ -29,7 +29,7 @@ class StatsFragment : Fragment() {
         _binding = FragmentStatsBinding.inflate(inflater, container, false)
 
         databaseHelper = PlansDatabaseHelper(requireContext())
-        statistics = databaseHelper.getExercisesFromDb()
+        statistics = databaseHelper.getAllExercisesFromDb()
         databaseHelper.close()
 
         return binding.root
