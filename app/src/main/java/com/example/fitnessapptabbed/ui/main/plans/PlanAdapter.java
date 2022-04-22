@@ -47,11 +47,11 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        TrainingPlan currentPlan = this.trainingPlans.get(position);
+        TrainingPlan plan = this.trainingPlans.get(position);
         PlanViewHolder tvh = (PlanViewHolder) holder;
 
-        tvh.title.setText(currentPlan.getTitle());
-        tvh.description.setText(currentPlan.getDescription());
+        tvh.title.setText(plan.getTitle());
+        tvh.description.setText(plan.getDescription());
     }
 
     @Override
@@ -69,6 +69,7 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         /**
          * Constructor for PlanViewHolder
          * @param itemView view of item, used to get references
+         * @param listener listener for item clicking events
          */
         public PlanViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);

@@ -4,52 +4,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="4dp"
+    android:layout_margin="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp">
+        android:padding="8dp">
 
         <TextView
-            android:id="@+id/textViewTitle"
+            android:id="@+id/textViewExName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="Name of Exercise"
             android:layout_alignParentTop="true"
             android:layout_marginStart="6dp"/>
 
         <TextView
-            android:id="@+id/textViewDescription"
+            android:id="@+id/textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:layout_below="@id/textViewTitle"
+            android:text="Date of new record"
+            android:layout_below="@id/textViewExName"
             android:layout_marginStart="12dp"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/editPlanFab"
-            app:fabSize="mini"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="56dp"
-            app:backgroundTint="#dddd55"
-            app:srcCompat="@drawable/ic_edit"
-            tools:ignore="ContentDescription,RelativeOverlap" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/deletePlanFab"
-            app:fabSize="mini"
+        <TextView
+            android:id="@+id/textViewKgs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="80 kg"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="6dp"
-            app:backgroundTint="#dd5555"
-            app:srcCompat="@drawable/ic_delete"
-            tools:ignore="ContentDescription,RelativeOverlap" />
+            android:layout_marginEnd="6dp"/>
 
     </RelativeLayout>
 

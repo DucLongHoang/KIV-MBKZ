@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.fitnessapptabbed.R
+import com.example.fitnessapptabbed.databinding.FragmentPlansHolderBinding
+import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
 
 
 /**
@@ -14,19 +16,23 @@ import com.example.fitnessapptabbed.R
  * create an instance of this fragment.
  */
 class StatsFragment : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
+    private var _binding: FragmentStatsBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
+//    private val adapter: StatsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stats, container, false)
+    ): View {
+        super.onCreate(savedInstanceState)
+        _binding = FragmentStatsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
     companion object {
@@ -36,12 +42,12 @@ class StatsFragment : Fragment() {
          *
          * @return A new instance of fragment StatsFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
-            StatsFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+            StatsFragment().apply { arguments = Bundle() }
+    }
+
+    fun buildRecyclerView() {
+
     }
 }

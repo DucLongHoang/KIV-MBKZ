@@ -26,7 +26,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             R.string.tab_plans, R.string.tab_train, R.string.tab_stats
     };
     private final Context mContext;
-    private Fragment plansFragment;
+    private Fragment planHolderFragment;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);

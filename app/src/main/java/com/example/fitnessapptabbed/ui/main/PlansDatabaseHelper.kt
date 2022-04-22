@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.provider.BaseColumns
 import com.example.fitnessapptabbed.ui.main.plans.Exercise
 import com.example.fitnessapptabbed.ui.main.plans.TrainingPlan
 
@@ -23,7 +24,7 @@ class PlansDatabaseHelper(
         // Table names
         const val TABLE_PLAN: String = "PLAN"
         const val TABLE_EXERCISE: String = "EXERCISE"
-        const val TABLE_RECORDS: String = "RECORDS"
+        const val TABLE_PLAN_CONFIG: String = "PLANCONFIG"
         // Column names
         const val COL_PLAN_TITLE: String = "title"
         const val COL_PLAN_DESC: String = "description"
@@ -31,11 +32,14 @@ class PlansDatabaseHelper(
         const val COL_EX_SETS: String = "sets"
         const val COL_EX_REPS: String = "reps"
         const val COL_EX_KGS: String = "kgs"
+        const val COL_DATE: String = "kgs"
     }
     // Exercise names
     private val exercises: Array<String> = arrayOf(
-        "bench", "deadlift", "squat", "bicep curl", "tricep extensions",
-        "hamstring curls", "chest flies", "lat pulldown"
+        "----------------------", "bench", "deadlift", "deadlift - sumo", "squat", "biceps curls",
+        "hammer curls", "triceps extensions", "triceps kickbacks", "shoulder front raises",
+        "shoulder side raises", "chest flies", "bent-over rows", "hamstring curls",
+        "bulgarian split squats", "lunges", "calf raises", "ab exercise"
     )
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -43,9 +47,7 @@ class PlansDatabaseHelper(
         insertExercisesIntoDb(db)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        TODO()
-    }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) { }
 
     /**
      * Method inserts 5 dummy values into database [db]
@@ -71,7 +73,8 @@ class PlansDatabaseHelper(
         for (exercise in exercises) {
             contentValues.put(COL_EX_NAME, exercise)
             contentValues.put(COL_EX_KGS, 0)
-            db.insert(TABLE_RECORDS, null, contentValues)
+            contentValues.put(COL_DATE, "29.02.2020")
+            db.insert(TABLE_EXERCISE, null, contentValues)
         }
     }
 
@@ -80,26 +83,29 @@ class PlansDatabaseHelper(
      */
     private fun createTables(db: SQLiteDatabase) {
         val createPlanTableSql: String = ("CREATE TABLE $TABLE_PLAN (" +
+                "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_PLAN_TITLE TEXT NOT NULL, " +
-                "$COL_PLAN_DESC TEXT, " +
-                "PRIMARY KEY ($COL_PLAN_TITLE) );")
-        val createRecordsTableSql: String = ("CREATE TABLE $TABLE_RECORDS (" +
+                "$COL_PLAN_DESC TEXT );")
+
+        val createExerciseTableSql: String = ("CREATE TABLE $TABLE_EXERCISE (" +
+                "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_EX_NAME TEXT NOT NULL, " +
                 "$COL_EX_KGS INTEGER, " +
-                "PRIMARY KEY ($COL_EX_NAME) );")
-        val createExerciseTableSql: String = ("CREATE TABLE $TABLE_EXERCISE (" +
+                "$COL_DATE TEXT NOT NULL );")
+
+        val createPlanConfigTableSql: String = ("CREATE TABLE $TABLE_PLAN_CONFIG (" +
                 "$COL_PLAN_TITLE TEXT NOT NULL, " +
                 "$COL_EX_NAME TEXT NOT NULL, " +
                 "$COL_EX_SETS INTEGER, " +
                 "$COL_EX_REPS INTEGER, " +
                 "$COL_EX_KGS INTEGER, " +
-                "PRIMARY KEY ($COL_PLAN_TITLE, $COL_EX_NAME), " +
+                "PRIMARY KEY ($COL_PLAN_TITLE), " +
                 "FOREIGN KEY ($COL_PLAN_TITLE) REFERENCES $TABLE_PLAN($COL_PLAN_TITLE), " +
                 "FOREIGN KEY ($COL_EX_NAME) REFERENCES $TABLE_EXERCISE($COL_EX_NAME) );")
 
         db.execSQL(createPlanTableSql)
         db.execSQL(createExerciseTableSql)
-        db.execSQL(createRecordsTableSql)
+        db.execSQL(createPlanConfigTableSql)
     }
 
     /**
@@ -145,42 +151,43 @@ class PlansDatabaseHelper(
      */
     private fun getPlansCursor(): Cursor {
         val db: SQLiteDatabase = this.readableDatabase
-        val selectQuery = "SELECT $COL_PLAN_TITLE, $COL_PLAN_DESC FROM $TABLE_PLAN "
+        val selectQuery = "SELECT $COL_PLAN_TITLE, $COL_PLAN_DESC FROM $TABLE_PLAN"
         return db.rawQuery(selectQuery, null)
     }
 
     /**
-     * Method returns a [MutableList] of [Exercise] from the DB
+     * Method returns a [MutableList] of exercise names from the DB
      */
     @SuppressLint("Range")
-    fun getExercisesFromDb(): MutableList<Exercise> {
-        val result: MutableList<Exercise> = ArrayList()
+    fun getExerciseNamesFromDb(): MutableList<String> {
+        val result: MutableList<String> = ArrayList()
         val c: Cursor = getExercisesCursor()
-        var exName: String;
+        var exName: String
 
         if(c.moveToFirst()) {
             do {
                 exName = c.getString(c.getColumnIndex(COL_EX_NAME))
-                result.add(Exercise(exName, 0, 0))
+                result.add(exName)
             } while (c.moveToNext())
         }
         return result
     }
 
+    // I need to add the first dummy Exercise so that the Recycler View works
     fun getExercisesOfPlanFromDb(plan: TrainingPlan?): MutableList<Exercise> {
         val result: MutableList<Exercise> = ArrayList()
-        val c: Cursor? = getExercisesCursor()
-        result.add(Exercise("deadlift", 10, 10, 100))
+//        val c: Cursor? = getExercisesCursor()
+        result.add(Exercise())
 
         return result
     }
 
     /**
-     * Method queries the whole [TABLE_RECORDS] table and returns a [Cursor] to it
+     * Method queries the whole [TABLE_EXERCISE] table and returns a [Cursor] to it
      */
     private fun getExercisesCursor(): Cursor {
         val db: SQLiteDatabase = this.readableDatabase
-        val selectQuery = "SELECT $COL_EX_NAME FROM $TABLE_RECORDS "
+        val selectQuery = "SELECT $COL_EX_NAME FROM $TABLE_EXERCISE"
         return db.rawQuery(selectQuery, null)
     }
 }

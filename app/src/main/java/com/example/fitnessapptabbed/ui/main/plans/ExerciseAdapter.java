@@ -54,8 +54,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Exercise currentExercise = this.exercises.get(position);
+        Exercise exercise = this.exercises.get(position);
         ExerciseViewHolder evh = (ExerciseViewHolder) holder;
+
+//        exercise.setName(evh.exercise.getSelectedItem().toString());
+//        exercise.setSets((int)evh.sets.getSelectedItem());
+//        exercise.setReps((int)evh.reps.getSelectedItem());
+//
+//        System.out.println(exercise);
     }
 
     @Override
@@ -127,8 +133,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             for(int i = 0; i < range; i++) { values[i] = i + 1; }
 
             // set up adapter to pass values to spinner
-            ArrayAdapter<Integer> adapter = new ArrayAdapter<>(
-                    itemView.getContext(), android.R.layout.simple_spinner_dropdown_item, values);
+            ArrayAdapter<Integer> adapter = new ArrayAdapter<>(itemView.getContext(),
+                    android.R.layout.simple_spinner_dropdown_item, values);
             spinner.setAdapter(adapter);
 
             // set listener for spinner
@@ -150,13 +156,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          */
         private void setExerciseSpinner(View itemView, PlansDatabaseHelper databaseHelper) {
             // prepare values for spinner
-            List<Exercise> exercises = databaseHelper.getExercisesFromDb();
+            List<String> exercises = databaseHelper.getExerciseNamesFromDb();
             String[] values = new String[exercises.size()];
-            for(int i = 0; i < exercises.size(); i++) { values[i] = exercises.get(i).getName(); }
+            for(int i = 0; i < exercises.size(); i++) { values[i] = exercises.get(i); }
 
             // set up adapter for exercises spinner
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    itemView.getContext(), android.R.layout.simple_spinner_dropdown_item, values);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(itemView.getContext(),
+                    android.R.layout.simple_spinner_dropdown_item, values);
             exercise.setAdapter(adapter);
 
             // set listener for spinner
