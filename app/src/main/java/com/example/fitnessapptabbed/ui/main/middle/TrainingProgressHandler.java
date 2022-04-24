@@ -1,7 +1,6 @@
 package com.example.fitnessapptabbed.ui.main.middle;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Vibrator;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -47,7 +46,7 @@ public class TrainingProgressHandler {
     public TrainingProgressHandler(TrainFragment fragment, List<Exercise> exercisesList) {
         this.databaseHelper = new PlansDatabaseHelper(fragment.requireContext());
         this.recordHandler = new RecordHandler(fragment);
-        this.vibrator = (Vibrator) fragment.requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        this.vibrator = fragment.getVibrator();
         this.kgList = new LinkedList<>();
         this.exIterator = exercisesList.listIterator();
         this.kgIterator = kgList.listIterator();

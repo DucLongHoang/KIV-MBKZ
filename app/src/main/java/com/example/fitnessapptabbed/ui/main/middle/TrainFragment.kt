@@ -1,13 +1,18 @@
 package com.example.fitnessapptabbed.ui.main.middle
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
-import android.os.SystemClock
+import android.os.Vibrator
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
@@ -26,16 +31,13 @@ class TrainFragment: Fragment() {
     private var _binding: FragmentTrainBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var vibrator: Vibrator
     private lateinit var databaseHelper: PlansDatabaseHelper
     private lateinit var allPlans: MutableList<TrainingPlan>
     private lateinit var chosenPlan: TrainingPlan
     private lateinit var exercisesInPlan: MutableList<Exercise>
     private lateinit var handler: TrainingProgressHandler
-
-    private lateinit var chronometer: Chronometer
-    private var running: Boolean = false
     private var trainingRunning: Boolean = false
-    private var pauseOffset: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +45,7 @@ class TrainFragment: Fragment() {
     ): View {
         super.onCreate(savedInstanceState)
         _binding = FragmentTrainBinding.inflate(inflater, container, false)
+        vibrator = requireActivity().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         databaseHelper = PlansDatabaseHelper(requireContext())
         allPlans = databaseHelper.getPlansFromDb()
 
@@ -54,14 +57,12 @@ class TrainFragment: Fragment() {
         setSpinner()
         setStartEndButton()
         setControlPanel()
-
-//        chronometer = view.findViewById(R.id.chronometer)
-//        chronometer.format = "%s"
-//
-//        view.findViewById<Button>(R.id.startButton).setOnClickListener { startChronometer() }
-//        view.findViewById<Button>(R.id.stopButton).setOnClickListener { stopChronometer() }
-//        view.findViewById<Button>(R.id.resetButton).setOnClickListener { resetChronometer() }
     }
+
+    /**
+     * Method returns a [Vibrator] instance
+     */
+    fun getVibrator(): Vibrator = this.vibrator
 
     private fun setControlPanel() {
         val ibNext: ImageButton = requireActivity().findViewById(R.id.imButtonNext)
@@ -98,18 +99,36 @@ class TrainFragment: Fragment() {
                 imButtonBack.isEnabled = false
                 exercisesInPlan = databaseHelper.getPlanConfigFromDb(chosenPlan.Title)
                 handler = TrainingProgressHandler(this, exercisesInPlan)
+                vibrator.vibrate(Companion.VIB_DURATION)
                 lin_layout_2.visibility = View.VISIBLE
                 lin_layout_3.visibility = View.VISIBLE
             }
             else {      // end -> start
-                trainingRunning = false
-                startEndButton.text = getString(R.string.start)
-                choosePlanSpinner.isEnabled = true
-                imButtonBack.isEnabled = false
-                lin_layout_2.visibility = View.INVISIBLE
-                lin_layout_3.visibility = View.INVISIBLE
+                endTrainingDialog()
             }
         }
+    }
+
+    private fun endTrainingDialog() {
+        // create dialog
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setTitle("End training?")
+
+        // setting options
+        dialogBuilder.setNegativeButton("No") { dialogInterface, _: Int -> dialogInterface.cancel() }
+        dialogBuilder.setPositiveButton("Yes") { _, _: Int ->
+            trainingRunning = false
+            startEndButton.text = getString(R.string.start)
+            choosePlanSpinner.isEnabled = true
+            imButtonBack.isEnabled = false
+            vibrator.vibrate(VIB_DURATION)
+            lin_layout_2.visibility = View.INVISIBLE
+            lin_layout_3.visibility = View.INVISIBLE
+        }
+
+        // show dialog
+        val dialog = dialogBuilder.create()
+        dialog.show()
     }
 
     private fun setSpinner() {
@@ -144,28 +163,6 @@ class TrainFragment: Fragment() {
         }
     }
 
-    private fun startChronometer() {
-        if(!running) {
-            chronometer.base = SystemClock.elapsedRealtime() - pauseOffset
-            chronometer.start()
-            running = true
-        }
-    }
-
-    private fun stopChronometer() {
-        if(running) {
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.base
-            chronometer.stop()
-            running = false
-        }
-    }
-
-    private fun resetChronometer() {
-        chronometer.base = SystemClock.elapsedRealtime()
-        pauseOffset = 0
-        stopChronometer()
-    }
-
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -175,5 +172,6 @@ class TrainFragment: Fragment() {
          */
         @JvmStatic
         fun newInstance() = TrainFragment().apply { arguments = Bundle() }
+        private const val VIB_DURATION: Long = 500
     }
 }
