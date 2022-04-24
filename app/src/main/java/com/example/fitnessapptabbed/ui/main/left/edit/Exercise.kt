@@ -16,8 +16,16 @@ data class Exercise (
     // empty secondary constructor with default values
     constructor() : this("", 0, 0, 0)
 
+    /**
+     * Returns [Boolean] if the exercise is valid or not
+     */
     fun isNullExercise(): Boolean {
         return (this == Exercise()) ||
                 (this.name == ExerciseAdapter.NULL_EXERCISE)
+    }
+
+    companion object {
+        @JvmStatic
+        fun congratulations() = Exercise("Congratulations", 0, 0, 0)
     }
 }

@@ -27,7 +27,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class EditPlanFragment extends Fragment {
-    private static final String CANCEL_CONFIRM = "Do you really want to cancel editing?";
+    private static final String CANCEL_CONFIRM = "Do you want to cancel editing?";
     private static final String SAVE_CONFIRM = "Save training plan configuration?";
 
     private FragmentEditPlanBinding binding;
@@ -58,8 +58,7 @@ public class EditPlanFragment extends Fragment {
         planTitle = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
         planDescription = EditPlanFragmentArgs.fromBundle(getArguments()).getDescription();
         exercises = databaseHelper.getPlanConfigFromDb(planTitle);
-        printExercises();
-
+//        printExercises();
         buildRecyclerView();
 
         return binding.getRoot();
@@ -147,7 +146,7 @@ public class EditPlanFragment extends Fragment {
     private void setSaveButton() {
         binding.saveEditButton.setOnClickListener(view -> {
             saveExercises();
-            printExercises();
+//            printExercises();
             createDialog(true);
         });
     }

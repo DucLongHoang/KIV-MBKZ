@@ -48,8 +48,7 @@ class StatsFragment : Fragment() {
          * @return A new instance of fragment StatsFragment.
          */
         @JvmStatic
-        fun newInstance() =
-            StatsFragment().apply { arguments = Bundle() }
+        fun newInstance() = StatsFragment().apply { arguments = Bundle() }
     }
 
     /**

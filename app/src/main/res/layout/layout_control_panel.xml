@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:layout_margin="6dp"
+    android:layout_margin="4dp"
     android:weightSum="9">
 
     <ImageButton

@@ -140,6 +140,17 @@ class PlansDatabaseHelper(
         return db.rawQuery(selectQuery, null)
     }
 
+    @SuppressLint("Range", "Recycle")
+    fun getRecordKgs(title: String): Int {
+        val db: SQLiteDatabase = this.readableDatabase
+        val c: Cursor = db.query(TABLE_EXERCISE, arrayOf(COL_EX_KGS), "${COL_EX_NAME}=?",
+            arrayOf(title), null, null, null)
+
+        if(c.moveToFirst()) return c.getInt(c.getColumnIndex(COL_EX_KGS))
+
+        return 0
+    }
+
     /**
      * Method updates [COL_EX_KGS] and [COL_DATE]
      * of table [TABLE_EXERCISE] in the database
@@ -247,7 +258,7 @@ class PlansDatabaseHelper(
     /**
      * Method deletes a plan config [title] from the DB
      */
-    private fun deletePlanConfigFromDb(title: String) {
+    fun deletePlanConfigFromDb(title: String) {
         val database: SQLiteDatabase = this.writableDatabase
         database.delete(TABLE_PLAN_CONFIG, "$COL_PLAN_TITLE=?", arrayOf(title))
     }

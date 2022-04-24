@@ -39,7 +39,6 @@ class PlansHolderFragment : Fragment() {
          * @return A new instance of fragment PlansHolderFragment.
          */
         @JvmStatic
-        fun newInstance() =
-            PlansHolderFragment().apply { arguments = Bundle() }
+        fun newInstance() = PlansHolderFragment().apply { arguments = Bundle() }
     }
 }

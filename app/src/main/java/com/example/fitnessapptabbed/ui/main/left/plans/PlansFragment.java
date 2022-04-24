@@ -62,7 +62,7 @@ public class PlansFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.addPlanFab.setOnClickListener(view1 -> createPlanDialog());
+        binding.addPlanFab.setOnClickListener(view1 -> showCreatePlanDialog());
     }
 
     @Override
@@ -84,13 +84,9 @@ public class PlansFragment extends Fragment {
             @Override
             public void onAddClick(int position) { }
             @Override
-            public void onItemClick(int position) {
-                navigateToEditPlan(position);
-            }
+            public void onItemClick(int position) { navigateToEditPlan(position); }
             @Override
-            public void onDeleteClick(int position) {
-                deletePlan(position);
-            }
+            public void onDeleteClick(int position) { showDeletePlanDialog(position); }
             @Override
             public void onEditClick(int position) {
                 editTitleAndDescription(position, "Changed " + position);
@@ -129,6 +125,7 @@ public class PlansFragment extends Fragment {
     private void deletePlan(int position) {
         TrainingPlan toDelete = trainingPlans.get(position);
         databaseHelper.deletePlanFromDb(toDelete);
+        databaseHelper.deletePlanConfigFromDb(toDelete.getTitle());
         trainingPlans.remove(position);
         adapter.notifyItemRemoved(position);
     }
@@ -144,9 +141,28 @@ public class PlansFragment extends Fragment {
     }
 
     /**
+     * Method shows AlertDialog with the option to delete a new TrainingPlan
+     * @param position of TrainingPlan to be deleted
+     */
+    private void showDeletePlanDialog(int position) {
+        // create Dialog
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        String title = trainingPlans.get(position).getTitle();
+        dialogBuilder.setTitle("Delete plan: " + title + " ?");
+
+        // setting options
+        dialogBuilder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+        dialogBuilder.setPositiveButton("Yes", (dialogInterface, i) -> deletePlan(position));
+
+        // show dialog
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
+    /**
      * Method shows AlertDialog with the option to create a new TrainingPlan
      */
-    private void createPlanDialog() {
+    private void showCreatePlanDialog() {
         // editable fields
         final EditText inputTitle = new EditText(getContext());
         final EditText inputDescription = new EditText(getContext());

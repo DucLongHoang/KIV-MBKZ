@@ -4,6 +4,8 @@
     <string name="tab_train">train</string>
     <string name="tab_stats">records</string>
     <string name="start">start</string>
+    <string name="end">end</string>
+    <string name="choose_plan_prompt"> --- Choose plan ---</string>
     <string name="stop">stop</string>
     <string name="reset">reset</string>
     <string name="cancel" tools:ignore="ButtonCase">cancel</string>
@@ -13,4 +15,8 @@
     <string name="night_mode">Night mode</string>
     <string name="kg">kg</string>
     <string name="input_weight">Input weight</string>
+    <string name="sets">sets:</string>
+    <string name="reps">reps:</string>
+    <string name="hyper_trophy">HT:</string>
+    <string name="personal_best">max:</string>
 </resources>
