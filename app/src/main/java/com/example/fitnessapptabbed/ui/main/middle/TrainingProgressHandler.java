@@ -9,7 +9,6 @@ import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.ui.main.left.edit.Exercise;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -24,12 +23,11 @@ public class TrainingProgressHandler {
     private static final int SET_VIB_DURATION = 100;
     private static final int EX_VIB_DURATION = 400;
 
+    private final TrainFragment fragment;
     private final PlansDatabaseHelper databaseHelper;
     private final RecordHandler recordHandler;
     private final Vibrator vibrator;
-    private final List<Integer> kgList;
     private final ListIterator<Exercise> exIterator;
-    private final ListIterator<Integer> kgIterator;
     private final Exercise firstExercise, lastExercise;
     private Exercise currExercise;
     private int setCounter;
@@ -44,12 +42,11 @@ public class TrainingProgressHandler {
      * @param exercisesList list of Exercises of TrainingPLan to display
      */
     public TrainingProgressHandler(TrainFragment fragment, List<Exercise> exercisesList) {
+        this.fragment = fragment;
         this.databaseHelper = new PlansDatabaseHelper(fragment.requireContext());
         this.recordHandler = new RecordHandler(fragment);
         this.vibrator = fragment.getVibrator();
-        this.kgList = new LinkedList<>();
         this.exIterator = exercisesList.listIterator();
-        this.kgIterator = kgList.listIterator();
         this.currExercise = exIterator.next();
         this.firstExercise = currExercise;
         // length - 2, because last exercise is empty exercise
@@ -77,9 +74,8 @@ public class TrainingProgressHandler {
         recordHandler.checkIfRecordBroken(currExercise.getName(), kg);
 
         int vibDuration = SET_VIB_DURATION;
-        kgList.add(kg);
-        setCounter++;
         ibBack.setEnabled(true);
+        setCounter++;
 
         // last set done, change exercise to next
         if(setCounter > currExercise.getSets()) {
@@ -87,6 +83,7 @@ public class TrainingProgressHandler {
             // if exercise is last, disable Next button
             if(!hasNextExercise()) ibNext.setEnabled(false);
         }
+
         vibrator.vibrate(vibDuration);
         displayInfo();
     }
@@ -97,7 +94,6 @@ public class TrainingProgressHandler {
     public void moveBack() {
         int vibDuration = SET_VIB_DURATION;
         setCounter--;
-        ibNext.setEnabled(true);
 
         // before 1st set, change exercise to previous
         if(setCounter <= 0) {
@@ -126,14 +122,8 @@ public class TrainingProgressHandler {
                 setCounter++;
                 return false;
             }
-            // handling case going back while on 'congratulations'
-            if(currExercise.equals(Exercise.congratulations())) {
-                System.out.println("curr: " + currExercise);
-                System.out.println("last: " + lastExercise);
-                currExercise = lastExercise;
-            }
-            else currExercise = exIterator.previous();
-
+            // normal behaviour
+            currExercise = exIterator.previous();
             setCounter = currExercise.getSets();
             return true;
         }
@@ -156,12 +146,11 @@ public class TrainingProgressHandler {
             }
             // handling going next on last exercise
             if(currExercise.equals(lastExercise)) {
-                System.out.println("LAST EXERCISE");
-                currExercise = Exercise.congratulations();
-                setCounter = 0;
+                setCounter--;
+                fragment.endTrainingDialog();
                 return false;
             }
-
+            // normal behaviour
             currExercise = exIterator.next();
             setCounter = 1;
             return true;
