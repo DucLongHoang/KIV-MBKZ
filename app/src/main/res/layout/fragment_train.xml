@@ -1,38 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context=".ui.main.middle.TrainFragment">
 
-    <Chronometer
-        android:id="@+id/chronometer"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/lin_layout_1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/choosePlanSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
+
+        <Button
+            android:id="@+id/startEndButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start"
+            android:visibility="invisible"
+            android:clickable="false"
+            android:layout_margin="8dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_layout_2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="startChronometer"
-        android:text="@string/start" />
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_below="@id/lin_layout_1">
 
-    <Button
-        android:id="@+id/stopButton"
-        android:layout_width="wrap_content"
+        <include layout="@layout/layout_current_exercise"
+            android:id="@+id/exerciseInfo" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_layout_3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="pauseChronometer"
-        android:text="@string/stop"/>
+        android:visibility="invisible"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true">
 
-    <Button
-        android:id="@+id/resetButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="resetChronometer"
-        android:text="@string/reset" />
+        <include layout="@layout/layout_control_panel" />
 
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

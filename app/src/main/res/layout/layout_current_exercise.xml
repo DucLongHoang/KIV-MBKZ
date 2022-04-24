@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textViewCurrEx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current exercise neam"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sets: "
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/textViewSetCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1/3"
+            android:textSize="20sp"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="reps: "
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/textViewRepCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="20sp"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="6dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ideal weight: "
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/textViewIdealWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100kg"
+            android:textSize="20sp"/>
+
+    </TableRow>
+
+
+</TableLayout>

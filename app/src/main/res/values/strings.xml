@@ -11,4 +11,6 @@
     <string name="backAgainToExit">Press back again to exit app</string>
     <string name="stayOnTabPlease">Please don\'t switch tabs before saving or you will lose all editing progress</string>
     <string name="night_mode">Night mode</string>
+    <string name="kg">kg</string>
+    <string name="input_weight">Input weight</string>
 </resources>
