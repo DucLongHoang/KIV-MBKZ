@@ -29,6 +29,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final String NULL_EXERCISE = "------------------------";
     private static final int SETS_RANGE = 6;
     private static final int REPS_RANGE = 30;
+    private static final int ALPHA_TRANSPARENT = 0;
+    private static final int ALPHA_OPAQUE = 255;
 
     private final List<Exercise> exercisesInPlan;
     private final List<String> allExercises;
@@ -67,6 +69,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Exercise currentEx = this.exercisesInPlan.get(position);
         if(currentEx.isNullExercise()) return;
 
+        // setting up view if exercise taken from database
         ExerciseViewHolder evh = (ExerciseViewHolder) holder;
         // index numbers need to change, allExercises missing NULL exercise
         // sets and reps starting from 1 but indexing from zero
@@ -89,6 +92,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * ExerciseViewHolder class - encapsulates Exercise data in a View
      */
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
+        public View itemView;
         public FloatingActionButton addFab, deleteFab;
         public Spinner exerciseSpinner, setsSpinner, repsSpinner;
         public LinearLayout layout;
@@ -101,6 +105,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public ExerciseViewHolder(@NonNull View itemView, final OnItemClickListener listener,
                                   final List<String> allExercises) {
             super(itemView);
+            this.itemView = itemView;
+
+            this.itemView.getBackground().setAlpha(ALPHA_TRANSPARENT);
             addFab = itemView.findViewById(R.id.addExerciseFab);
             deleteFab = itemView.findViewById(R.id.deleteExerciseFab);
             exerciseSpinner = itemView.findViewById(R.id.exerciseSpinner);
@@ -132,6 +139,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * upon addFab click
          */
         private void changeExerciseAdded() {
+            itemView.getBackground().setAlpha(ALPHA_OPAQUE);
             addFab.setClickable(false);
             addFab.setVisibility(View.INVISIBLE);
             layout.setClickable(true);
@@ -146,6 +154,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * is reusing ViewHolders and keeps their states
          */
         private void changeExerciseDeleted() {
+            itemView.getBackground().setAlpha(ALPHA_TRANSPARENT);
             addFab.setClickable(true);
             addFab.setVisibility(View.VISIBLE);
             layout.setClickable(false);

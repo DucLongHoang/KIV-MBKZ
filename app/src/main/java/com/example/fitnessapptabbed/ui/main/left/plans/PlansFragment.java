@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.databinding.FragmentPlansBinding;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
@@ -148,11 +149,12 @@ public class PlansFragment extends Fragment {
         // create Dialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         String title = trainingPlans.get(position).getTitle();
-        dialogBuilder.setTitle("Delete plan: " + title + " ?");
+        String msg = getString(R.string.delete_plan) + title + " ?";
+        dialogBuilder.setTitle(msg);
 
         // setting options
-        dialogBuilder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-        dialogBuilder.setPositiveButton("Yes", (dialogInterface, i) -> deletePlan(position));
+        dialogBuilder.setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel());
+        dialogBuilder.setPositiveButton(R.string.yes, (dialogInterface, i) -> deletePlan(position));
 
         // show dialog
         AlertDialog dialog = dialogBuilder.create();
@@ -166,8 +168,8 @@ public class PlansFragment extends Fragment {
         // editable fields
         final EditText inputTitle = new EditText(getContext());
         final EditText inputDescription = new EditText(getContext());
-        inputTitle.setHint("Title (mandatory)");
-        inputDescription.setHint("Description (optional)");
+        inputTitle.setHint(R.string.title_edit_text);
+        inputDescription.setHint(R.string.description_edit_text);
 
         // add layout for fields
         LinearLayout layout = new LinearLayout(getContext());
@@ -178,12 +180,12 @@ public class PlansFragment extends Fragment {
 
         // create Dialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        dialogBuilder.setTitle("Create a new training plan");
+        dialogBuilder.setTitle(getString(R.string.create_new_plan_msg));
         dialogBuilder.setView(layout);
 
         // setting options
-        dialogBuilder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
-        dialogBuilder.setPositiveButton("Create", (dialogInterface, i) ->
+        dialogBuilder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        dialogBuilder.setPositiveButton(R.string.create, (dialogInterface, i) ->
                 addPlan(new TrainingPlan(inputTitle.getText().toString(),
                 inputDescription.getText().toString())));
 

@@ -27,9 +27,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class EditPlanFragment extends Fragment {
-    private static final String CANCEL_CONFIRM = "Do you want to cancel editing?";
-    private static final String SAVE_CONFIRM = "Save training plan configuration?";
-
     private FragmentEditPlanBinding binding;
     private ExerciseAdapter adapter;
     private List<Exercise> exercises;
@@ -71,7 +68,7 @@ public class EditPlanFragment extends Fragment {
         setCancelButton();
         setSaveButton();
 
-        Snackbar.make(binding.getRoot(), R.string.stayOnTabPlease, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(binding.getRoot(), R.string.stay_on_tab_warning, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -182,15 +179,20 @@ public class EditPlanFragment extends Fragment {
      * @param save true to save plan config, false to cancel editing
      */
     private void createDialog(boolean save) {
-        String confirmation = save ? SAVE_CONFIRM : CANCEL_CONFIRM;
+        for(Exercise ex : exercises) {
+            System.out.println(ex);
+        }
+
+        String confirmation = save ?
+                getString(R.string.save_plan_prompt) : getString(R.string.cancel_editing_prompt);
 
         // create dialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setTitle(confirmation);
 
         // setting options
-        dialogBuilder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-        dialogBuilder.setPositiveButton("Yes", (dialogInterface, i) -> {
+        dialogBuilder.setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel());
+        dialogBuilder.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
             if(save) { savePlanConfig(exercises); }
             NavHostFragment.findNavController(EditPlanFragment.this)
                     .navigate(R.id.action_editPlan_to_plans); });

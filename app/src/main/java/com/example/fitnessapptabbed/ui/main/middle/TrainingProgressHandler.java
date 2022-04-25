@@ -2,6 +2,7 @@ package com.example.fitnessapptabbed.ui.main.middle;
 
 import android.annotation.SuppressLint;
 import android.os.Vibrator;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -19,12 +20,15 @@ import java.util.ListIterator;
  * @version 1.0
  */
 public class TrainingProgressHandler {
+    // Constants
     private static final double HYPER_TROPHY = 0.8;
     private static final int SET_VIB_DURATION = 100;
     private static final int EX_VIB_DURATION = 400;
 
+    // Variables
     private final TrainFragment fragment;
     private final PlansDatabaseHelper databaseHelper;
+    private final InputWeightHandler inputWeightHandler;
     private final RecordHandler recordHandler;
     private final Vibrator vibrator;
     private final ListIterator<Exercise> exIterator;
@@ -33,6 +37,7 @@ public class TrainingProgressHandler {
     private int setCounter;
     private boolean exMovingBackward, exMovingForward;
 
+    // View objects
     private final ImageButton ibNext, ibBack;
     private final TextView tvCurrEx, tvSets, tvReps, tvKgs, tvRecord;
 
@@ -63,28 +68,8 @@ public class TrainingProgressHandler {
         tvKgs = fragment.requireActivity().findViewById(R.id.textViewIdealWeight);
         tvRecord = fragment.requireActivity().findViewById(R.id.textViewRecord);
 
-        displayInfo();
-    }
-
-    /**
-     * Method move to the next set / exercise
-     * @param kg weight of the just done exercise
-     */
-    public void moveNext(int kg) {
-        recordHandler.checkIfRecordBroken(currExercise.getName(), kg);
-
-        int vibDuration = SET_VIB_DURATION;
-        ibBack.setEnabled(true);
-        setCounter++;
-
-        // last set done, change exercise to next
-        if(setCounter > currExercise.getSets()) {
-            vibDuration = EX_VIB_DURATION;
-            // if exercise is last, disable Next button
-            if(!hasNextExercise()) ibNext.setEnabled(false);
-        }
-
-        vibrator.vibrate(vibDuration);
+        EditText editTextKg = fragment.requireActivity().findViewById(R.id.editTextInputWeight);
+        this.inputWeightHandler = new InputWeightHandler(editTextKg);
         displayInfo();
     }
 
@@ -103,6 +88,33 @@ public class TrainingProgressHandler {
         }
         vibrator.vibrate(vibDuration);
         displayInfo();
+        inputWeightHandler.displayPreviousWeight();
+    }
+
+    /**
+     * Method move to the next set / exercise
+     * @param inputKgs weight of the just done exercise
+     */
+    public void moveNext(int inputKgs) {
+        boolean atLastExercise = false;
+        recordHandler.checkIfRecordBroken(currExercise.getName(), inputKgs);
+
+        int vibDuration = SET_VIB_DURATION;
+        ibBack.setEnabled(true);
+        setCounter++;
+
+        // last set done, change exercise to next
+        if(setCounter > currExercise.getSets()) {
+            vibDuration = EX_VIB_DURATION;
+            // if exercise is last, disable Next button
+            if(!hasNextExercise()) {
+
+                ibNext.setEnabled(false);
+            }
+        }
+        vibrator.vibrate(vibDuration);
+        displayInfo();
+        inputWeightHandler.displayNextWeight(inputKgs);
     }
 
     /**
@@ -163,13 +175,12 @@ public class TrainingProgressHandler {
      * Method displays current exercise, set and rep count
      * as well as ideal weight for hypertrophy
      */
-    @SuppressLint({"DefaultLocale", "SetTextI18n"})
+    @SuppressLint("SetTextI18n")
     private void displayInfo() {
         int currRecord = databaseHelper.getRecordKgs(currExercise.getName());
-//        System.out.println("Current record = " + currRecord);
         tvCurrEx.setText(currExercise.getName().toUpperCase());
-        tvSets.setText(String.format("%d/%d", setCounter, currExercise.getSets()));
-        tvReps.setText(String.format("%d", currExercise.getReps()));
+        tvSets.setText(setCounter + "/" + currExercise.getSets());
+        tvReps.setText("" + currExercise.getReps());
         tvKgs.setText(round(currRecord * HYPER_TROPHY) + " kg");
         tvRecord.setText(currRecord + " kg");
     }

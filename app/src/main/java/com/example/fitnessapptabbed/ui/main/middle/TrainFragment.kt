@@ -9,11 +9,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageButton
+import android.widget.*
 import androidx.fragment.app.Fragment
+import com.example.fitnessapptabbed.MainActivity
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentTrainBinding
@@ -37,9 +35,6 @@ class TrainFragment: Fragment() {
     private lateinit var chosenPlan: TrainingPlan
     private lateinit var exercisesInPlan: MutableList<Exercise>
     private lateinit var handler: TrainingProgressHandler
-    private lateinit var kgList: MutableList<Int>
-    private lateinit var kgIterator: ListIterator<Int>
-    private var kgListIndex: Int = 0
     private var trainingRunning: Boolean = false
 
     override fun onCreateView(
@@ -51,9 +46,6 @@ class TrainFragment: Fragment() {
         vibrator = requireActivity().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         databaseHelper = PlansDatabaseHelper(requireContext())
         allPlans = databaseHelper.getPlansFromDb()
-        kgList = ArrayList()
-        kgIterator = kgList.listIterator()
-        kgListIndex = 0
 
         return binding.root
     }
@@ -91,34 +83,8 @@ class TrainFragment: Fragment() {
             }
         })
 
-        ibBack.setOnClickListener {
-            handler.moveBack()
-            kgListIndex--
-            println("index: $kgListIndex")
-
-            if(kgList.getOrNull(kgListIndex) != null) {
-                editTextInput.setText(kgList[kgListIndex].toString())
-            }
-            else {
-                kgListIndex++
-            }
-        }
-
-        ibNext.setOnClickListener {
-            handler.moveNext(kgInput)
-            kgListIndex++
-            println("index: $kgListIndex")
-
-            if(kgList.getOrNull(kgListIndex) != null) {
-                editTextInput.setText(kgList[kgListIndex].toString())
-            }
-            else {
-                if(kgListIndex > kgList.size) {
-                    kgList.add(kgInput)
-                }
-                editTextInput.text.clear()
-            }
-        }
+        ibBack.setOnClickListener { handler.moveBack() }
+        ibNext.setOnClickListener { handler.moveNext(kgInput) }
     }
 
     /**
@@ -127,16 +93,23 @@ class TrainFragment: Fragment() {
     private fun setStartEndButton() {
         startEndButton.setOnClickListener {
             if(!trainingRunning) {      // start -> end
-                trainingRunning = true
-                startEndButton.text = getString(R.string.end)
-                choosePlanSpinner.isEnabled = false
-                imButtonBack.isEnabled = false
-                imButtonNext.isEnabled = false
                 exercisesInPlan = databaseHelper.getPlanConfigFromDb(chosenPlan.Title)
-                handler = TrainingProgressHandler(this, exercisesInPlan)
-                vibrator.vibrate(VIB_DURATION)
-                lin_layout_2.visibility = View.VISIBLE
-                lin_layout_3.visibility = View.VISIBLE
+                // every TrainingPlan has an empty exercise
+                if(exercisesInPlan.size > 1) {
+                    trainingRunning = true
+                    startEndButton.text = getString(R.string.end)
+                    choosePlanSpinner.isEnabled = false
+                    imButtonBack.isEnabled = false
+                    imButtonNext.isEnabled = false
+                    handler = TrainingProgressHandler(this, exercisesInPlan)
+                    vibrator.vibrate(VIB_DURATION)
+                    lin_layout_2.visibility = View.VISIBLE
+                    lin_layout_3.visibility = View.VISIBLE
+                    (activity as MainActivity).enableSwitch(false)
+                }
+                else Toast.makeText(context,
+                    R.string.empty_plan_msg,
+                    Toast.LENGTH_SHORT).show()
             }
             else {      // end -> start
                 endTrainingDialog()
@@ -150,22 +123,20 @@ class TrainFragment: Fragment() {
     fun endTrainingDialog() {
         // create dialog
         val dialogBuilder = AlertDialog.Builder(context)
-        dialogBuilder.setTitle("Do you want to end the training?")
+        dialogBuilder.setTitle(R.string.end_training_prompt)
 
         // setting options
-        dialogBuilder.setNegativeButton("No") { dialogInterface, _: Int -> dialogInterface.cancel() }
-        dialogBuilder.setPositiveButton("Yes") { _, _: Int ->
+        dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
+        dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int ->
             trainingRunning = false
             startEndButton.text = getString(R.string.start)
             choosePlanSpinner.isEnabled = true
             choosePlanSpinner.setSelection(0)
-            imButtonBack.isEnabled = false
+            (activity as MainActivity).enableSwitch(true)
             vibrator.vibrate(VIB_DURATION)
             lin_layout_2.visibility = View.INVISIBLE
             lin_layout_3.visibility = View.INVISIBLE
             editTextInputWeight.text.clear()
-            kgList.clear()
-            kgListIndex = 0
         }
 
         // show dialog
@@ -193,8 +164,7 @@ class TrainFragment: Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 choosePlanSpinner.setSelection(position)
-                if(position == 0) startEndButton.visibility = View.INVISIBLE
-
+                if(position == 0) { startEndButton.visibility = View.INVISIBLE }
                 else {
                     startEndButton.visibility = View.VISIBLE
                     chosenPlan = allPlans[position - 1] // -1 because of 'choosePlan' string

@@ -6,12 +6,23 @@
     <string name="start">start</string>
     <string name="end">end</string>
     <string name="choose_plan_prompt"> --- Choose plan ---</string>
+    <string name="end_training_prompt">Do you want to end the training?</string>
+    <string name="cancel_editing_prompt">Do you want to cancel editing?</string>
+    <string name="save_plan_prompt">Save training plan configuration?</string>
+    <string name="delete_plan">Delete plan:&#160;</string>
     <string name="stop">stop</string>
     <string name="reset">reset</string>
     <string name="cancel" tools:ignore="ButtonCase">cancel</string>
+    <string name="create">create</string>
     <string name="save">save</string>
-    <string name="backAgainToExit">Press back again to exit app</string>
-    <string name="stayOnTabPlease">Please don\'t switch tabs before saving or you will lose all editing progress</string>
+    <string name="no">no</string>
+    <string name="yes">yes</string>
+    <string name="title_edit_text">Title (mandatory)</string>
+    <string name="description_edit_text">Description (optional)</string>
+    <string name="empty_plan_msg">This training plan is empty!</string>
+    <string name="create_new_plan_msg">Create a new training plan</string>
+    <string name="back_again_to_exit_msg">Press back again to exit app</string>
+    <string name="stay_on_tab_warning">Please don\'t switch tabs before saving or you will lose all editing progress</string>
     <string name="night_mode">Night mode</string>
     <string name="kg">kg</string>
     <string name="input_weight">Input weight</string>
