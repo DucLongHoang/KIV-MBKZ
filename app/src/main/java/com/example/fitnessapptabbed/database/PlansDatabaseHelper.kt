@@ -37,10 +37,11 @@ class PlansDatabaseHelper(
     }
     // Exercise names
     private val exercises: Array<String> = arrayOf(
-        "bench", "deadlift", "deadlift - sumo", "squat", "biceps curls",
-        "hammer curls", "triceps extensions", "triceps kickbacks", "shoulder front raises",
-        "shoulder side raises", "chest flies", "bent-over rows", "hamstring curls",
-        "bulgarian split squats", "lunges", "calf raises", "ab exercise"
+        "bench press", "deadlift", "deadlift (sumo)", "squat", "bicep curl", "hammer curl",
+        "tricep extension", "tricep kickback", "tricep pull down", "shoulder front raise",
+        "shoulder side raise", "shoulder pulls", "shoulder press", "dumbbell chest press", "chest fly",
+        "barbell row", "dumbbell row", "hamstring curl", "bulgarian split squat", "lunge",
+        "calf raise", "push up", "pull up", "chin up", "dip", "pistol squat", "abs exercise"
     )
 
     override fun onCreate(db: SQLiteDatabase) {

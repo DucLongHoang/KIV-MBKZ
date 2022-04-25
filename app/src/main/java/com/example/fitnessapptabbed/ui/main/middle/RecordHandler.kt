@@ -13,6 +13,13 @@ import java.util.*
 class RecordHandler(val fragment: TrainFragment) {
     private val databaseHelper = PlansDatabaseHelper(fragment.requireContext())
     private val listOfRecords: MutableList<Statistic> = databaseHelper.getAllExercisesFromDb()
+    private val exShortcuts: Array<String> = arrayOf(
+        "bench press", "deadlift", "dl - sumo", "squat", "bicep curl", "hamm. curl",
+        "tricep ext", "tricep kb", "tricep pd", "front raise", "side raise",
+        "shldr pulls", "shldr press", "db chest p", "chest fly", "bb row",
+        "db row", "hamst. curl", "bulg. s. s", "lunge", "calf raise", "push up",
+        "pull up", "chin up", "dip", "pis. squat", "abs ex"
+    )
 
     /**
      * Method checks if a record of [exName] with was broken by weight [kgs]
@@ -28,7 +35,7 @@ class RecordHandler(val fragment: TrainFragment) {
 
                 listOfRecords[i] = Statistic(exName, kgs, dateInString)
                 updateRecordInDb(listOfRecords[i])
-                makeNewRecordToast(exName, item.recordKgs, kgs)
+                makeNewRecordToast(exShortcuts[i], item.recordKgs, kgs)
                 return
             }
         }
@@ -39,7 +46,7 @@ class RecordHandler(val fragment: TrainFragment) {
      */
     private fun makeNewRecordToast(exName: String, recordKgs: Int, kgs: Int) {
         val trimmedName = if(exName.length <=10) exName else exName.substring(0, 11)
-        val message = "New personal best!!! \n$trimmedName: $recordKgs kg --> $kgs kg"
+        val message = "New personal best!!! \n$trimmedName: $recordKgs kg -> $kgs kg"
         Toast.makeText(fragment.context, message.uppercase(), Toast.LENGTH_LONG).show()
     }
 
