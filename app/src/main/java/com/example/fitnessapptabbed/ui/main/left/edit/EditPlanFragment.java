@@ -67,7 +67,9 @@ public class EditPlanFragment extends Fragment {
         setCancelButton();
         setSaveButton();
 
-        Snackbar.make(binding.getRoot(), R.string.stay_on_tab_warning, Snackbar.LENGTH_SHORT).show();
+        Snackbar sb = Snackbar.make(binding.getRoot(), R.string.stay_on_tab_warning, Snackbar.LENGTH_SHORT);
+        sb.setAction(R.string.dismiss, view1 -> sb.dismiss());
+        sb.show();
     }
 
     @Override
