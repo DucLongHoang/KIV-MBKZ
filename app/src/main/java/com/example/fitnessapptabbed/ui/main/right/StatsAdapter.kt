@@ -1,13 +1,19 @@
 package com.example.fitnessapptabbed.ui.main.right
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fitnessapptabbed.MainActivity
 import com.example.fitnessapptabbed.R
+import com.example.fitnessapptabbed.database.PlansDatabaseHelper
+import com.example.fitnessapptabbed.ui.main.middle.TrainFragment
+import kotlinx.android.synthetic.main.fragment_train.*
 import kotlinx.android.synthetic.main.item_statistic.view.*
+import kotlinx.android.synthetic.main.layout_control_panel.*
 
 class StatsAdapter(private val statistics: MutableList<Statistic>)
     : RecyclerView.Adapter<StatsAdapter.StatisticViewHolder>() {
@@ -30,7 +36,42 @@ class StatsAdapter(private val statistics: MutableList<Statistic>)
 
     class StatisticViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val exerciseName: TextView = itemView.textViewExName
-        val recordKgs: TextView = itemView.textViewKgs
-        val date: TextView = itemView.textViewDate
+        var recordKgs: TextView = itemView.textViewKgs
+        var date: TextView = itemView.textViewDate
+
+        init {
+            // onLongClickListener needs to return a boolean, dunno why - StackOverflow
+            itemView.setOnLongClickListener { nullifyRecordDialog(); true }
+        }
+
+        /**
+         * Method displays an [AlertDialog] to confirm record nullification
+         */
+        private fun nullifyRecordDialog() {
+            // create dialog
+            val dialogBuilder = AlertDialog.Builder(itemView.context)
+            dialogBuilder.setTitle(R.string.nullify_record_prompt)
+
+            // setting options
+            dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
+            dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int ->
+                nullifyRecord()
+                date.setText(R.string.default_date)
+                recordKgs.setText(R.string.default_kg)
+            }
+
+            // show dialog
+            val dialog = dialogBuilder.create()
+            dialog.show()
+        }
+
+        /**
+         * Method nullifies record in the database
+         */
+        private fun nullifyRecord() {
+            val databaseHelper = PlansDatabaseHelper(itemView.context)
+            databaseHelper.updateRecord(Statistic(exerciseName.text.toString()))
+            databaseHelper.close()
+        }
     }
 }

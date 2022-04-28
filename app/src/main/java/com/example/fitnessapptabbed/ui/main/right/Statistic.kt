@@ -14,4 +14,7 @@ data class Statistic(
 ) {
     // empty secondary constructor with default values
     constructor() : this("", 0, "dd.MM.yyyy")
+    // constructor to nullify record in dataabse
+    constructor(exerciseName: String) :
+            this(exerciseName, 0, "dd.MM.yyyy")
 }

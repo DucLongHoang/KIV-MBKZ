@@ -8,6 +8,7 @@
     <string name="choose_plan_prompt"> --- Choose plan ---</string>
     <string name="end_training_prompt">Do you want to end the training?</string>
     <string name="cancel_editing_prompt">Do you want to cancel editing?</string>
+    <string name="nullify_record_prompt">Do you want to nullify the record?</string>
     <string name="save_plan_prompt">Save training plan configuration?</string>
     <string name="delete_plan">Delete plan:&#160;</string>
     <string name="stop">stop</string>
@@ -25,6 +26,8 @@
     <string name="stay_on_tab_warning">Please don\'t switch tabs before saving or you will lose all editing progress</string>
     <string name="night_mode">Night mode</string>
     <string name="kg">kg</string>
+    <string name="default_kg">0 kg</string>
+    <string name="default_date">dd.MM.yyyy</string>
     <string name="input_weight">Input weight</string>
     <string name="sets">sets:</string>
     <string name="reps">reps:</string>

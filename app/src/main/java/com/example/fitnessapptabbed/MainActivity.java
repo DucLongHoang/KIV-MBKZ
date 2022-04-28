@@ -1,6 +1,6 @@
 package com.example.fitnessapptabbed;
 
-import android.content.res.Configuration;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -16,9 +16,9 @@ import com.google.android.material.tabs.TabLayout;
 public class MainActivity extends AppCompatActivity {
     private static final long TWO_SECONDS = 2000;
 
+    private ActivityMainBinding binding;
     private SwitchCompat modeSwitch;
     private long backPressedTime;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +56,27 @@ public class MainActivity extends AppCompatActivity {
      * Method sets up night mode switch
      */
     private void setNightModeSwitch() {
+        // get saved mode from preferences, if not present use default night mode
+        SharedPreferences sharedPref = getSharedPreferences("my_preferences", MODE_PRIVATE);
+        int defaultMode = AppCompatDelegate.MODE_NIGHT_YES;
+        int savedMode = sharedPref.getInt("MODE", defaultMode);
+
         // set initial switch position
-        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
-            case Configuration.UI_MODE_NIGHT_YES: { modeSwitch.setChecked(true); break; }
-            case Configuration.UI_MODE_NIGHT_NO: { modeSwitch.setChecked(false); break; }
+        switch (savedMode) {
+            case AppCompatDelegate.MODE_NIGHT_YES: { modeSwitch.setChecked(true); break; }
+            case AppCompatDelegate.MODE_NIGHT_NO: { modeSwitch.setChecked(false); break; }
         }
+
+        // set initial mode
+        AppCompatDelegate.setDefaultNightMode(savedMode);
 
         // set switch check listener
         modeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             int mode = (isChecked) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
             AppCompatDelegate.setDefaultNightMode(mode);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("MODE", mode);
+            editor.apply();
         });
     }
 
