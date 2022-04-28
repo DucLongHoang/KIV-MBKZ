@@ -85,11 +85,12 @@ class PlansDatabaseHelper(
      * TODO - redo database layout
      */
     private fun initExercisesInDb(db: SQLiteDatabase) {
+        val emptyExercise = Statistic()
         val contentValues = ContentValues()
         for (exercise in exercises) {
             contentValues.put(COL_EX_NAME, exercise)
-            contentValues.put(COL_EX_KGS, 0)
-            contentValues.put(COL_DATE, "29.02.2020")
+            contentValues.put(COL_EX_KGS, emptyExercise.recordKgs)
+            contentValues.put(COL_DATE, emptyExercise.dateOfRecord)
             db.insert(TABLE_EXERCISE, null, contentValues)
         }
     }

@@ -13,5 +13,5 @@ data class Statistic(
     val dateOfRecord: String
 ) {
     // empty secondary constructor with default values
-    constructor() : this("", 0, "")
+    constructor() : this("", 0, "dd.MM.yyyy")
 }

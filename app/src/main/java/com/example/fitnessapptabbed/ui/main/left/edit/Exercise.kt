@@ -20,12 +20,13 @@ data class Exercise (
      * Returns [Boolean] if the exercise is valid or not
      */
     fun isNullExercise(): Boolean {
-        return (this == Exercise()) ||
-                (this.name == ExerciseAdapter.NULL_EXERCISE)
+        return this == nullExercise
     }
 
     companion object {
         @JvmStatic
         fun congratulations() = Exercise("Congratulations", 0, 0, 0)
+        @JvmStatic
+        val nullExercise = Exercise()
     }
 }

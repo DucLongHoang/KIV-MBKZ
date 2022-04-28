@@ -26,7 +26,6 @@ import java.util.List;
  * @version 1.0
  */
 public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final String NULL_EXERCISE = "------------------------";
     private static final int SETS_RANGE = 6;
     private static final int REPS_RANGE = 30;
     private static final int ALPHA_TRANSPARENT = 0;
