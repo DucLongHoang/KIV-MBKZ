@@ -107,9 +107,12 @@ class TrainFragment: Fragment() {
                     lin_layout_3.visibility = View.VISIBLE
                     (activity as MainActivity).enableSwitch(false)
                 }
-                else Toast.makeText(context,
-                    R.string.empty_plan_msg,
-                    Toast.LENGTH_SHORT).show()
+                else {
+                    vibrator.vibrate(VIB_DURATION)
+                    Toast.makeText(context,
+                        R.string.empty_plan_msg,
+                        Toast.LENGTH_SHORT).show()
+                }
             }
             else {      // end -> start
                 endTrainingDialog()

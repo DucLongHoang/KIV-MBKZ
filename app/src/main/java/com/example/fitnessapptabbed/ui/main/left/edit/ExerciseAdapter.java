@@ -72,12 +72,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         // setting up view if exercise taken from database
         ExerciseViewHolder evh = (ExerciseViewHolder) holder;
         // index numbers need to change, allExercises missing NULL exercise
+            // changed so that at always one exercise selected
         // sets and reps starting from 1 but indexing from zero
         int nameIndex = allExercises.indexOf(currentEx.getName());
         int setsIndex = exercisesInPlan.get(position).getSets();
         int repsIndex = exercisesInPlan.get(position).getReps();
 
-        evh.exerciseSpinner.setSelection(nameIndex + 1);
+        evh.exerciseSpinner.setSelection(nameIndex);
         evh.setsSpinner.setSelection(setsIndex - 1);
         evh.repsSpinner.setSelection(repsIndex - 1);
         evh.changeExerciseAdded();
@@ -138,7 +139,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * Method changes the appearance of the add Exercise item
          * upon addFab click
          */
-        private void changeExerciseAdded() {
+        public void changeExerciseAdded() {
             itemView.getBackground().setAlpha(ALPHA_OPAQUE);
             addFab.setClickable(false);
             addFab.setVisibility(View.INVISIBLE);
@@ -153,7 +154,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * Important method, because the Recycler View
          * is reusing ViewHolders and keeps their states
          */
-        private void changeExerciseDeleted() {
+        public void changeExerciseDeleted() {
             itemView.getBackground().setAlpha(ALPHA_TRANSPARENT);
             addFab.setClickable(true);
             addFab.setVisibility(View.VISIBLE);
@@ -199,13 +200,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @param allExercises List of all pre-defined exercises
          */
         private void setExerciseSpinner(View itemView, List<String> allExercises) {
-            List<String> allPlusNullExercise = new ArrayList<>();
-            allPlusNullExercise.add(NULL_EXERCISE);
-            allPlusNullExercise.addAll(allExercises);
+//            List<String> allPlusNullExercise = new ArrayList<>();
+//            allPlusNullExercise.add(NULL_EXERCISE);
+//            allPlusNullExercise.addAll(allExercises);
 
             // set up adapter for exercises spinner
             ArrayAdapter<String> adapter = new ArrayAdapter<>(itemView.getContext(),
-                    android.R.layout.simple_spinner_dropdown_item, allPlusNullExercise);
+                    android.R.layout.simple_spinner_dropdown_item, allExercises);
             exerciseSpinner.setAdapter(adapter);
 
             // set listener for spinner

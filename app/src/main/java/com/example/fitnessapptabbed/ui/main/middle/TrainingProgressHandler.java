@@ -96,7 +96,6 @@ public class TrainingProgressHandler {
      * @param inputKgs weight of the just done exercise
      */
     public void moveNext(int inputKgs) {
-        boolean atLastExercise = false;
         recordHandler.checkIfRecordBroken(currExercise.getName(), inputKgs);
 
         int vibDuration = SET_VIB_DURATION;
@@ -107,10 +106,7 @@ public class TrainingProgressHandler {
         if(setCounter > currExercise.getSets()) {
             vibDuration = EX_VIB_DURATION;
             // if exercise is last, disable Next button
-            if(!hasNextExercise()) {
-
-                ibNext.setEnabled(false);
-            }
+            if(!hasNextExercise()) ibNext.setEnabled(false);
         }
         vibrator.vibrate(vibDuration);
         displayInfo();
@@ -160,6 +156,7 @@ public class TrainingProgressHandler {
             if(currExercise.equals(lastExercise)) {
                 setCounter--;
                 fragment.endTrainingDialog();
+                inputWeightHandler.decrementKgIndex();
                 return false;
             }
             // normal behaviour

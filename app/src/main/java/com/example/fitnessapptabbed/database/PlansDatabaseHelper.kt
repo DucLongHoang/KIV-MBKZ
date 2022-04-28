@@ -195,7 +195,9 @@ class PlansDatabaseHelper(
         return db.rawQuery(selectQuery, null)
     }
 
-    // I need to add the first dummy Exercise so that the Recycler View works
+    /**
+     * Method retrieves Exercises of a TrainingPlan from the database
+     */
     @SuppressLint("Range")
     fun getPlanConfigFromDb(planTitle: String): MutableList<Exercise> {
         val result: MutableList<Exercise> = ArrayList()
@@ -211,6 +213,7 @@ class PlansDatabaseHelper(
             } while (c.moveToNext())
         }
 
+        // add empty first Exercise so that the Recycler View show '+' button
         result.add(Exercise())
 
         return result

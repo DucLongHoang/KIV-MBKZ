@@ -55,7 +55,6 @@ public class EditPlanFragment extends Fragment {
         planTitle = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
         planDescription = EditPlanFragmentArgs.fromBundle(getArguments()).getDescription();
         exercises = databaseHelper.getPlanConfigFromDb(planTitle);
-//        printExercises();
         buildRecyclerView();
 
         return binding.getRoot();
@@ -68,7 +67,7 @@ public class EditPlanFragment extends Fragment {
         setCancelButton();
         setSaveButton();
 
-        Snackbar.make(binding.getRoot(), R.string.stay_on_tab_warning, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(binding.getRoot(), R.string.stay_on_tab_warning, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -143,11 +142,13 @@ public class EditPlanFragment extends Fragment {
     private void setSaveButton() {
         binding.saveEditButton.setOnClickListener(view -> {
             saveExercises();
-//            printExercises();
             createDialog(true);
         });
     }
 
+    /**
+     * Method prints all exercises except the last NULL exercise
+     */
     private void printExercises() {
         for(int i = 0; i < exercises.size() - 1; i++)
             System.out.println(exercises.get(i));
@@ -167,9 +168,11 @@ public class EditPlanFragment extends Fragment {
             v = rv.getChildAt(i);
             evh = (ExerciseAdapter.ExerciseViewHolder) rv.getChildViewHolder(v);
             exercise = exercises.get(i);
+
+            // setting exercise from ViewHolder
             exercise.setName(evh.exerciseSpinner.getSelectedItem().toString());
-            exercise.setSets((int)evh.setsSpinner.getSelectedItem());
-            exercise.setReps((int)evh.repsSpinner.getSelectedItem());
+            exercise.setSets((int) evh.setsSpinner.getSelectedItem());
+            exercise.setReps((int) evh.repsSpinner.getSelectedItem());
         }
     }
 
