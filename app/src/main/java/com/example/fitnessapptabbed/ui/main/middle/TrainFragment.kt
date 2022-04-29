@@ -3,12 +3,14 @@ package com.example.fitnessapptabbed.ui.main.middle
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.os.SystemClock
 import android.os.Vibrator
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.fitnessapptabbed.MainActivity
@@ -37,6 +39,10 @@ class TrainFragment: Fragment() {
     private lateinit var handler: TrainingProgressHandler
     private var trainingRunning: Boolean = false
 
+    private lateinit var chronometer: Chronometer
+    private var running: Boolean = false
+    private var pauseOffset: Long = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +58,7 @@ class TrainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        chronometer = requireActivity().findViewById(R.id.chronometer)
         setSpinner()
         setStartEndButton()
         setControlPanel()
@@ -106,6 +113,8 @@ class TrainFragment: Fragment() {
                     lin_layout_2.visibility = View.VISIBLE
                     lin_layout_3.visibility = View.VISIBLE
                     (activity as MainActivity).enableSwitch(false)
+                    (activity as MainActivity).window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    startChronometer()
                 }
                 else {
                     vibrator.vibrate(VIB_DURATION)
@@ -140,6 +149,8 @@ class TrainFragment: Fragment() {
             lin_layout_2.visibility = View.INVISIBLE
             lin_layout_3.visibility = View.INVISIBLE
             editTextInputWeight.text.clear()
+            (activity as MainActivity).window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            resetChronometer()
         }
 
         // show dialog
@@ -167,13 +178,49 @@ class TrainFragment: Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 choosePlanSpinner.setSelection(position)
-                if(position == 0) { startEndButton.visibility = View.INVISIBLE }
+                if(position == 0) {
+                    startEndButton.visibility = View.INVISIBLE
+                    chronometer.visibility = View.INVISIBLE
+                }
                 else {
                     startEndButton.visibility = View.VISIBLE
+                    chronometer.visibility = View.VISIBLE
                     chosenPlan = allPlans[position - 1] // -1 because of 'choosePlan' string
                 }
             }
         }
+    }
+
+    /**
+     * Method starts the [chronometer] count
+     */
+    private fun startChronometer() {
+        if(!running) {
+            chronometer.base = SystemClock.elapsedRealtime() - pauseOffset
+            chronometer.start()
+            running = true
+        }
+    }
+
+    /**
+     * Method stops the [chronometer] count
+     * app does not support pausing, but this is used in [resetChronometer]
+     */
+    private fun stopChronometer() {
+        if(running) {
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.base
+            chronometer.stop()
+            running = false
+        }
+    }
+
+    /**
+     * Method resets the [chronometer] to zero
+     */
+    private fun resetChronometer() {
+        chronometer.base = SystemClock.elapsedRealtime()
+        pauseOffset = 0
+        stopChronometer()
     }
 
     companion object {
@@ -185,6 +232,7 @@ class TrainFragment: Fragment() {
          */
         @JvmStatic
         fun newInstance() = TrainFragment().apply { arguments = Bundle() }
+        /** Vibration duration - 0.5 sec */
         private const val VIB_DURATION: Long = 500
     }
 }

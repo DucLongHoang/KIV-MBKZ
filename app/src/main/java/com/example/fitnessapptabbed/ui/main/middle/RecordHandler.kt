@@ -16,7 +16,7 @@ class RecordHandler(val fragment: TrainFragment) {
     private val exShortcuts: Array<String> = arrayOf(
         "bench press", "deadlift", "dl - sumo", "squat", "bicep curl", "hamm. curl",
         "tricep ext", "tricep kb", "tricep pd", "front raise", "side raise",
-        "shldr pulls", "shldr press", "db chest p", "chest fly", "bb row",
+        "r. d. fly", "bb oh press", "db sh press", "db chest p", "chest fly", "bb row",
         "db row", "hamst. curl", "bulg. s. s", "lunge", "calf raise", "push up",
         "pull up", "chin up", "dip", "pis. squat", "abs ex"
     )

@@ -16,18 +16,33 @@
             android:id="@+id/choosePlanSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
-        <Button
-            android:id="@+id/startEndButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start"
-            android:visibility="invisible"
-            android:clickable="false"
-            android:layout_margin="8dp"/>
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:gravity="center">
+
+            <Chronometer
+                android:id="@+id/chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:textSize="35sp" />
+
+            <Button
+                android:id="@+id/startEndButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start"
+                android:visibility="invisible"
+                android:layout_margin="6dp"/>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
