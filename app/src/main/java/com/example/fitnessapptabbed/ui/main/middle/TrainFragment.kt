@@ -39,7 +39,6 @@ class TrainFragment: Fragment() {
     private lateinit var handler: TrainingProgressHandler
     private var trainingRunning: Boolean = false
 
-    private lateinit var chronometer: Chronometer
     private var running: Boolean = false
     private var pauseOffset: Long = 0
 
@@ -58,7 +57,6 @@ class TrainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        chronometer = requireActivity().findViewById(R.id.chronometer)
         setSpinner()
         setStartEndButton()
         setControlPanel()
@@ -72,26 +70,25 @@ class TrainFragment: Fragment() {
      */
     private fun setControlPanel() {
         // init views and values
-        val ibNext: ImageButton = requireActivity().findViewById(R.id.imButtonNext)
-        val ibBack: ImageButton = requireActivity().findViewById(R.id.imButtonBack)
-        val editTextInput: EditText = requireActivity().findViewById(R.id.editTextInputWeight)
         var kgInput = 0
 
         // set up listener for editText field
-        editTextInput.addTextChangedListener(object : TextWatcher {
+        editTextInputWeight.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(input: CharSequence?, start: Int, before: Int, count: Int) {
-                if(input.toString().isEmpty()) { ibNext.isEnabled = false }
+                if(input.toString().isEmpty()) {
+                    imButtonNext.isEnabled = false
+                }
                 else {
                     kgInput = input.toString().toInt()
-                    ibNext.isEnabled = true
+                    imButtonNext.isEnabled = true
                 }
             }
         })
 
-        ibBack.setOnClickListener { handler.moveBack() }
-        ibNext.setOnClickListener { handler.moveNext(kgInput) }
+        imButtonBack.setOnClickListener { handler.moveBack() }
+        imButtonNext.setOnClickListener { handler.moveNext(kgInput) }
     }
 
     /**
@@ -179,8 +176,8 @@ class TrainFragment: Fragment() {
 
                 choosePlanSpinner.setSelection(position)
                 if(position == 0) {
-                    startEndButton.visibility = View.INVISIBLE
-                    chronometer.visibility = View.INVISIBLE
+                    startEndButton.visibility = View.GONE
+                    chronometer.visibility = View.GONE
                 }
                 else {
                     startEndButton.visibility = View.VISIBLE
