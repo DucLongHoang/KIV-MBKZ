@@ -10,7 +10,7 @@ import android.provider.BaseColumns
 import com.example.fitnessapptabbed.ui.main.left.edit.Exercise
 import com.example.fitnessapptabbed.ui.main.left.plans.TrainingPlan
 import com.example.fitnessapptabbed.ui.main.right.Statistic
-import com.example.fitnessapptabbed.util.ExerciseUtil
+import com.example.fitnessapptabbed.util.Exercises
 
 /**
  * [PlansDatabaseHelper] class - helps with all database related stuff
@@ -37,7 +37,7 @@ class PlansDatabaseHelper(
         const val COL_DATE: String = "date"
     }
     // Exercise names
-    private val exercises: Array<String> = ExerciseUtil.getAllExerciseNames()
+    private val exercises: Array<String> = Exercises.getAllExerciseNames()
 
 
     override fun onCreate(db: SQLiteDatabase) {

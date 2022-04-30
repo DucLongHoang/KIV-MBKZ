@@ -106,7 +106,7 @@ class TrainFragment: Fragment() {
         val chronometerTime = SystemClock.elapsedRealtime() - chronometer.base
         val formattedTime = DateTime.getTimeFromLong(chronometerTime)
 
-        // subtract duration from current time to get starting time
+        // subtract training duration from current time to get starting time
         val dateInString = DateTime.getCurrentDateInString("dd.MM.yyyy - HH:mm", chronometerTime)
 
         // save into preferences
@@ -150,21 +150,7 @@ class TrainFragment: Fragment() {
             if(!trainingRunning) {      // start -> end
                 exercisesInPlan = databaseHelper.getPlanConfigFromDb(chosenPlan.Title)
                 // every TrainingPlan has an empty exercise
-                if(exercisesInPlan.size > 1) {
-                    trainingRunning = true
-                    startEndButton.text = getString(R.string.end)
-                    choosePlanSpinner.isEnabled = false
-                    imButtonBack.isEnabled = false
-                    imButtonNext.isEnabled = false
-                    handler = TrainingProgressHandler(this, exercisesInPlan)
-                    vibrator.vibrate(VIB_DURATION)
-                    lin_layout_1_5.visibility = View.GONE
-                    lin_layout_2.visibility = View.VISIBLE
-                    lin_layout_3.visibility = View.VISIBLE
-                    (activity as MainActivity).enableSwitch(false)
-                    (activity as MainActivity).window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                    startChronometer()
-                }
+                if(exercisesInPlan.size > 1) startTraining()
                 else {
                     vibrator.vibrate(VIB_DURATION)
                     Toast.makeText(context,
@@ -188,25 +174,49 @@ class TrainFragment: Fragment() {
 
         // setting options
         dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
-        dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int ->
-            trainingRunning = false
-            startEndButton.text = getString(R.string.start)
-            choosePlanSpinner.isEnabled = true
-            choosePlanSpinner.setSelection(0)
-            (activity as MainActivity).enableSwitch(true)
-            vibrator.vibrate(VIB_DURATION)
-            lin_layout_2.visibility = View.INVISIBLE
-            lin_layout_3.visibility = View.INVISIBLE
-            editTextInputWeight.text.clear()
-            (activity as MainActivity).window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            saveTrainingToPreferences()
-            resetChronometer()
-            showLastTraining()
-        }
+        dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int -> endTraining() }
 
         // show dialog
         val dialog = dialogBuilder.create()
         dialog.show()
+    }
+
+    /**
+     * Method starts the training
+     */
+    private fun startTraining() {
+        trainingRunning = true
+        startEndButton.text = getString(R.string.end)
+        choosePlanSpinner.isEnabled = false
+        imButtonBack.isEnabled = false
+        imButtonNext.isEnabled = false
+        handler = TrainingProgressHandler(this, exercisesInPlan)
+        vibrator.vibrate(VIB_DURATION)
+        lin_layout_1_5.visibility = View.GONE
+        lin_layout_2.visibility = View.VISIBLE
+        lin_layout_3.visibility = View.VISIBLE
+        (activity as MainActivity).enableSwitch(false)
+        (activity as MainActivity).window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        startChronometer()
+    }
+
+    /**
+     * Method ends the training
+     */
+    private fun endTraining() {
+        trainingRunning = false
+        startEndButton.text = getString(R.string.start)
+        choosePlanSpinner.isEnabled = true
+        choosePlanSpinner.setSelection(0)
+        vibrator.vibrate(VIB_DURATION)
+        lin_layout_2.visibility = View.INVISIBLE
+        lin_layout_3.visibility = View.INVISIBLE
+        editTextInputWeight.text.clear()
+        (activity as MainActivity).enableSwitch(true)
+        (activity as MainActivity).window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        saveTrainingToPreferences()
+        showLastTraining()
+        resetChronometer()
     }
 
     /**

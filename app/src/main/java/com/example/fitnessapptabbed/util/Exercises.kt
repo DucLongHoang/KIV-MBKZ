@@ -5,7 +5,7 @@ package com.example.fitnessapptabbed.util
  * @author Long
  * @version 1.0
  */
-class ExerciseUtil {
+class Exercises {
     companion object {
 
         /**

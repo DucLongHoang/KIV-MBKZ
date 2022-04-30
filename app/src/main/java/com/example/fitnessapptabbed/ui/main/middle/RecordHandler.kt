@@ -1,12 +1,11 @@
 package com.example.fitnessapptabbed.ui.main.middle
 
-import android.provider.Settings.Global.getString
 import android.widget.Toast
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.ui.main.right.Statistic
 import com.example.fitnessapptabbed.util.DateTime
-import com.example.fitnessapptabbed.util.ExerciseUtil
+import com.example.fitnessapptabbed.util.Exercises
 
 /**
  * [RecordHandler] class takes a [TrainFragment] as parameter
@@ -15,7 +14,7 @@ import com.example.fitnessapptabbed.util.ExerciseUtil
 class RecordHandler(val fragment: TrainFragment) {
     private val databaseHelper = PlansDatabaseHelper(fragment.requireContext())
     private val listOfRecords: MutableList<Statistic> = databaseHelper.getAllExercisesFromDb()
-    private val exShortcuts: Array<String> = ExerciseUtil.getAllExercisesShortcuts()
+    private val exShortcuts: Array<String> = Exercises.getAllExercisesShortcuts()
 
     /**
      * Method checks if a record of [exName] with was broken by weight [kgs]
