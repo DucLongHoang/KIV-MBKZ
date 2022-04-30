@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setNightModeSwitch() {
         // get saved mode from preferences, if not present use default night mode
-        SharedPreferences sharedPref = getSharedPreferences("my_preferences", MODE_PRIVATE);
+        SharedPreferences sharedPref = getPreferences(MODE_PRIVATE);
         int defaultMode = AppCompatDelegate.MODE_NIGHT_YES;
         int savedMode = sharedPref.getInt("MODE", defaultMode);
 

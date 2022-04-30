@@ -19,8 +19,13 @@ import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentTrainBinding
 import com.example.fitnessapptabbed.ui.main.left.edit.Exercise
 import com.example.fitnessapptabbed.ui.main.left.plans.TrainingPlan
+import com.example.fitnessapptabbed.util.DateTime
 import kotlinx.android.synthetic.main.fragment_train.*
 import kotlinx.android.synthetic.main.layout_control_panel.*
+import kotlinx.android.synthetic.main.layout_last_training.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -60,10 +65,58 @@ class TrainFragment: Fragment() {
         setSpinner()
         setStartEndButton()
         setControlPanel()
+        showLastTraining()
     }
 
     /** Method returns a [Vibrator] instance */
     fun getVibrator(): Vibrator = this.vibrator
+
+    /**
+     * Method show the last done [TrainingPlan] if there is any
+     */
+    private fun showLastTraining() {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val defaultEmptyString = ""
+
+        val savedName = sharedPref?.getString("TRAIN_NAME", defaultEmptyString)
+        val savedDate = sharedPref?.getString("TRAIN_DATE", defaultEmptyString)
+        val savedDuration = sharedPref?.getString("TRAIN_DUR", defaultEmptyString)
+
+        if(savedName.equals(defaultEmptyString)) {
+            lin_layout_1_5.visibility = View.GONE
+            return
+        }
+
+        textViewLastName.text = savedName
+        textViewLastDate.text = savedDate
+        textViewLastDuration.text = savedDuration.toString()
+        lin_layout_1_5.visibility = View.VISIBLE
+    }
+
+    /**
+     * Method saves the last done training to the preferences file
+     */
+    private fun saveTrainingToPreferences() {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPref?.edit()
+
+        val dateInString = DateTime.getCurrentDateInString("dd.MM.yyyy - hh:mm")
+        val chronometerTime = SystemClock.elapsedRealtime() - chronometer.base
+        val formattedTime = DateTime.getTimeFromLong(chronometerTime)
+
+        editor?.putString("TRAIN_NAME", chosenPlan.Title)
+        editor?.putString("TRAIN_DATE", dateInString)
+        editor?.putString("TRAIN_DUR", formattedTime)
+        editor?.apply()
+    }
+
+    /**
+     *
+     */
+    private fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
+        val formatter = SimpleDateFormat(format, locale)
+        return formatter.format(this)
+    }
 
     /**
      * Method sets up the control panel
@@ -107,6 +160,7 @@ class TrainFragment: Fragment() {
                     imButtonNext.isEnabled = false
                     handler = TrainingProgressHandler(this, exercisesInPlan)
                     vibrator.vibrate(VIB_DURATION)
+                    lin_layout_1_5.visibility = View.GONE
                     lin_layout_2.visibility = View.VISIBLE
                     lin_layout_3.visibility = View.VISIBLE
                     (activity as MainActivity).enableSwitch(false)
@@ -147,7 +201,9 @@ class TrainFragment: Fragment() {
             lin_layout_3.visibility = View.INVISIBLE
             editTextInputWeight.text.clear()
             (activity as MainActivity).window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            saveTrainingToPreferences()
             resetChronometer()
+            showLastTraining()
         }
 
         // show dialog

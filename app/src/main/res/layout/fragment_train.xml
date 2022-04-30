@@ -52,6 +52,18 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/lin_layout_1_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_below="@id/lin_layout_1">
+
+        <include layout="@layout/layout_last_training"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/lin_layout_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

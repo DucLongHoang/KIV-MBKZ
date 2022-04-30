@@ -34,4 +34,7 @@
     <string name="reps">reps:</string>
     <string name="hyper_trophy">HT:</string>
     <string name="personal_best">max:</string>
+    <string name="last_training">Last training</string>
+    <string name="date_time">Date - Time</string>
+    <string name="duration">Duration</string>
 </resources>

@@ -10,6 +10,7 @@ import android.provider.BaseColumns
 import com.example.fitnessapptabbed.ui.main.left.edit.Exercise
 import com.example.fitnessapptabbed.ui.main.left.plans.TrainingPlan
 import com.example.fitnessapptabbed.ui.main.right.Statistic
+import com.example.fitnessapptabbed.util.ExerciseUtil
 
 /**
  * [PlansDatabaseHelper] class - helps with all database related stuff
@@ -36,14 +37,8 @@ class PlansDatabaseHelper(
         const val COL_DATE: String = "date"
     }
     // Exercise names
-    private val exercises: Array<String> = arrayOf(
-        "bench press", "deadlift", "deadlift (sumo)", "squat", "bicep curl", "hammer curl",
-        "tricep extension", "tricep kickback", "tricep pull down", "shoulder front raise",
-        "shoulder side raise", "rear delt fly", "barbell overhead press", "dumbbell shoulder press",
-        "dumbbell chest press", "chest fly", "barbell row", "dumbbell row", "hamstring curl",
-        "bulgarian split squat", "lunge", "calf raise", "push up", "pull up", "chin up", "dip",
-        "pistol squat", "abs exercise"
-    )
+    private val exercises: Array<String> = ExerciseUtil.getAllExerciseNames()
+
 
     override fun onCreate(db: SQLiteDatabase) {
         createTables(db)

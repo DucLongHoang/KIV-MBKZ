@@ -3,8 +3,8 @@ package com.example.fitnessapptabbed.ui.main.middle
 import android.widget.Toast
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.ui.main.right.Statistic
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.fitnessapptabbed.util.DateTime
+import com.example.fitnessapptabbed.util.ExerciseUtil
 
 /**
  * [RecordHandler] class takes a [TrainFragment] as parameter
@@ -13,13 +13,7 @@ import java.util.*
 class RecordHandler(val fragment: TrainFragment) {
     private val databaseHelper = PlansDatabaseHelper(fragment.requireContext())
     private val listOfRecords: MutableList<Statistic> = databaseHelper.getAllExercisesFromDb()
-    private val exShortcuts: Array<String> = arrayOf(
-        "bench press", "deadlift", "dl - sumo", "squat", "bicep curl", "hamm. curl",
-        "tricep ext", "tricep kb", "tricep pd", "front raise", "side raise",
-        "r. d. fly", "bb oh press", "db sh press", "db chest p", "chest fly", "bb row",
-        "db row", "hamst. curl", "bulg. s. s", "lunge", "calf raise", "push up",
-        "pull up", "chin up", "dip", "pis. squat", "abs ex"
-    )
+    private val exShortcuts: Array<String> = ExerciseUtil.getAllExercisesShortcuts()
 
     /**
      * Method checks if a record of [exName] with was broken by weight [kgs]
@@ -30,10 +24,7 @@ class RecordHandler(val fragment: TrainFragment) {
             item = listOfRecords[i]
 
             if (item.exerciseName == exName && item.recordKgs < kgs) {
-                val date = getCurrentDateTime()
-                val dateInString = date.toString("dd.MM.yyyy")
-
-                listOfRecords[i] = Statistic(exName, kgs, dateInString)
+                listOfRecords[i] = Statistic(exName, kgs, DateTime.getCurrentDateInString())
                 updateRecordInDb(listOfRecords[i])
                 makeNewRecordToast(exShortcuts[i], item.recordKgs, kgs)
                 return
@@ -56,18 +47,4 @@ class RecordHandler(val fragment: TrainFragment) {
     private fun updateRecordInDb(statistic: Statistic) {
         databaseHelper.updateRecord(statistic)
     }
-
-    /**
-     * Method extension, formats [Date] to [format]
-     */
-    private fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
-        val formatter = SimpleDateFormat(format, locale)
-        return formatter.format(this)
-    }
-
-    /**
-     * Method returns [Date] with current time
-     */
-    private fun getCurrentDateTime(): Date = Calendar.getInstance().time
-
 }
