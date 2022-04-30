@@ -11,7 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.fitnessapptabbed.MainActivity
 import com.example.fitnessapptabbed.R
@@ -23,9 +25,6 @@ import com.example.fitnessapptabbed.util.DateTime
 import kotlinx.android.synthetic.main.fragment_train.*
 import kotlinx.android.synthetic.main.layout_control_panel.*
 import kotlinx.android.synthetic.main.layout_last_training.*
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -78,15 +77,18 @@ class TrainFragment: Fragment() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val defaultEmptyString = ""
 
+        // get saved values from preferences
         val savedName = sharedPref?.getString("TRAIN_NAME", defaultEmptyString)
         val savedDate = sharedPref?.getString("TRAIN_DATE", defaultEmptyString)
         val savedDuration = sharedPref?.getString("TRAIN_DUR", defaultEmptyString)
 
+        // if no training saved, show nothing
         if(savedName.equals(defaultEmptyString)) {
             lin_layout_1_5.visibility = View.GONE
             return
         }
 
+        // show training
         textViewLastName.text = savedName
         textViewLastDate.text = savedDate
         textViewLastDuration.text = savedDuration.toString()
@@ -100,22 +102,18 @@ class TrainFragment: Fragment() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val editor = sharedPref?.edit()
 
-        val dateInString = DateTime.getCurrentDateInString("dd.MM.yyyy - hh:mm")
+        // duration of training
         val chronometerTime = SystemClock.elapsedRealtime() - chronometer.base
         val formattedTime = DateTime.getTimeFromLong(chronometerTime)
 
+        // subtract duration from current time to get starting time
+        val dateInString = DateTime.getCurrentDateInString("dd.MM.yyyy - HH:mm", chronometerTime)
+
+        // save into preferences
         editor?.putString("TRAIN_NAME", chosenPlan.Title)
         editor?.putString("TRAIN_DATE", dateInString)
         editor?.putString("TRAIN_DUR", formattedTime)
         editor?.apply()
-    }
-
-    /**
-     *
-     */
-    private fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
-        val formatter = SimpleDateFormat(format, locale)
-        return formatter.format(this)
     }
 
     /**

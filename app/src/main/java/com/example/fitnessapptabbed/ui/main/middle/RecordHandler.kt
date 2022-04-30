@@ -1,6 +1,8 @@
 package com.example.fitnessapptabbed.ui.main.middle
 
+import android.provider.Settings.Global.getString
 import android.widget.Toast
+import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.ui.main.right.Statistic
 import com.example.fitnessapptabbed.util.DateTime
@@ -36,8 +38,8 @@ class RecordHandler(val fragment: TrainFragment) {
      * Method makes a Toast [exName], old [recordKgs] and new record [kgs]
      */
     private fun makeNewRecordToast(exName: String, recordKgs: Int, kgs: Int) {
-        val trimmedName = if(exName.length <=10) exName else exName.substring(0, 11)
-        val message = "New personal best!!! \n$trimmedName: $recordKgs kg -> $kgs kg"
+        val message = fragment.context?.getString(R.string.new_record_msg) +
+                "\n$exName: $recordKgs kg -> $kgs kg"
         Toast.makeText(fragment.context, message.uppercase(), Toast.LENGTH_LONG).show()
     }
 
