@@ -53,13 +53,8 @@ class InputWeightHandler(private val editText: EditText) {
         // saving new values while going left and right
         // doesn't work for the next to last element
         kgList[kgListIndex - 1] = inputKgs
-        println("index: $kgListIndex, listSize: ${kgList.size}, list: $kgList")
+//        println("index: $kgListIndex, listSize: ${kgList.size}, list: $kgList")
     }
-
-    private fun updateValueIfNextToLast(inputKgs: Int) {
-
-    }
-
 
     /**
      * Method just decrements the [kgListIndex]

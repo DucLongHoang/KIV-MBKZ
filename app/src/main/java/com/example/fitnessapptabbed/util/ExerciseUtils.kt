@@ -5,7 +5,7 @@ package com.example.fitnessapptabbed.util
  * @author Long
  * @version 1.0
  */
-class Exercises {
+class ExerciseUtils {
     companion object {
 
         /**
@@ -26,7 +26,7 @@ class Exercises {
          * Method returns and [Array] of exercise shortcuts in [String]
          */
         @JvmStatic
-        fun getAllExercisesShortcuts(): Array<String> {
+        fun getAllExerciseShortcuts(): Array<String> {
             return arrayOf(
                 "bench press", "deadlift", "dl - sumo", "squat", "bicep curl", "hamm. curl",
                 "tricep ext", "tricep kb", "tricep pd", "front raise",

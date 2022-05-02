@@ -10,8 +10,9 @@ import java.util.concurrent.TimeUnit
  * @author Long
  * @version 1.0
  */
-class DateTime {
+class DateTimeUtils {
     companion object {
+        /** Default date format */
         private const val defaultFormat = "dd.MM.yyyy"
 
         /**

@@ -11,7 +11,6 @@ import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.ui.main.left.edit.Exercise;
 
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * TrainingProgressHandler class - handles the logic and view
@@ -31,11 +30,10 @@ public class TrainingProgressHandler {
     private final InputWeightHandler inputWeightHandler;
     private final RecordHandler recordHandler;
     private final Vibrator vibrator;
-    private final ListIterator<Exercise> exIterator;
-    private final Exercise firstExercise, lastExercise;
+    private final List<Exercise> exercises;
     private Exercise currExercise;
-    private int setCounter;
-    private boolean exMovingBackward, exMovingForward;
+    private int setCounter, exerciseIndex;
+    private final int exerciseCount;
 
     // View objects
     private final ImageButton ibNext, ibBack;
@@ -51,14 +49,12 @@ public class TrainingProgressHandler {
         this.databaseHelper = new PlansDatabaseHelper(fragment.requireContext());
         this.recordHandler = new RecordHandler(fragment);
         this.vibrator = fragment.getVibrator();
-        this.exIterator = exercisesList.listIterator();
-        this.currExercise = exIterator.next();
-        this.firstExercise = currExercise;
-        // length - 2, because last exercise is empty exercise
-        this.lastExercise = exercisesList.get(exercisesList.size() - 2);
+        this.exercises = exercisesList;
+        this.currExercise = exercisesList.get(0);
+        // length - 1 because of last empty exercise
+        this.exerciseCount = exercisesList.size() - 1;
+        this.exerciseIndex = 0;
         this.setCounter = 1;
-        this.exMovingBackward = false;
-        this.exMovingForward = true;
 
         ibNext = fragment.requireActivity().findViewById(R.id.imButtonNext);
         ibBack = fragment.requireActivity().findViewById(R.id.imButtonBack);
@@ -118,25 +114,17 @@ public class TrainingProgressHandler {
      * @return true if not first, otherwise false
      */
     private boolean hasPreviousExercise() {
-        if(exIterator.hasPrevious()) {
-            // handling iterator changing directions, move one extra back
-            if(exMovingForward) {
-                exMovingForward = false;
-                exMovingBackward = true;
-                currExercise = exIterator.previous();
-            }
-            // handling going back on first exercise
-            if(currExercise.equals(firstExercise)) {
-                setCounter++;
-                return false;
-            }
-            // normal behaviour
-            currExercise = exIterator.previous();
+        exerciseIndex--;
+        if(exerciseIndex >= 0) {
+            currExercise = exercises.get(exerciseIndex);
             setCounter = currExercise.getSets();
             return true;
         }
-        setCounter++;
-        return false;
+        else {
+            setCounter++;
+            exerciseIndex++;    // to prevent negative index
+            return false;
+        }
     }
 
     /**
@@ -145,27 +133,19 @@ public class TrainingProgressHandler {
      * @return true if not last, otherwise false
      */
     private boolean hasNextExercise() {
-        if(exIterator.hasNext()) {
-            // handling iterator changing directions, move one extra next
-            if(exMovingBackward) {
-                currExercise = exIterator.next();
-                exMovingBackward = false;
-                exMovingForward = true;
-            }
-            // handling going next on last exercise
-            if(currExercise.equals(lastExercise)) {
-                setCounter--;
-                fragment.endTrainingDialog();
-                inputWeightHandler.decrementKgIndex();
-                return false;
-            }
-            // normal behaviour
-            currExercise = exIterator.next();
+        exerciseIndex++;
+        if(exerciseIndex <  exerciseCount) {
+            currExercise = exercises.get(exerciseIndex);
             setCounter = 1;
             return true;
         }
-        setCounter--;
-        return false;
+        else {
+            setCounter--;
+            exerciseIndex--;    // to not exceed List size
+            inputWeightHandler.decrementKgIndex();
+            fragment.endTrainingDialog();
+            return false;
+        }
     }
 
     /**

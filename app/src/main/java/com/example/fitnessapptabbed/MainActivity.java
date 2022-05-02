@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.fitnessapptabbed.databinding.ActivityMainBinding;
 import com.example.fitnessapptabbed.ui.main.SectionsPagerAdapter;
+import com.example.fitnessapptabbed.util.PreferencesUtils;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // get saved mode from preferences, if not present use default night mode
         SharedPreferences sharedPref = getPreferences(MODE_PRIVATE);
         int defaultMode = AppCompatDelegate.MODE_NIGHT_YES;
-        int savedMode = sharedPref.getInt("MODE", defaultMode);
+        int savedMode = sharedPref.getInt(PreferencesUtils.KEY_MODE, defaultMode);
 
         // set initial switch position
         switch (savedMode) {
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             int mode = (isChecked) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
             AppCompatDelegate.setDefaultNightMode(mode);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt("MODE", mode);
+            editor.putInt(PreferencesUtils.KEY_MODE, mode);
             editor.apply();
         });
     }

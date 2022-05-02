@@ -21,7 +21,8 @@ import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentTrainBinding
 import com.example.fitnessapptabbed.ui.main.left.edit.Exercise
 import com.example.fitnessapptabbed.ui.main.left.plans.TrainingPlan
-import com.example.fitnessapptabbed.util.DateTime
+import com.example.fitnessapptabbed.util.DateTimeUtils
+import com.example.fitnessapptabbed.util.PreferencesUtils
 import kotlinx.android.synthetic.main.fragment_train.*
 import kotlinx.android.synthetic.main.layout_control_panel.*
 import kotlinx.android.synthetic.main.layout_last_training.*
@@ -78,9 +79,9 @@ class TrainFragment: Fragment() {
         val defaultEmptyString = ""
 
         // get saved values from preferences
-        val savedName = sharedPref?.getString("TRAIN_NAME", defaultEmptyString)
-        val savedDate = sharedPref?.getString("TRAIN_DATE", defaultEmptyString)
-        val savedDuration = sharedPref?.getString("TRAIN_DUR", defaultEmptyString)
+        val savedName = sharedPref?.getString(PreferencesUtils.KEY_NAME, defaultEmptyString)
+        val savedDate = sharedPref?.getString(PreferencesUtils.KEY_DATE, defaultEmptyString)
+        val savedDuration = sharedPref?.getString(PreferencesUtils.KEY_DURATION, defaultEmptyString)
 
         // if no training saved, show nothing
         if(savedName.equals(defaultEmptyString)) {
@@ -104,15 +105,15 @@ class TrainFragment: Fragment() {
 
         // duration of training
         val chronometerTime = SystemClock.elapsedRealtime() - chronometer.base
-        val formattedTime = DateTime.getTimeFromLong(chronometerTime)
+        val formattedDuration = DateTimeUtils.getTimeFromLong(chronometerTime)
 
         // subtract training duration from current time to get starting time
-        val dateInString = DateTime.getCurrentDateInString("dd.MM.yyyy - HH:mm", chronometerTime)
+        val dateInString = DateTimeUtils.getCurrentDateInString("dd.MM.yyyy - HH:mm", chronometerTime)
 
         // save into preferences
-        editor?.putString("TRAIN_NAME", chosenPlan.Title)
-        editor?.putString("TRAIN_DATE", dateInString)
-        editor?.putString("TRAIN_DUR", formattedTime)
+        editor?.putString(PreferencesUtils.KEY_NAME, chosenPlan.Title)
+        editor?.putString(PreferencesUtils.KEY_DATE, dateInString)
+        editor?.putString(PreferencesUtils.KEY_DURATION, formattedDuration)
         editor?.apply()
     }
 
@@ -141,7 +142,9 @@ class TrainFragment: Fragment() {
         imButtonBack.setOnClickListener { handler.moveBack() }
         imButtonNext.setOnClickListener { handler.moveNext(kgInput) }
     }
-
+    private fun printExercises() {
+        for (i in 0 until exercisesInPlan.size - 1) println(exercisesInPlan[i])
+    }
     /**
      * Method sets up the Start/End button
      */
@@ -149,6 +152,7 @@ class TrainFragment: Fragment() {
         startEndButton.setOnClickListener {
             if(!trainingRunning) {      // start -> end
                 exercisesInPlan = databaseHelper.getPlanConfigFromDb(chosenPlan.Title)
+//                printExercises()
                 // every TrainingPlan has an empty exercise
                 if(exercisesInPlan.size > 1) startTraining()
                 else {
