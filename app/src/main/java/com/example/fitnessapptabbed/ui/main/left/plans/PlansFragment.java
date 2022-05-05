@@ -2,6 +2,7 @@ package com.example.fitnessapptabbed.ui.main.left.plans;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -11,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -60,6 +63,7 @@ public class PlansFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -88,9 +92,10 @@ public class PlansFragment extends Fragment {
             public void onItemClick(int position) { navigateToEditPlan(position); }
             @Override
             public void onDeleteClick(int position) { showDeletePlanDialog(position); }
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onEditClick(int position) {
-                editTitleAndDescription(position, "Changed " + position);
+                showEditTitleDialog(trainingPlans.get(position), position);
             }
         });
     }
@@ -132,16 +137,6 @@ public class PlansFragment extends Fragment {
     }
 
     /**
-     * Method to edit Title of a TrainingPlan
-     * @param position of TrainingPlan to be edited
-     * @param text to change the Title to
-     */
-    private void editTitleAndDescription(int position, String text) {
-        this.trainingPlans.get(position).setTitle(text);
-        adapter.notifyItemChanged(position);
-    }
-
-    /**
      * Method shows AlertDialog with the option to delete a new TrainingPlan
      * @param position of TrainingPlan to be deleted
      */
@@ -164,6 +159,7 @@ public class PlansFragment extends Fragment {
     /**
      * Method shows AlertDialog with the option to create a new TrainingPlan
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void showCreatePlanDialog() {
         // editable fields
         final EditText inputTitle = new EditText(getContext());
@@ -185,9 +181,11 @@ public class PlansFragment extends Fragment {
 
         // setting options
         dialogBuilder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
-        dialogBuilder.setPositiveButton(R.string.create, (dialogInterface, i) ->
-                addPlan(new TrainingPlan(inputTitle.getText().toString(),
-                inputDescription.getText().toString())));
+        dialogBuilder.setPositiveButton(R.string.create, (dialogInterface, i) -> {
+            String title = inputTitle.getText().toString();
+            String desc = inputDescription.getText().toString();
+            if (!isDuplicatePlanName(title)) addPlan(new TrainingPlan(title, desc));
+        });
 
         // empty Title edit field
         AlertDialog dialog = dialogBuilder.create();
@@ -206,5 +204,81 @@ public class PlansFragment extends Fragment {
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
             }
         });
+    }
+
+    /**
+     * Method shows AlertDialog with the option to edit Title
+     * and Description of a TrainingPlan
+     * @param planToBeRenamed plan whose title and description will be changed
+     * @param position at which the TrainingPlan is
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void showEditTitleDialog(TrainingPlan planToBeRenamed, int position) {
+        // editable fields
+        final EditText inputTitle = new EditText(getContext());
+        final EditText inputDescription = new EditText(getContext());
+        inputTitle.setHint(R.string.title_edit_text);
+        inputDescription.setHint(R.string.description_edit_text);
+        // use old values
+        inputTitle.setText(planToBeRenamed.getTitle());
+        inputDescription.setText(planToBeRenamed.getDescription());
+
+        // add layout for fields
+        LinearLayout layout = new LinearLayout(getContext());
+        layout.setPadding(4, 0, 4, 0);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.addView(inputTitle);
+        layout.addView(inputDescription);
+
+        // create Dialog
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        dialogBuilder.setTitle(getString(R.string.edit_plan_title_msg));
+        dialogBuilder.setView(layout);
+
+        // setting options
+        dialogBuilder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        dialogBuilder.setPositiveButton(R.string.edit, (dialogInterface, i) -> {
+            String newTitle = inputTitle.getText().toString();
+            String newDesc = inputDescription.getText().toString();
+
+            // check if name already used
+            if(!isDuplicatePlanName(newTitle)) {
+                databaseHelper.updatePlanTitleInDb(planToBeRenamed.getTitle(), newTitle, newDesc);
+                planToBeRenamed.setTitle(newTitle);
+                planToBeRenamed.setDescription(newDesc);
+                adapter.notifyItemChanged(position);
+            }
+        });
+
+        // empty Title edit field
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();  // has to be in this order - 1.show dialog, 2.disable button
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+        // enable create button if Title field not empty
+        inputTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                boolean enable = !TextUtils.isEmpty(editable.toString().trim()); // if empty false, else true
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
+            }
+        });
+    }
+
+    /**
+     * Method checks if the inputted Plan name is already used or not
+     * @param name new name of TrainingPlan
+     * @return true if name already used, otherwise false
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private boolean isDuplicatePlanName(String name) {
+        boolean duplicate = trainingPlans.stream().anyMatch(tp -> tp.getTitle().equals(name));
+        if (duplicate) Toast.makeText(getContext(), R.string.duplicate_plan_name_msg,
+                Toast.LENGTH_SHORT).show();
+        return duplicate;
     }
 }

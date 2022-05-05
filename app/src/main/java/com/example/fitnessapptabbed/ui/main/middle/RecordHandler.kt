@@ -46,6 +46,6 @@ class RecordHandler(val fragment: TrainFragment) {
      * Method updates the [statistic] in the database
      */
     private fun updateRecordInDb(statistic: Statistic) {
-        databaseHelper.updateRecord(statistic)
+        databaseHelper.updateRecordInDb(statistic)
     }
 }

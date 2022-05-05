@@ -154,7 +154,7 @@ public class TrainingProgressHandler {
      */
     @SuppressLint("SetTextI18n")
     private void displayInfo() {
-        int currRecord = databaseHelper.getRecordKgs(currExercise.getName());
+        int currRecord = databaseHelper.getRecordKgsFromDb(currExercise.getName());
         tvCurrEx.setText(currExercise.getName().toUpperCase());
         tvSets.setText(setCounter + "/" + currExercise.getSets());
         tvReps.setText("" + currExercise.getReps());

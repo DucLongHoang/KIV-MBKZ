@@ -185,10 +185,6 @@ public class EditPlanFragment extends Fragment {
      * @param save true to save plan config, false to cancel editing
      */
     private void createDialog(boolean save) {
-//        for(Exercise ex : exercises) {
-//            System.out.println(ex);
-//        }
-
         String confirmation = save ?
                 getString(R.string.save_plan_prompt) : getString(R.string.cancel_editing_prompt);
 

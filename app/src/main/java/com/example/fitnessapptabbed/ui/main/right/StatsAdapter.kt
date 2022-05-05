@@ -7,13 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fitnessapptabbed.MainActivity
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
-import com.example.fitnessapptabbed.ui.main.middle.TrainFragment
-import kotlinx.android.synthetic.main.fragment_train.*
 import kotlinx.android.synthetic.main.item_statistic.view.*
-import kotlinx.android.synthetic.main.layout_control_panel.*
 
 class StatsAdapter(private val statistics: MutableList<Statistic>)
     : RecyclerView.Adapter<StatsAdapter.StatisticViewHolder>() {
@@ -70,7 +66,7 @@ class StatsAdapter(private val statistics: MutableList<Statistic>)
          */
         private fun nullifyRecord() {
             val databaseHelper = PlansDatabaseHelper(itemView.context)
-            databaseHelper.updateRecord(Statistic(exerciseName.text.toString()))
+            databaseHelper.updateRecordInDb(Statistic(exerciseName.text.toString()))
             databaseHelper.close()
         }
     }

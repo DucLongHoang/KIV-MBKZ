@@ -103,6 +103,27 @@ class PlansDatabaseHelper(
     }
 
     /**
+     * Method changes plan's [oldTitle] to [newTitle] and [newDescription]
+     */
+    fun updatePlanTitleInDb(oldTitle:String, newTitle: String, newDescription: String) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COL_PLAN_TITLE, newTitle)
+        contentValues.put(COL_PLAN_DESC, newDescription)
+
+        // change title and description in Plans Table
+        db.update(TABLE_PLAN, contentValues,
+            "$COL_PLAN_TITLE=?", arrayOf(oldTitle))
+
+        // change title in Plan config table
+        contentValues.clear()
+        contentValues.put(COL_PLAN_TITLE, newTitle)
+        db.update(TABLE_PLAN_CONFIG, contentValues,
+            "$COL_PLAN_TITLE=?", arrayOf(oldTitle))
+
+    }
+
+    /**
      * Method deletes a [plan] from the DB
      */
     fun deletePlanFromDb(plan: TrainingPlan) {
@@ -139,21 +160,21 @@ class PlansDatabaseHelper(
     }
 
     @SuppressLint("Range", "Recycle")
-    fun getRecordKgs(title: String): Int {
+    fun getRecordKgsFromDb(title: String): Int {
         val db: SQLiteDatabase = this.readableDatabase
         val c: Cursor = db.query(TABLE_EXERCISE, arrayOf(COL_EX_KGS), "${COL_EX_NAME}=?",
             arrayOf(title), null, null, null)
 
-        if(c.moveToFirst()) return c.getInt(c.getColumnIndex(COL_EX_KGS))
-
-        return 0
+        return if(c.moveToFirst())
+            c.getInt(c.getColumnIndex(COL_EX_KGS))
+        else 0
     }
 
     /**
      * Method updates [COL_EX_KGS] and [COL_DATE]
      * of table [TABLE_EXERCISE] in the database
      */
-    fun updateRecord(statistic: Statistic) {
+    fun updateRecordInDb(statistic: Statistic) {
         val db: SQLiteDatabase = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_EX_KGS, statistic.recordKgs)
@@ -206,7 +227,7 @@ class PlansDatabaseHelper(
                 exName = c.getString(c.getColumnIndex(COL_EX_NAME))
                 sets = c.getInt(c.getColumnIndex(COL_EX_SETS))
                 reps = c.getInt(c.getColumnIndex(COL_EX_REPS))
-                result.add(Exercise(exName, sets, reps, 0))
+                result.add(Exercise(exName, sets, reps))
             } while (c.moveToNext())
         }
 

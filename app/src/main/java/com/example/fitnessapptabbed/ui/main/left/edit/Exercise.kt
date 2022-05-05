@@ -11,10 +11,12 @@ data class Exercise (
     var name: String,
     var sets: Int,
     var reps: Int,
-    var kgs: Int
+    var kgs: IntArray
 )   {
+
     // empty secondary constructor with default values
-    constructor() : this("", 0, 0, 0)
+    constructor() : this("", 0, 0, intArrayOf(0))
+    constructor(exName: String, numSet: Int, numRep: Int) : this(exName, numSet, numRep, kgs = IntArray(numSet))
 
     /**
      * Returns [Boolean] if the exercise is valid or not
@@ -25,7 +27,7 @@ data class Exercise (
 
     companion object {
         @JvmStatic
-        fun congratulations() = Exercise("Congratulations", 0, 0, 0)
+        fun congratulations() = Exercise("Congratulations", 0, 0, intArrayOf(0))
         @JvmStatic
         val nullExercise = Exercise()
     }

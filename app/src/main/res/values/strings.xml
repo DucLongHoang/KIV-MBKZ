@@ -15,6 +15,7 @@
     <string name="reset">reset</string>
     <string name="cancel" tools:ignore="ButtonCase">cancel</string>
     <string name="create">create</string>
+    <string name="edit">edit</string>
     <string name="dismiss">dismiss</string>
     <string name="save">save</string>
     <string name="no">no</string>
@@ -23,6 +24,8 @@
     <string name="description_edit_text">Description (optional)</string>
     <string name="empty_plan_msg">This training plan is empty!</string>
     <string name="create_new_plan_msg">Create a new training plan</string>
+    <string name="edit_plan_title_msg">Change title and description of plan</string>
+    <string name="duplicate_plan_name_msg">A training plan with this name already exists!</string>
     <string name="new_record_msg">New personal best!!!</string>
     <string name="back_again_to_exit_msg">Press back again to exit app</string>
     <string name="stay_on_tab_warning">Please don\'t switch tabs before saving or you will lose all editing progress</string>
