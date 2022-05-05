@@ -1,6 +1,5 @@
 package com.example.fitnessapptabbed.util
 
-import android.os.SystemClock
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -38,7 +37,8 @@ class DateTimeUtils {
          */
         @JvmStatic
         @JvmOverloads
-        fun getCurrentDateInString(format: String = defaultFormat, offset: Long = 0, locale: Locale = Locale.getDefault()): String {
+        fun getCurrentDateInString(format: String = defaultFormat, offset: Long = 0,
+                                   locale: Locale = Locale.getDefault()): String {
             val date = getCurrentDateTime(offset)
             return date.toString(format, locale)
         }

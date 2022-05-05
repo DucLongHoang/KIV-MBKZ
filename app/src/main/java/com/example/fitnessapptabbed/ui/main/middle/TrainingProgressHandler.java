@@ -84,7 +84,7 @@ public class TrainingProgressHandler {
         }
         vibrator.vibrate(vibDuration);
         displayInfo();
-        inputWeightHandler.displayPreviousWeight();
+        inputWeightHandler.displayPreviousWeight(currExercise, setCounter);
     }
 
     /**
@@ -93,6 +93,7 @@ public class TrainingProgressHandler {
      */
     public void moveNext(int inputKgs) {
         recordHandler.checkIfRecordBroken(currExercise.getName(), inputKgs);
+        inputWeightHandler.saveWeight(currExercise, setCounter, inputKgs);
 
         int vibDuration = SET_VIB_DURATION;
         ibBack.setEnabled(true);
@@ -106,7 +107,7 @@ public class TrainingProgressHandler {
         }
         vibrator.vibrate(vibDuration);
         displayInfo();
-        inputWeightHandler.displayNextWeight(inputKgs);
+        inputWeightHandler.displayNextWeight(currExercise, setCounter);
     }
 
     /**
@@ -142,7 +143,6 @@ public class TrainingProgressHandler {
         else {
             setCounter--;
             exerciseIndex--;    // to not exceed List size
-            inputWeightHandler.decrementKgIndex();
             fragment.endTrainingDialog();
             return false;
         }

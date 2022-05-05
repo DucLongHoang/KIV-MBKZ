@@ -108,7 +108,7 @@ class TrainFragment: Fragment() {
         val formattedDuration = DateTimeUtils.getTimeFromLong(chronometerTime)
 
         // subtract training duration from current time to get starting time
-        val dateInString = DateTimeUtils.getCurrentDateInString("dd.MM.yyyy - HH:mm", chronometerTime)
+        val dateInString = DateTimeUtils.getCurrentDateInString(getString(R.string.date_long_format), chronometerTime)
 
         // save into preferences
         editor?.putString(PreferencesUtils.KEY_NAME, chosenPlan.Title)
@@ -121,7 +121,7 @@ class TrainFragment: Fragment() {
      * Method sets up the control panel
      */
     private fun setControlPanel() {
-        // init views and values
+        var userInput: String
         var kgInput = 0
 
         // set up listener for editText field
@@ -129,11 +129,12 @@ class TrainFragment: Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(input: CharSequence?, start: Int, before: Int, count: Int) {
-                if(input.toString().isEmpty()) {
+                userInput = input.toString()
+                if(userInput.isEmpty() || Integer.valueOf(userInput) == 0) {
                     imButtonNext.isEnabled = false
                 }
                 else {
-                    kgInput = input.toString().toInt()
+                    kgInput = userInput.toInt()
                     imButtonNext.isEnabled = true
                 }
             }

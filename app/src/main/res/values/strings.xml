@@ -48,6 +48,8 @@
     <string name="date_time">Date - Time</string>
     <string name="duration">Duration</string>
     <!--  Miscellaneous  -->
+    <string name="date_short_format">dd.MM.yyyy</string>
+    <string name="date_long_format">dd.MM.yyyy - HH:mm</string>
     <string name="night_mode">Night mode</string>
     <string name="kg">kg</string>
 </resources>
