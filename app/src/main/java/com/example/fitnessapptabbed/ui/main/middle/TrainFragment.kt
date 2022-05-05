@@ -229,7 +229,7 @@ class TrainFragment: Fragment() {
     private fun setSpinner() {
         // prepare values for spinner
         val allPlansPlusChoose: MutableList<String> = ArrayList()
-        allPlansPlusChoose.add(getString(R.string.choose_plan_prompt))
+        allPlansPlusChoose.add(getString(R.string.choose_plan))
         for (plan in allPlans) { allPlansPlusChoose.add(plan.Title + " - " + plan.Description) }
 
         // set up adapter for spinner

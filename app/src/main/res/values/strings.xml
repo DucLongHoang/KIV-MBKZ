@@ -1,16 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!--  App Title and Tab Titles  -->
     <string name="app_name">FitnessApp</string>
     <string name="tab_plans">plans</string>
     <string name="tab_train">train</string>
     <string name="tab_stats">records</string>
-    <string name="start">start</string>
-    <string name="end">end</string>
-    <string name="choose_plan_prompt"> --- Choose plan ---</string>
+    <!--  Prompts - ask user for confirmation  -->
     <string name="end_training_prompt">Do you want to end the training?</string>
     <string name="cancel_editing_prompt">Do you want to cancel editing?</string>
     <string name="nullify_record_prompt">Do you want to nullify the record?</string>
     <string name="save_plan_prompt">Save training plan configuration?</string>
-    <string name="delete_plan">Delete plan:&#160;</string>
+    <string name="delete_plan_prompt">Delete plan:&#160;</string>
+    <!--  Simple Strings  -->
+    <string name="choose_plan"> --- Choose plan ---</string>
+    <string name="start">start</string>
+    <string name="end">end</string>
     <string name="stop">stop</string>
     <string name="reset">reset</string>
     <string name="cancel" tools:ignore="ButtonCase">cancel</string>
@@ -20,25 +23,31 @@
     <string name="save">save</string>
     <string name="no">no</string>
     <string name="yes">yes</string>
+    <!--  EditText - create/rename Plan editTexts  -->
     <string name="title_edit_text">Title (mandatory)</string>
     <string name="description_edit_text">Description (optional)</string>
+    <!--  Messages - headers of Dialogs, messages of Toasts and SnackBars  -->
     <string name="empty_plan_msg">This training plan is empty!</string>
     <string name="create_new_plan_msg">Create a new training plan</string>
-    <string name="edit_plan_title_msg">Change title and description of plan</string>
+    <string name="edit_plan_title_msg">Edit title and description of plan</string>
     <string name="duplicate_plan_name_msg">A training plan with this name already exists!</string>
     <string name="new_record_msg">New personal best!!!</string>
     <string name="back_again_to_exit_msg">Press back again to exit app</string>
-    <string name="stay_on_tab_warning">Please don\'t switch tabs before saving or you will lose all editing progress</string>
-    <string name="night_mode">Night mode</string>
-    <string name="kg">kg</string>
+    <string name="stay_on_tab_msg">Please don\'t switch tabs before saving or you will lose all editing progress</string>
+    <!--  Strings used in Records Tab if Exercise never done  -->
     <string name="default_kg">0 kg</string>
     <string name="default_date">dd.MM.yyyy</string>
+    <!--  Strings used on Train Tab  -->
     <string name="input_weight">Input weight</string>
     <string name="sets">sets:</string>
     <string name="reps">reps:</string>
     <string name="hyper_trophy">HT:</string>
     <string name="personal_best">max:</string>
+    <!--  Last training + details  -->
     <string name="last_training">Last training</string>
     <string name="date_time">Date - Time</string>
     <string name="duration">Duration</string>
+    <!--  Miscellaneous  -->
+    <string name="night_mode">Night mode</string>
+    <string name="kg">kg</string>
 </resources>

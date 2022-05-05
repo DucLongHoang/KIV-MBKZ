@@ -38,7 +38,7 @@ class InputWeightHandler(private val editText: EditText) {
         kgListIndex++
 
         // if value was already filled, use it
-        var currentKgs = kgList.getOrNull(kgListIndex)
+        val currentKgs = kgList.getOrNull(kgListIndex)
         if(currentKgs != null) {
             editText.setText(currentKgs.toString())
         }

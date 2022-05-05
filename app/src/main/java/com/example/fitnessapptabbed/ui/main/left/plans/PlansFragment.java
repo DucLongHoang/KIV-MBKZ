@@ -144,7 +144,7 @@ public class PlansFragment extends Fragment {
         // create Dialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         String title = trainingPlans.get(position).getTitle();
-        String msg = getString(R.string.delete_plan) + title + " ?";
+        String msg = getString(R.string.delete_plan_prompt) + title + " ?";
         dialogBuilder.setTitle(msg);
 
         // setting options
