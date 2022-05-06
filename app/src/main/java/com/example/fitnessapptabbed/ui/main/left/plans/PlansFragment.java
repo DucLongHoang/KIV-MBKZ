@@ -241,8 +241,14 @@ public class PlansFragment extends Fragment {
             String newTitle = inputTitle.getText().toString();
             String newDesc = inputDescription.getText().toString();
 
+            // check if Title and Description remain the same
+            if (newTitle.equals(planToBeRenamed.getTitle()) && newDesc.equals(planToBeRenamed.getDescription())) {
+                adapter.notifyItemChanged(position);    // just for the animation
+                return;
+            }
+
             // check if name already used
-            if(!isDuplicatePlanName(newTitle)) {
+            if (!isDuplicatePlanName(newTitle)) {
                 databaseHelper.updatePlanTitleInDb(planToBeRenamed.getTitle(), newTitle, newDesc);
                 planToBeRenamed.setTitle(newTitle);
                 planToBeRenamed.setDescription(newDesc);
@@ -252,8 +258,7 @@ public class PlansFragment extends Fragment {
 
         // empty Title edit field
         AlertDialog dialog = dialogBuilder.create();
-        dialog.show();  // has to be in this order - 1.show dialog, 2.disable button
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        dialog.show();  // has to be in this order, 1.show dialog, 2.disable button
 
         // enable create button if Title field not empty
         inputTitle.addTextChangedListener(new TextWatcher() {
@@ -276,7 +281,8 @@ public class PlansFragment extends Fragment {
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private boolean isDuplicatePlanName(String name) {
-        boolean duplicate = trainingPlans.stream().anyMatch(tp -> tp.getTitle().equals(name));
+        // count must be more than 1 because we do not count the same training
+        boolean duplicate = trainingPlans.stream().filter(tp -> tp.getTitle().equals(name)).count() > 1;
         if (duplicate) Toast.makeText(getContext(), R.string.duplicate_plan_name_msg,
                 Toast.LENGTH_SHORT).show();
         return duplicate;
