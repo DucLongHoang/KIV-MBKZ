@@ -105,7 +105,7 @@ class PlansDatabaseHelper(
     /**
      * Method changes plan's [oldTitle] to [newTitle] and [newDescription]
      */
-    fun updatePlanTitleInDb(oldTitle:String, newTitle: String, newDescription: String) {
+    fun updatePlanTitleInDb(oldTitle: String, newTitle: String, newDescription: String) {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_PLAN_TITLE, newTitle)
@@ -120,7 +120,18 @@ class PlansDatabaseHelper(
         contentValues.put(COL_PLAN_TITLE, newTitle)
         db.update(TABLE_PLAN_CONFIG, contentValues,
             "$COL_PLAN_TITLE=?", arrayOf(oldTitle))
+    }
 
+    /**
+     * Update description of [TrainingPlan] with [title] to [newDescription]
+     */
+    fun updatePlanDescriptionInDb(title: String, newDescription: String) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COL_PLAN_DESC, newDescription)
+
+        db.update(TABLE_PLAN, contentValues,
+            "$COL_PLAN_TITLE=?", arrayOf(title))
     }
 
     /**

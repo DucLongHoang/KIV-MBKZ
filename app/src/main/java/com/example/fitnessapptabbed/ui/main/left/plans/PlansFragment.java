@@ -241,13 +241,18 @@ public class PlansFragment extends Fragment {
             String newTitle = inputTitle.getText().toString();
             String newDesc = inputDescription.getText().toString();
 
-            // check if Title and Description remain the same
-            if (newTitle.equals(planToBeRenamed.getTitle()) && newDesc.equals(planToBeRenamed.getDescription())) {
+            // branch 1 - check if Title remains the same
+            if (newTitle.equals(planToBeRenamed.getTitle())) {
+                // check if Description is new
+                if (!newDesc.equals(planToBeRenamed.getDescription())) {
+                    databaseHelper.updatePlanDescriptionInDb(newTitle, newDesc);
+                    planToBeRenamed.setDescription(newDesc);
+                }
                 adapter.notifyItemChanged(position);    // just for the animation
                 return;
             }
 
-            // check if name already used
+            // branch 2 - check if new Title already used
             if (!isDuplicatePlanName(newTitle)) {
                 databaseHelper.updatePlanTitleInDb(planToBeRenamed.getTitle(), newTitle, newDesc);
                 planToBeRenamed.setTitle(newTitle);
@@ -282,7 +287,7 @@ public class PlansFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private boolean isDuplicatePlanName(String name) {
         // count must be more than 1 because we do not count the same training
-        boolean duplicate = trainingPlans.stream().filter(tp -> tp.getTitle().equals(name)).count() > 1;
+        boolean duplicate = trainingPlans.stream().anyMatch(tp -> tp.getTitle().equalsIgnoreCase(name));
         if (duplicate) Toast.makeText(getContext(), R.string.duplicate_plan_name_msg,
                 Toast.LENGTH_SHORT).show();
         return duplicate;
