@@ -151,15 +151,13 @@ class TrainFragment: Fragment() {
      */
     private fun setStartEndButton() {
         startEndButton.setOnClickListener {
-            if(!trainingRunning) {      // start -> end
+            if (!trainingRunning) {      // start -> end
                 exercisesInPlan = databaseHelper.getPlanConfigFromDb(chosenPlan.Title)
-//                printExercises()
                 // every TrainingPlan has an empty exercise
-                if(exercisesInPlan.size > 1) startTraining()
+                if (exercisesInPlan.size > 1) startTraining()
                 else {
                     vibrator.vibrate(VIB_DURATION)
-                    Toast.makeText(context,
-                        R.string.empty_plan_msg,
+                    Toast.makeText(context, R.string.empty_plan_msg,
                         Toast.LENGTH_SHORT).show()
                 }
             }
@@ -244,7 +242,7 @@ class TrainFragment: Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 choosePlanSpinner.setSelection(position)
-                if(position == 0) {
+                if (position == 0) {
                     startEndButton.visibility = View.GONE
                     chronometer.visibility = View.GONE
                 }
@@ -288,6 +286,9 @@ class TrainFragment: Fragment() {
         pauseOffset = 0
         stopChronometer()
     }
+
+    /** Method returns [Boolean] of [running] */
+    fun isRunning(): Boolean = running
 
     companion object {
         /**

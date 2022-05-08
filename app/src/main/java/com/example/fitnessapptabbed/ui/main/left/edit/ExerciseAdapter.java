@@ -15,9 +15,11 @@ import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
 import com.example.fitnessapptabbed.ui.main.right.Statistic;
+import com.example.fitnessapptabbed.util.ExerciseUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,12 +42,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param databaseHelper DatabaseHelper passed from fragment
      * @param list data set
      */
-    public ExerciseAdapter(PlansDatabaseHelper databaseHelper, List<Exercise> list) {
+    public ExerciseAdapter(List<Exercise> list) {
         this.exercisesInPlan = list;
-        this.allExercises = new ArrayList<>();
-
-        List<Statistic> statistics = databaseHelper.getAllExercisesFromDb();
-        for(Statistic s : statistics) { allExercises.add(s.getExerciseName()); }
+        this.allExercises = Arrays.asList(ExerciseUtils.getAllExerciseNames());
     }
 
     /**
@@ -199,10 +198,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
          * @param allExercises List of all pre-defined exercises
          */
         private void setExerciseSpinner(View itemView, List<String> allExercises) {
-//            List<String> allPlusNullExercise = new ArrayList<>();
-//            allPlusNullExercise.add(NULL_EXERCISE);
-//            allPlusNullExercise.addAll(allExercises);
-
             // set up adapter for exercises spinner
             ArrayAdapter<String> adapter = new ArrayAdapter<>(itemView.getContext(),
                     android.R.layout.simple_spinner_dropdown_item, allExercises);

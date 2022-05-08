@@ -14,12 +14,12 @@ class ExerciseUtils {
         @JvmStatic
         fun getAllExerciseNames(): Array<String> {
             return arrayOf(
-                "bench press", "deadlift", "deadlift (sumo)", "squat", "bicep curl", "hammer curl",
-                "tricep extension", "tricep kickback", "tricep pull down", "shoulder front raise",
+                "bench press", "deadlift", "deadlift - sumo", "squat", "barbell bicep curl", "dumbbell bicep curl",
+                "hammer curl", "tricep extension", "tricep kickback", "tricep pull down", "shoulder front raise",
                 "shoulder side raise", "rear delt fly", "barbell overhead press", "dumbbell shoulder press",
-                "dumbbell chest press", "chest fly", "barbell row", "dumbbell row", "hamstring curl",
-                "bulgarian split squat", "lunge", "calf raise", "push up", "pull up", "chin up", "dip",
-                "pistol squat", "abs exercise")
+                "dumbbell chest press", "chest fly", "barbell row", "dumbbell row", "resistance band row",
+                "hip thrust", "hamstring curl", "bulgarian split squat", "lunge", "calf raise", "push up",
+                "pull up", "chin up", "dip", "pistol squat", "abs exercise")
         }
 
         /**
@@ -28,12 +28,12 @@ class ExerciseUtils {
         @JvmStatic
         fun getAllExerciseShortcuts(): Array<String> {
             return arrayOf(
-                "bench press", "deadlift", "dl - sumo", "squat", "bicep curl", "hamm. curl",
-                "tricep ext", "tricep kb", "tricep pd", "front raise",
+                "bench press", "deadlift", "dl - sumo", "squat", "bb curl", "db curl",
+                "hamm. curl", "tricep ext", "tricep kb", "tricep pd", "front raise",
                 "side raise", "r. d. fly", "bb oh press", "db sh press",
-                "db chest p", "chest fly", "bb row", "db row", "hamst. curl",
-                "bulg. s. s", "lunge", "calf raise", "push up", "pull up", "chin up",
-                "dip", "pis. squat", "abs ex"
+                "db chest p", "chest fly", "bb row", "db row", "band row",
+                "hip thrust", "hamst. curl", "bulg. s. s", "lunge", "calf raise", "push up",
+                "pull up", "chin up", "dip", "pis. squat", "abs ex"
             )
         }
     }

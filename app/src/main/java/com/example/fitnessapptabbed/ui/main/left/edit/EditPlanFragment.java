@@ -92,7 +92,7 @@ public class EditPlanFragment extends Fragment {
      * and all the onItemClick actions
      */
     private void buildRecyclerView() {
-        adapter = new ExerciseAdapter(databaseHelper, exercises);
+        adapter = new ExerciseAdapter(exercises);
         binding.exercisesRecyclerView.setHasFixedSize(true);
         binding.exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.exercisesRecyclerView.setAdapter(adapter);

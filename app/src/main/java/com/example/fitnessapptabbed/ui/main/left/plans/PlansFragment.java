@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.fitnessapptabbed.MainActivity;
 import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.databinding.FragmentPlansBinding;
@@ -136,6 +137,30 @@ public class PlansFragment extends Fragment {
         adapter.notifyItemRemoved(position);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void editPlan(String[] newPlan, TrainingPlan planToBeRenamed, int position) {
+        String newTitle = newPlan[0];
+        String newDesc = newPlan[1];
+
+        // branch 1 - check if Title remains the same
+        if (newTitle.equals(planToBeRenamed.getTitle())) {
+            // check if Description is new
+            if (!newDesc.equals(planToBeRenamed.getDescription())) {
+                databaseHelper.updatePlanDescriptionInDb(newTitle, newDesc);
+                planToBeRenamed.setDescription(newDesc);
+            }
+            adapter.notifyItemChanged(position);    // just for the animation
+            return;
+        }
+        // branch 2 - check if new Title already used
+        if (!isDuplicatePlanName(newTitle)) {
+            databaseHelper.updatePlanTitleInDb(planToBeRenamed.getTitle(), newTitle, newDesc);
+            planToBeRenamed.setTitle(newTitle);
+            planToBeRenamed.setDescription(newDesc);
+            adapter.notifyItemChanged(position);
+        }
+    }
+
     /**
      * Method shows AlertDialog with the option to delete a new TrainingPlan
      * @param position of TrainingPlan to be deleted
@@ -240,25 +265,7 @@ public class PlansFragment extends Fragment {
         dialogBuilder.setPositiveButton(R.string.edit, (dialogInterface, i) -> {
             String newTitle = inputTitle.getText().toString();
             String newDesc = inputDescription.getText().toString();
-
-            // branch 1 - check if Title remains the same
-            if (newTitle.equals(planToBeRenamed.getTitle())) {
-                // check if Description is new
-                if (!newDesc.equals(planToBeRenamed.getDescription())) {
-                    databaseHelper.updatePlanDescriptionInDb(newTitle, newDesc);
-                    planToBeRenamed.setDescription(newDesc);
-                }
-                adapter.notifyItemChanged(position);    // just for the animation
-                return;
-            }
-
-            // branch 2 - check if new Title already used
-            if (!isDuplicatePlanName(newTitle)) {
-                databaseHelper.updatePlanTitleInDb(planToBeRenamed.getTitle(), newTitle, newDesc);
-                planToBeRenamed.setTitle(newTitle);
-                planToBeRenamed.setDescription(newDesc);
-                adapter.notifyItemChanged(position);
-            }
+            editPlan(new String[]{newTitle, newDesc}, planToBeRenamed, position);
         });
 
         // empty Title edit field
