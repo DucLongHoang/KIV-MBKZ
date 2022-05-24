@@ -12,14 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnessapptabbed.R;
-import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
-import com.example.fitnessapptabbed.ui.main.right.Statistic;
 import com.example.fitnessapptabbed.util.ExerciseUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,7 +40,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     public ExerciseAdapter(List<Exercise> list) {
         this.exercisesInPlan = list;
-        this.allExercises = Arrays.asList(ExerciseUtils.getAllExerciseNames());
+        this.allExercises = ExerciseUtils.getAllExerciseNames();
     }
 
     /**

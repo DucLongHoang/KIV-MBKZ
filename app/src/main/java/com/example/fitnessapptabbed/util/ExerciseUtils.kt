@@ -1,40 +1,89 @@
 package com.example.fitnessapptabbed.util
 
 /**
- * ExerciseUtil class - provides all initial exercises and their shortcuts
+ * [ExerciseUtils] class - provides all initial exercises and their shortcuts
  * @author Long
  * @version 1.0
  */
 class ExerciseUtils {
-    companion object {
+    /**
+     * [StringPair] data class - just to hold exercise name and exercise shortcut
+     * also enables simple sequence/stream manipulation by method calling
+     */
+    data class StringPair(val name: String, val shortcut: String)
 
-        /**
-         * Method returns an [Array] of exercise names in [String]
-         */
+    companion object {
         @JvmStatic
-        fun getAllExerciseNames(): Array<String> {
-            return arrayOf(
-                "bench press", "deadlift", "deadlift - sumo", "squat", "barbell bicep curl", "dumbbell bicep curl",
-                "hammer curl", "tricep extension", "tricep kickback", "tricep pull down", "shoulder front raise",
-                "shoulder side raise", "rear delt fly", "barbell overhead press", "dumbbell shoulder press",
-                "dumbbell chest press", "chest fly", "barbell row", "dumbbell row", "resistance band row",
-                "hip thrust", "hamstring curl", "bulgarian split squat", "lunge", "calf raise", "push up",
-                "pull up", "chin up", "dip", "pistol squat", "abs exercise")
+        private var exNamesShortcuts: MutableList<StringPair> = ArrayList()
+        init {
+            // main lifts
+            exNamesShortcuts.add(StringPair("bench press", "bench press"))
+            exNamesShortcuts.add(StringPair("deadlift", "deadlift"))
+            exNamesShortcuts.add(StringPair("deadlift - sumo", "dl - sumo"))
+            exNamesShortcuts.add(StringPair("squat", "squat"))
+            // biceps
+            exNamesShortcuts.add(StringPair("barbell bicep curl", "bb curl"))
+            exNamesShortcuts.add(StringPair("dumbbell bicep curl", "db curl"))
+            exNamesShortcuts.add(StringPair("hammer curl", "hamm. curl"))
+            // triceps
+            exNamesShortcuts.add(StringPair("tricep extension", "tricep ext"))
+            exNamesShortcuts.add(StringPair("tricep kickback", "tricep kb"))
+            exNamesShortcuts.add(StringPair("tricep pull down", "tricep pd"))
+            // front and side deltoids
+            exNamesShortcuts.add(StringPair("dumbbell front raise", "db fr raise"))
+            exNamesShortcuts.add(StringPair("plate front raise", "pl fr raise"))
+            exNamesShortcuts.add(StringPair("lateral raise", "lat. raise"))
+            // rear deltoids
+            exNamesShortcuts.add(StringPair("barbell high row", "bb high row"))
+            exNamesShortcuts.add(StringPair("dumbbell incline row", "db incl row"))
+            exNamesShortcuts.add(StringPair("face pulls", "face pulls"))
+            exNamesShortcuts.add(StringPair("rear delt fly", "r. d. fly"))
+            // shoulders
+            exNamesShortcuts.add(StringPair("barbell overhead press", "bb oh press"))
+            exNamesShortcuts.add(StringPair("dumbbell shoulder press", "db sh press"))
+            // chest
+            exNamesShortcuts.add(StringPair("dumbbell chest press", "db chest p"))
+            exNamesShortcuts.add(StringPair("chest fly", "chest fly"))
+            // lats
+            exNamesShortcuts.add(StringPair("barbell row", "bb row"))
+            exNamesShortcuts.add(StringPair("dumbbell row", "db row"))
+            exNamesShortcuts.add(StringPair("resistance band row", "band row"))
+            // legs
+            exNamesShortcuts.add(StringPair("hip thrust", "hip thrust"))
+            exNamesShortcuts.add(StringPair("hamstring curl", "hamst. curl"))
+            exNamesShortcuts.add(StringPair("bulgarian split squat", "bulg. s. s"))
+            exNamesShortcuts.add(StringPair("lunge", "lunge"))
+            exNamesShortcuts.add(StringPair("calf raise", "calf raise"))
+            // calisthenics
+            exNamesShortcuts.add(StringPair("push up", "push up"))
+            exNamesShortcuts.add(StringPair("pull up", "pull up"))
+            exNamesShortcuts.add(StringPair("chin up", "chin up"))
+            exNamesShortcuts.add(StringPair("dip", "dip"))
+            exNamesShortcuts.add(StringPair("pistol squat", "pis. squat"))
+            exNamesShortcuts.add(StringPair("abs exercise", "abs ex"))
+            // old exercises
+            exNamesShortcuts.add(StringPair("shoulder front raise", "front raise"))
+            exNamesShortcuts.add(StringPair("shoulder side raise", "side raise"))
         }
 
         /**
-         * Method returns and [Array] of exercise shortcuts in [String]
+         * Method returns a [List] of exercise names in [String]
          */
         @JvmStatic
-        fun getAllExerciseShortcuts(): Array<String> {
-            return arrayOf(
-                "bench press", "deadlift", "dl - sumo", "squat", "bb curl", "db curl",
-                "hamm. curl", "tricep ext", "tricep kb", "tricep pd", "front raise",
-                "side raise", "r. d. fly", "bb oh press", "db sh press",
-                "db chest p", "chest fly", "bb row", "db row", "band row",
-                "hip thrust", "hamst. curl", "bulg. s. s", "lunge", "calf raise", "push up",
-                "pull up", "chin up", "dip", "pis. squat", "abs ex"
-            )
+        fun getAllExerciseNames(): List<String> {
+            return exNamesShortcuts.asSequence()
+                .map(StringPair::name)
+                .toList()
+        }
+
+        /**
+         * Method returns a [List] of exercise shortcuts in [String]
+         */
+        @JvmStatic
+        fun getAllExerciseShortcuts(): List<String> {
+            return exNamesShortcuts.asSequence()
+                .map(StringPair::shortcut)
+                .toList()
         }
     }
 }

@@ -14,7 +14,7 @@ import com.example.fitnessapptabbed.util.ExerciseUtils
 class RecordHandler(val fragment: TrainFragment) {
     private val databaseHelper = PlansDatabaseHelper(fragment.requireContext())
     private val listOfRecords: MutableList<Statistic> = databaseHelper.getAllExercisesFromDb()
-    private val exShortcuts: Array<String> = ExerciseUtils.getAllExerciseShortcuts()
+    private val exShortcuts: List<String> = ExerciseUtils.getAllExerciseShortcuts()
 
     /**
      * Method checks if a record of [exName] with was broken by weight [kgs]
