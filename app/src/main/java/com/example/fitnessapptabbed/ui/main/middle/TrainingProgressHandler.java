@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class TrainingProgressHandler {
     // Constants
-    private static final double HYPER_TROPHY = 0.8;
     private static final int SET_VIB_DURATION = 100;
     private static final int EX_VIB_DURATION = 400;
 
@@ -37,7 +36,7 @@ public class TrainingProgressHandler {
 
     // View objects
     private final ImageButton ibNext, ibBack;
-    private final TextView tvCurrEx, tvSets, tvReps, tvKgs, tvRecord;
+    private final TextView tvCurrEx, tvSets, tvReps, tvRecord;
 
     /**
      * Constructor for TrainingProgressHandler
@@ -61,7 +60,6 @@ public class TrainingProgressHandler {
         tvCurrEx = fragment.requireActivity().findViewById(R.id.textViewCurrEx);
         tvSets = fragment.requireActivity().findViewById(R.id.textViewSetCounter);
         tvReps = fragment.requireActivity().findViewById(R.id.textViewRepCounter);
-        tvKgs = fragment.requireActivity().findViewById(R.id.textViewIdealWeight);
         tvRecord = fragment.requireActivity().findViewById(R.id.textViewRecord);
 
         EditText editTextKg = fragment.requireActivity().findViewById(R.id.editTextInputWeight);
@@ -158,7 +156,6 @@ public class TrainingProgressHandler {
         tvCurrEx.setText(currExercise.getName().toUpperCase());
         tvSets.setText(setCounter + "/" + currExercise.getSets());
         tvReps.setText("" + currExercise.getReps());
-        tvKgs.setText(round(currRecord * HYPER_TROPHY) + " kg");
         tvRecord.setText(currRecord + " kg");
     }
 
