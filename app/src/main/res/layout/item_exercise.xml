@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 app:fabSize="mini"
-                app:backgroundTint="#dd5555"
+                app:backgroundTint="@color/red"
                 app:srcCompat="@drawable/ic_delete"
                 tools:ignore="ContentDescription,RelativeOverlap"/>
 

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="56dp"
-            app:backgroundTint="#dddd55"
+            app:backgroundTint="@color/yellow"
             app:srcCompat="@drawable/ic_edit"
             tools:ignore="ContentDescription,RelativeOverlap" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="6dp"
-            app:backgroundTint="#dd5555"
+            app:backgroundTint="@color/red"
             app:srcCompat="@drawable/ic_delete"
             tools:ignore="ContentDescription,RelativeOverlap" />
 
