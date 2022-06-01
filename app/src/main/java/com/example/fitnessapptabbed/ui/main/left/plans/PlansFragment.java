@@ -112,6 +112,8 @@ public class PlansFragment extends Fragment {
                 .actionPlansToEditPlan(toPass.getTitle(), toPass.getDescription());
         NavHostFragment.findNavController(PlansFragment.this)
                 .navigate(action);
+        ( (MainActivity)requireActivity() ).setCanTrain(false);
+        ( (MainActivity)requireActivity() ).setCanAddNewExercise(false);
     }
 
     /**

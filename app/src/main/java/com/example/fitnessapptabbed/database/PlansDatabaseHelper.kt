@@ -34,6 +34,7 @@ class PlansDatabaseHelper(
         const val COL_EX_SETS: String = "sets"
         const val COL_EX_REPS: String = "reps"
         const val COL_EX_KGS: String = "kgs"
+        const val COL_EX_SC: String = "shortcut"
         const val COL_DATE: String = "date"
     }
     // Exercise names

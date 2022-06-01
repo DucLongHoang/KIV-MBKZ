@@ -9,10 +9,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
+import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener
 import kotlinx.android.synthetic.main.item_statistic.view.*
 
 class StatsAdapter(private val statistics: MutableList<Statistic>)
     : RecyclerView.Adapter<StatsAdapter.StatisticViewHolder>() {
+    private lateinit var itemClickListener: OnItemClickListener
+
+    /**
+     * Sets [itemClickListener] to [onItemClickListener]
+     */
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.itemClickListener = onItemClickListener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatisticViewHolder {
         val itemView: View = LayoutInflater.from(parent.context)

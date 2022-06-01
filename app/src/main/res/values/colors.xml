@@ -9,11 +9,21 @@
     <color name="white">#FFFFFFFF</color>
 
     <!--  Custom colours  -->
-    <color name="primary_200">#a4ceea</color>
-    <color name="primary_500">#679fd3</color>
-    <color name="primary_700">#5280b4</color>
-    <color name="secondary_200">#FF03DAC5</color>
-    <color name="secondary_700">#FF018786</color>
+    <color name="primary_200">@color/amber_700</color>
+    <color name="primary_500">@color/amber_700</color>
+    <color name="primary_700">@color/amber_700</color>
+    <color name="secondary_200">@color/amber_secondary</color>
+    <color name="secondary_700">@color/teal_700</color>
     <color name="red">#DD5555</color>
     <color name="yellow">#DDDD55</color>
+
+    <!--  My colours  -->
+    <color name="blue_200">#A4CEEA</color>
+    <color name="blue_500">#669FD3</color>
+    <color name="blue_700">#5280B4</color>
+
+    <!--  Vitek's colours  -->
+    <color name="amber_700">#FFA000</color>
+    <color name="amber_secondary">#4CB4FF</color>
+
 </resources>

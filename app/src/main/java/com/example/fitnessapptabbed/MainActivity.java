@@ -19,13 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private SwitchCompat modeSwitch;
+    private boolean canEditPlan, canTrain, canAddNewExercise;
     private long backPressedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getBaseContext().deleteDatabase("plans_database.db");
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         modeSwitch = findViewById(R.id.nightModeSwitch);
         setNightModeSwitch();
+        canEditPlan = canTrain = canAddNewExercise = true;
     }
 
     @Override
@@ -87,5 +87,29 @@ public class MainActivity extends AppCompatActivity {
      */
     public void enableSwitch(boolean enable) {
         modeSwitch.setEnabled(enable);
+    }
+
+    public boolean canEditPlan() {
+        return canEditPlan;
+    }
+
+    public void setCanEditPlan(boolean canEditPlan) {
+        this.canEditPlan = canEditPlan;
+    }
+
+    public boolean canTrain() {
+        return canTrain;
+    }
+
+    public void setCanTrain(boolean canTrain) {
+        this.canTrain = canTrain;
+    }
+
+    public boolean canAddNewExercise() {
+        return canAddNewExercise;
+    }
+
+    public void setCanAddNewExercise(boolean canAddNewExercise) {
+        this.canAddNewExercise = canAddNewExercise;
     }
 }

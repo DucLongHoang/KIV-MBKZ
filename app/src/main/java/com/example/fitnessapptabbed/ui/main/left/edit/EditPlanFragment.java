@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fitnessapptabbed.MainActivity;
 import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.databinding.FragmentEditPlanBinding;
@@ -143,8 +145,13 @@ public class EditPlanFragment extends Fragment {
      */
     private void setSaveButton() {
         binding.saveEditButton.setOnClickListener(view -> {
-            saveExercises();
-            createDialog(true);
+            if ( !( (MainActivity)requireActivity() ).canEditPlan() ) {
+                Toast.makeText(requireContext(), R.string.cannot_edit_msg, Toast.LENGTH_SHORT).show();
+            }
+            else {
+                saveExercises();
+                createDialog(true);
+            }
         });
     }
 
@@ -198,6 +205,8 @@ public class EditPlanFragment extends Fragment {
             if(save) { savePlanConfig(exercises); }
             NavHostFragment.findNavController(EditPlanFragment.this)
                     .navigate(R.id.action_editPlan_to_plans); });
+            ( (MainActivity)requireActivity() ).setCanTrain(true);
+            ( (MainActivity)requireActivity() ).setCanAddNewExercise(true);
 
         // show dialog
         AlertDialog dialog = dialogBuilder.create();

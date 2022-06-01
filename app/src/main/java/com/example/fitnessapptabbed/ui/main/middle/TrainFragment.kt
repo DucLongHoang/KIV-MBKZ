@@ -152,13 +152,19 @@ class TrainFragment: Fragment() {
     private fun setStartEndButton() {
         startEndButton.setOnClickListener {
             if (!trainingRunning) {      // start -> end
-                exercisesInPlan = databaseHelper.getPlanConfigFromDb(chosenPlan.Title)
-                // every TrainingPlan has an empty exercise
-                if (exercisesInPlan.size > 1) startTraining()
+
+                if (!(activity as MainActivity).canTrain()) {
+                    Toast.makeText(context, R.string.cannot_train_msg, Toast.LENGTH_SHORT).show()
+                }
                 else {
-                    vibrator.vibrate(VIB_DURATION)
-                    Toast.makeText(context, R.string.empty_plan_msg,
-                        Toast.LENGTH_SHORT).show()
+                    exercisesInPlan = databaseHelper.getPlanConfigFromDb(chosenPlan.Title)
+
+                    // every TrainingPlan has an empty exercise, check if size at least 2
+                    if (exercisesInPlan.size > 1) startTraining()
+                    else {
+                        vibrator.vibrate(VIB_DURATION)
+                        Toast.makeText(context, R.string.empty_plan_msg, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             else {      // end -> start
@@ -199,6 +205,7 @@ class TrainFragment: Fragment() {
         lin_layout_2.visibility = View.VISIBLE
         lin_layout_3.visibility = View.VISIBLE
         (activity as MainActivity).enableSwitch(false)
+        (activity as MainActivity).setCanEditPlan(false)
         (activity as MainActivity).window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         startChronometer()
     }
@@ -216,6 +223,7 @@ class TrainFragment: Fragment() {
         lin_layout_3.visibility = View.INVISIBLE
         editTextInputWeight.text.clear()
         (activity as MainActivity).enableSwitch(true)
+        (activity as MainActivity).setCanEditPlan(true)
         (activity as MainActivity).window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         saveTrainingToPreferences()
         showLastTraining()
