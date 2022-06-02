@@ -85,5 +85,10 @@ class ExerciseUtils {
                 .map(StringPair::shortcut)
                 .toList()
         }
+
+        @JvmStatic
+        fun getAllExerciseNamesAndShortcuts(): List<StringPair> {
+            return exNamesShortcuts;
+        }
     }
 }

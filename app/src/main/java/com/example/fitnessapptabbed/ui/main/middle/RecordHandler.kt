@@ -5,7 +5,6 @@ import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.ui.main.right.Statistic
 import com.example.fitnessapptabbed.util.DateTimeUtils
-import com.example.fitnessapptabbed.util.ExerciseUtils
 
 /**
  * [RecordHandler] class takes a [TrainFragment] as parameter
@@ -14,7 +13,6 @@ import com.example.fitnessapptabbed.util.ExerciseUtils
 class RecordHandler(val fragment: TrainFragment) {
     private val databaseHelper = PlansDatabaseHelper(fragment.requireContext())
     private val listOfRecords: MutableList<Statistic> = databaseHelper.getAllExercisesFromDb()
-    private val exShortcuts: List<String> = ExerciseUtils.getAllExerciseShortcuts()
 
     /**
      * Method checks if a record of [exName] with was broken by weight [kgs]
@@ -25,9 +23,11 @@ class RecordHandler(val fragment: TrainFragment) {
             item = listOfRecords[i]
 
             if (item.exerciseName == exName && item.recordKgs < kgs) {
-                listOfRecords[i] = Statistic(exName, kgs, DateTimeUtils.getCurrentDateInString())
+                listOfRecords[i] = Statistic(item.exerciseName, item.exerciseShortcut,
+                    kgs, DateTimeUtils.getCurrentDateInString(), item.order)
+
                 updateRecordInDb(listOfRecords[i])
-                makeNewRecordToast(exShortcuts[i], item.recordKgs, kgs)
+                makeNewRecordToast(item.exerciseShortcut, item.recordKgs, kgs)
                 return
             }
         }
@@ -37,8 +37,11 @@ class RecordHandler(val fragment: TrainFragment) {
      * Method makes a Toast [exName], old [recordKgs] and new record [kgs]
      */
     private fun makeNewRecordToast(exName: String, recordKgs: Int, kgs: Int) {
+        var shortcut: String = exName
+        if (exName.length > 11) shortcut = exName.substring(0, 11)
+
         val message = fragment.context?.getString(R.string.new_record_msg) +
-                "\n$exName: $recordKgs kg -> $kgs kg"
+                "\n$shortcut: $recordKgs kg -> $kgs kg"
         Toast.makeText(fragment.context, message.uppercase(), Toast.LENGTH_LONG).show()
     }
 

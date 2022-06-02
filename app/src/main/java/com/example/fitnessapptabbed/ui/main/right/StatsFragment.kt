@@ -121,7 +121,11 @@ class StatsFragment : Fragment() {
         dialogBuilder.setPositiveButton(R.string.create) { _, _ ->
             val name = inputName.text.toString()
             val shortcut = inputShortcut.text.toString()
-            addExercise(Statistic(name))
+            var order = statistics.asSequence().map(Statistic::order).maxOrNull()
+
+            if (order != null) {
+                addExercise(Statistic(name, shortcut, ++order))
+            }
         }
 
         // empty Title edit field
@@ -139,18 +143,19 @@ class StatsFragment : Fragment() {
             }
         })
 
-        inputShortcut.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(field: Editable) {
-                if (field.length > 11) {
-                    field.replace(0, field.length, field, 0 ,11)
-                }
-            }
-        })
+//        inputShortcut.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+//            override fun afterTextChanged(field: Editable) {
+//                if (field.length > 11) {
+//                    field.replace(0, field.length, field, 0 ,11)
+//                }
+//            }
+//        })
     }
 
     private fun addExercise(statistic: Statistic) {
+        databaseHelper.insertNewExerciseIntoDb(statistic)
         val index: Int = statistics.size
         statistics.add(index, statistic)
         adapter.notifyItemInserted(index)

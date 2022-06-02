@@ -75,7 +75,7 @@ class StatsAdapter(private val statistics: MutableList<Statistic>)
          */
         private fun nullifyRecord() {
             val databaseHelper = PlansDatabaseHelper(itemView.context)
-            databaseHelper.updateRecordInDb(Statistic(exerciseName.text.toString()))
+            databaseHelper.nullifyRecordInDb(exerciseName.text.toString())
             databaseHelper.close()
         }
     }

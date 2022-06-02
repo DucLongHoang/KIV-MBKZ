@@ -1,6 +1,7 @@
 package com.example.fitnessapptabbed.ui.main.left.edit;
 
 import android.app.AlertDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,9 +21,11 @@ import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.databinding.FragmentEditPlanBinding;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
+import com.example.fitnessapptabbed.ui.main.right.Statistic;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +35,8 @@ import java.util.List;
 public class EditPlanFragment extends Fragment {
     private FragmentEditPlanBinding binding;
     private ExerciseAdapter adapter;
-    private List<Exercise> exercises;
+    private List<Exercise> exercisesInPlan;
+    private List<String> allExercises;
     private PlansDatabaseHelper databaseHelper;
     private String planTitle, planDescription;
 
@@ -48,6 +53,7 @@ public class EditPlanFragment extends Fragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,7 +62,13 @@ public class EditPlanFragment extends Fragment {
 
         planTitle = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
         planDescription = EditPlanFragmentArgs.fromBundle(getArguments()).getDescription();
-        exercises = databaseHelper.getPlanConfigFromDb(planTitle);
+        exercisesInPlan = databaseHelper.getPlanConfigFromDb(planTitle);
+        allExercises = databaseHelper.getAllExercisesFromDb()
+                .stream()
+                .sorted()
+                .map(Statistic::getExerciseName)
+                .collect(Collectors.toList());
+
         buildRecyclerView();
 
         return binding.getRoot();
@@ -94,7 +106,7 @@ public class EditPlanFragment extends Fragment {
      * and all the onItemClick actions
      */
     private void buildRecyclerView() {
-        adapter = new ExerciseAdapter(exercises);
+        adapter = new ExerciseAdapter(exercisesInPlan, allExercises);
         binding.exercisesRecyclerView.setHasFixedSize(true);
         binding.exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.exercisesRecyclerView.setAdapter(adapter);
@@ -119,8 +131,8 @@ public class EditPlanFragment extends Fragment {
      */
     private void addExercise() {
         Exercise ex = new Exercise();
-        int index = exercises.size();
-        exercises.add(index, ex);
+        int index = exercisesInPlan.size();
+        exercisesInPlan.add(index, ex);
         adapter.notifyItemInserted(index);
     }
 
@@ -129,7 +141,7 @@ public class EditPlanFragment extends Fragment {
      * @param position at which an Exercise is deleted from
      */
     private void deleteExercise(int position) {
-        exercises.remove(position);
+        exercisesInPlan.remove(position);
         adapter.notifyItemRemoved(position);
     }
 
@@ -159,8 +171,8 @@ public class EditPlanFragment extends Fragment {
      * Method prints all exercises except the last NULL exercise
      */
     private void printExercises() {
-        for(int i = 0; i < exercises.size() - 1; i++)
-            System.out.println(exercises.get(i));
+        for(int i = 0; i < exercisesInPlan.size() - 1; i++)
+            System.out.println(exercisesInPlan.get(i));
     }
 
     /**
@@ -173,10 +185,10 @@ public class EditPlanFragment extends Fragment {
         Exercise exercise; View v;
 
         // List length - 1 because don't want to save invisible default exercise
-        for(int i = 0; i < exercises.size() - 1; i++) {
+        for(int i = 0; i < exercisesInPlan.size() - 1; i++) {
             v = rv.getChildAt(i);
             evh = (ExerciseAdapter.ExerciseViewHolder) rv.getChildViewHolder(v);
-            exercise = exercises.get(i);
+            exercise = exercisesInPlan.get(i);
 
             // setting exercise from ViewHolder
             exercise.setName(evh.exerciseSpinner.getSelectedItem().toString());
@@ -202,7 +214,7 @@ public class EditPlanFragment extends Fragment {
         // setting options
         dialogBuilder.setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel());
         dialogBuilder.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-            if(save) { savePlanConfig(exercises); }
+            if(save) { savePlanConfig(exercisesInPlan); }
             NavHostFragment.findNavController(EditPlanFragment.this)
                     .navigate(R.id.action_editPlan_to_plans); });
             ( (MainActivity)requireActivity() ).setCanTrain(true);

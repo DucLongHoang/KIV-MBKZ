@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
-import com.example.fitnessapptabbed.util.ExerciseUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -38,9 +37,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param databaseHelper DatabaseHelper passed from fragment
      * @param list data set
      */
-    public ExerciseAdapter(List<Exercise> list) {
+    public ExerciseAdapter(List<Exercise> list, List<String> allExercises) {
         this.exercisesInPlan = list;
-        this.allExercises = ExerciseUtils.getAllExerciseNames();
+        this.allExercises = allExercises;
     }
 
     /**

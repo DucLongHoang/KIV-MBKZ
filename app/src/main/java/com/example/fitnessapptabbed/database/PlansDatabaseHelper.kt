@@ -35,51 +35,45 @@ class PlansDatabaseHelper(
         const val COL_EX_REPS: String = "reps"
         const val COL_EX_KGS: String = "kgs"
         const val COL_EX_SC: String = "shortcut"
+        // order column cannot be named 'order', WTF!!!
+        const val COL_ORDER: String = "order_number"
         const val COL_DATE: String = "date"
     }
     // Exercise names
-    private val exercises: List<String> = ExerciseUtils.getAllExerciseNames()
-
+    private val namesAndShortcuts: List<ExerciseUtils.StringPair> = ExerciseUtils.getAllExerciseNamesAndShortcuts()
 
     override fun onCreate(db: SQLiteDatabase) {
         createTables(db)
         initExercisesInDb(db)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_EXERCISE")
-        val createExerciseTableSql: String = ("CREATE TABLE $TABLE_EXERCISE (" +
-                "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "$COL_EX_NAME TEXT NOT NULL, " +
-                "$COL_EX_KGS INTEGER, " +
-                "$COL_DATE TEXT NOT NULL );")
-        db.execSQL(createExerciseTableSql)
-        initExercisesInDb(db)
-    }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) { }
 
     /**
      * Method creates tables of the database [db]
      */
     private fun createTables(db: SQLiteDatabase) {
-        val createPlanTableSql: String = ("CREATE TABLE $TABLE_PLAN (" +
+        val createPlanTableSql: String = "CREATE TABLE $TABLE_PLAN (" +
                 "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_PLAN_TITLE TEXT NOT NULL, " +
-                "$COL_PLAN_DESC TEXT );")
+                "$COL_PLAN_DESC TEXT );"
 
-        val createExerciseTableSql: String = ("CREATE TABLE $TABLE_EXERCISE (" +
+        val createExerciseTableSql: String = "CREATE TABLE $TABLE_EXERCISE (" +
                 "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_EX_NAME TEXT NOT NULL, " +
+                "$COL_EX_SC TEXT NOT NULL, " +
                 "$COL_EX_KGS INTEGER, " +
-                "$COL_DATE TEXT NOT NULL );")
+                "$COL_DATE TEXT NOT NULL, " +
+                "$COL_ORDER INTEGER );"
 
-        val createPlanConfigTableSql: String = ("CREATE TABLE $TABLE_PLAN_CONFIG (" +
+        val createPlanConfigTableSql: String = "CREATE TABLE $TABLE_PLAN_CONFIG (" +
                 "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_PLAN_TITLE TEXT NOT NULL, " +
                 "$COL_EX_NAME TEXT NOT NULL, " +
                 "$COL_EX_SETS INTEGER, " +
                 "$COL_EX_REPS INTEGER, " +
                 "FOREIGN KEY ($COL_PLAN_TITLE) REFERENCES $TABLE_PLAN($COL_PLAN_TITLE), " +
-                "FOREIGN KEY ($COL_EX_NAME) REFERENCES $TABLE_EXERCISE($COL_EX_NAME) );")
+                "FOREIGN KEY ($COL_EX_NAME) REFERENCES $TABLE_EXERCISE($COL_EX_NAME) );"
 
         db.execSQL(createPlanTableSql)
         db.execSQL(createExerciseTableSql)
@@ -93,11 +87,16 @@ class PlansDatabaseHelper(
     private fun initExercisesInDb(db: SQLiteDatabase) {
         val emptyExercise = Statistic()
         val contentValues = ContentValues()
-        for (exercise in exercises) {
-            contentValues.put(COL_EX_NAME, exercise)
+
+        var order = 1
+        for (item in namesAndShortcuts) {
+            contentValues.put(COL_EX_NAME, item.name)
+            contentValues.put(COL_EX_SC, item.shortcut)
             contentValues.put(COL_EX_KGS, emptyExercise.recordKgs)
             contentValues.put(COL_DATE, emptyExercise.dateOfRecord)
+            contentValues.put(COL_ORDER, order)
             db.insert(TABLE_EXERCISE, null, contentValues)
+            ++order
         }
     }
 
@@ -121,11 +120,11 @@ class PlansDatabaseHelper(
         contentValues.put(COL_PLAN_TITLE, newTitle)
         contentValues.put(COL_PLAN_DESC, newDescription)
 
-        // change title and description in Plans Table
+        // change title and description in PLANS Table
         db.update(TABLE_PLAN, contentValues,
             "$COL_PLAN_TITLE=?", arrayOf(oldTitle))
 
-        // change title in Plan config table
+        // change title in PLANCONFIG table
         contentValues.clear()
         contentValues.put(COL_PLAN_TITLE, newTitle)
         db.update(TABLE_PLAN_CONFIG, contentValues,
@@ -180,6 +179,9 @@ class PlansDatabaseHelper(
         return db.rawQuery(selectQuery, null)
     }
 
+    /**
+     *
+     */
     @SuppressLint("Range", "Recycle")
     fun getRecordKgsFromDb(title: String): Int {
         val db: SQLiteDatabase = this.readableDatabase
@@ -206,20 +208,53 @@ class PlansDatabaseHelper(
     }
 
     /**
+     *
+     */
+    fun nullifyRecordInDb(exerciseName: String) {
+        val db: SQLiteDatabase = this.writableDatabase
+        val contentValues = ContentValues()
+        val emptyExercise = Statistic()
+
+        contentValues.put(COL_EX_KGS, emptyExercise.recordKgs)
+        contentValues.put(COL_DATE, emptyExercise.dateOfRecord)
+
+        db.update(TABLE_EXERCISE, contentValues,
+            "$COL_EX_NAME=?", arrayOf(exerciseName))
+    }
+
+    /**
+     * Method inserts the [newExercise] into the Database
+     */
+    fun insertNewExerciseIntoDb(newExercise: Statistic) {
+        val database: SQLiteDatabase = this.writableDatabase
+        val contentValues = ContentValues()
+        val emptyExercise = Statistic()
+        contentValues.put(COL_EX_NAME, newExercise.exerciseName)
+        contentValues.put(COL_EX_SC, newExercise.exerciseShortcut)
+        contentValues.put(COL_EX_KGS, emptyExercise.recordKgs)
+        contentValues.put(COL_DATE, emptyExercise.dateOfRecord)
+        contentValues.put(COL_ORDER, newExercise.order)
+        database.insert(TABLE_EXERCISE, null, contentValues)
+    }
+
+    /**
      * Method returns a [MutableList] of exercises from the DB
      */
     @SuppressLint("Range")
     fun getAllExercisesFromDb(): MutableList<Statistic> {
         val result: MutableList<Statistic> = ArrayList()
         val c: Cursor = getExercisesCursor()
-        var exName: String; var recordKgs: Int; var date: String
+        var exName: String; var exShortcut: String
+        var recordKgs: Int; var date: String; var order: Int
 
         if(c.moveToFirst()) {
             do {
                 exName = c.getString(c.getColumnIndex(COL_EX_NAME))
+                exShortcut = c.getString(c.getColumnIndex(COL_EX_SC))
                 recordKgs = c.getInt(c.getColumnIndex(COL_EX_KGS))
                 date = c.getString(c.getColumnIndex(COL_DATE))
-                result.add(Statistic(exName, recordKgs, date))
+                order = c.getInt(c.getColumnIndex(COL_ORDER))
+                result.add(Statistic(exName, exShortcut, recordKgs, date, order))
             } while (c.moveToNext())
         }
         return result
@@ -230,7 +265,8 @@ class PlansDatabaseHelper(
      */
     private fun getExercisesCursor(): Cursor {
         val db: SQLiteDatabase = this.readableDatabase
-        val selectQuery = "SELECT $COL_EX_NAME, $COL_EX_KGS, $COL_DATE FROM $TABLE_EXERCISE"
+        val selectQuery = "SELECT $COL_EX_NAME, $COL_EX_SC, $COL_EX_KGS, $COL_DATE, $COL_ORDER " +
+                "FROM $TABLE_EXERCISE"
         return db.rawQuery(selectQuery, null)
     }
 
@@ -252,7 +288,7 @@ class PlansDatabaseHelper(
             } while (c.moveToNext())
         }
 
-        // add empty first Exercise so that the Recycler View show '+' button
+        // add empty first Exercise so that the Recycler View shows '+' button
         result.add(Exercise())
 
         return result
