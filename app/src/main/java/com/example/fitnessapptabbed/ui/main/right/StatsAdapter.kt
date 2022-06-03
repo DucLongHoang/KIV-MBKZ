@@ -10,26 +10,25 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
-import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener
 import kotlinx.android.synthetic.main.item_statistic.view.*
 
 class StatsAdapter(
     private val statistics: MutableList<Statistic>,
     private val context: Context)
     : RecyclerView.Adapter<StatsAdapter.StatisticViewHolder>() {
-    private lateinit var itemClickListener: OnItemClickListener
+    private lateinit var optionClickListener: OnOptionClickListener
 
     /**
-     * Sets [itemClickListener] to [onItemClickListener]
+     * Sets [optionClickListener] to [onOptionClickListener]
      */
-    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
-        this.itemClickListener = onItemClickListener
+    fun setItemClickListener(onOptionClickListener: OnOptionClickListener) {
+        this.optionClickListener = onOptionClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatisticViewHolder {
         val itemView: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_statistic, parent, false)
-        return StatisticViewHolder(itemView, itemClickListener)
+        return StatisticViewHolder(itemView)
     }
 
     @SuppressLint("SetTextI18n")
@@ -46,7 +45,7 @@ class StatsAdapter(
                     R.id.option_move_one_up -> {}
                     R.id.option_move_one_down -> {}
                     R.id.option_nullify_record -> { holder.nullifyRecordDialog() }
-                    R.id.option_remove_exercise -> { holder.removeExerciseDialog() }
+                    R.id.option_remove_exercise -> { optionClickListener.onRemoveOptionClick(position) }
                 }
                 true
             }
@@ -56,7 +55,7 @@ class StatsAdapter(
 
     override fun getItemCount(): Int = statistics.size
 
-    class StatisticViewHolder(itemView: View, val itemClickListener: OnItemClickListener)
+    class StatisticViewHolder(itemView: View)
         : RecyclerView.ViewHolder(itemView) {
         val exerciseName: TextView = itemView.textViewExName
         var recordKgs: TextView = itemView.textViewKgs
@@ -79,9 +78,9 @@ class StatsAdapter(
             // setting options
             dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
             dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int ->
-                nullifyRecord()
                 date.setText(R.string.default_date)
                 recordKgs.setText(R.string.default_kg)
+                nullifyRecord()
             }
 
             // show dialog
@@ -96,39 +95,6 @@ class StatsAdapter(
             val databaseHelper = PlansDatabaseHelper(itemView.context)
             databaseHelper.nullifyRecordInDb(exerciseName.text.toString())
             databaseHelper.close()
-        }
-
-        fun removeExerciseDialog() {
-            // warning text
-            val warning = TextView(itemView.context)
-            warning.setText(R.string.remove_exercise_warning_msg)
-
-            // add layout for fields
-            val layout = LinearLayout(itemView.context)
-            layout.setPadding(24, 0, 24, 0)
-            layout.orientation = LinearLayout.VERTICAL
-            layout.addView(warning)
-
-            // create dialog
-            val dialogBuilder = AlertDialog.Builder(itemView.context)
-            dialogBuilder.setTitle(R.string.remove_exercise_prompt)
-            dialogBuilder.setView(layout)
-
-            // setting options
-            dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
-            dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int -> removeExercise() }
-
-            // show dialog
-            val dialog = dialogBuilder.create()
-            dialog.show()
-        }
-
-        private fun removeExercise() {
-            val databaseHelper = PlansDatabaseHelper(itemView.context)
-            databaseHelper.deleteExerciseFromDb(exerciseName.text.toString())
-            databaseHelper.close()
-            // propagate visual changes to the adapter and StatsFragment
-            itemClickListener.onDeleteClick(absoluteAdapterPosition)
         }
     }
 }

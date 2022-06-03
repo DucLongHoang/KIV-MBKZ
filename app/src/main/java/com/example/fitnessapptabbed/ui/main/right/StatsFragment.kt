@@ -12,13 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
-import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener
 import kotlinx.android.synthetic.main.fragment_stats.*
 
 
@@ -74,26 +74,13 @@ class StatsFragment : Fragment() {
         statsRecyclerView.layoutManager = LinearLayoutManager(context)
         statsRecyclerView.setHasFixedSize(true)
         statsRecyclerView.adapter = adapter
-        adapter.setItemClickListener(object : OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onAddClick(position: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onEditClick(position: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDeleteClick(position: Int) {
-                statistics.removeAt(position)
-                adapter.notifyItemRemoved(position)
-            }
+        adapter.setItemClickListener(object : OnOptionClickListener {
+            override fun onMoveUpClick(position: Int) {}
+            override fun onMoveDownClick(position: Int) {}
+            override fun onNullifyRecordClick(position: Int) {}
+            override fun onRemoveOptionClick(position: Int) { removeExerciseDialog(position) }
         })
     }
-
 
     /**
      * Method shows AlertDialog with the option to create a new TrainingPlan
@@ -156,11 +143,49 @@ class StatsFragment : Fragment() {
 //        })
     }
 
-    private fun addExercise(statistic: Statistic) {
-        databaseHelper.insertNewExerciseIntoDb(statistic)
+    /**
+     * Method adds a [newExercise] into the Database
+     */
+    private fun addExercise(newExercise: Statistic) {
+        databaseHelper.insertNewExerciseIntoDb(newExercise)
         val index: Int = statistics.size
-        statistics.add(index, statistic)
+        statistics.add(index, newExercise)
         adapter.notifyItemInserted(index)
+    }
+
+    fun removeExerciseDialog(position: Int) {
+        // warning text
+        val warning = TextView(context)
+        warning.setText(R.string.remove_exercise_warning_msg)
+
+        // add layout for fields
+        val layout = LinearLayout(context)
+        layout.setPadding(24, 0, 24, 0)
+        layout.orientation = LinearLayout.VERTICAL
+        layout.addView(warning)
+
+        // create dialog
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setTitle(R.string.remove_exercise_prompt)
+        dialogBuilder.setView(layout)
+
+        // setting options
+        dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
+        dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int -> removeExercise(position) }
+
+        // show dialog
+        val dialog = dialogBuilder.create()
+        dialog.show()
+    }
+
+    private fun removeExercise(position: Int) {
+        // delete from DB
+        val databaseHelper = PlansDatabaseHelper(requireContext())
+        databaseHelper.deleteExerciseFromDb(statistics[position].exerciseName)
+        databaseHelper.close()
+        // delete from RecyclerView
+        statistics.removeAt(position)
+        adapter.notifyItemRemoved(position)
     }
 
 }
