@@ -21,7 +21,6 @@ import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
 import kotlinx.android.synthetic.main.fragment_stats.*
 
-
 /**
  * A simple [Fragment] subclass.
  * Use the [StatsFragment.newInstance] factory method to
@@ -55,6 +54,11 @@ class StatsFragment : Fragment() {
         registerForContextMenu(statsRecyclerView)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        databaseHelper.close()
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -75,7 +79,7 @@ class StatsFragment : Fragment() {
         statsRecyclerView.setHasFixedSize(true)
         statsRecyclerView.adapter = adapter
         adapter.setItemClickListener(object : OnOptionClickListener {
-            override fun onMoveUpClick(position: Int) {}
+            override fun onMoveUpClick(position: Int) { moveExerciseUp(position) }
             override fun onMoveDownClick(position: Int) {}
             override fun onNullifyRecordClick(position: Int) {}
             override fun onRemoveOptionClick(position: Int) { removeExerciseDialog(position) }
@@ -153,7 +157,25 @@ class StatsFragment : Fragment() {
         adapter.notifyItemInserted(index)
     }
 
-    fun removeExerciseDialog(position: Int) {
+    private fun moveExerciseUp(position: Int) {
+        if (position == 0) return
+
+        for (i in 0 until 6) {
+            println(statistics[i].exerciseName + ": " + i)
+        }
+
+        val toBeMovedUp: Statistic = statistics[position]
+        statistics.removeAt(position)
+        statistics.add(position - 1, toBeMovedUp)
+        adapter.notifyItemMoved(position, position - 1)
+
+        println("-".repeat(5))
+        for (i in 0 until 6) {
+            println(statistics[i].exerciseName + ": " + i)
+        }
+    }
+
+    private fun removeExerciseDialog(position: Int) {
         // warning text
         val warning = TextView(context)
         warning.setText(R.string.remove_exercise_warning_msg)
@@ -179,13 +201,8 @@ class StatsFragment : Fragment() {
     }
 
     private fun removeExercise(position: Int) {
-        // delete from DB
-        val databaseHelper = PlansDatabaseHelper(requireContext())
         databaseHelper.deleteExerciseFromDb(statistics[position].exerciseName)
-        databaseHelper.close()
-        // delete from RecyclerView
         statistics.removeAt(position)
         adapter.notifyItemRemoved(position)
     }
-
 }

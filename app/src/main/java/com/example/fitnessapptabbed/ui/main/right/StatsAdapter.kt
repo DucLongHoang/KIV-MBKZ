@@ -12,6 +12,9 @@ import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import kotlinx.android.synthetic.main.item_statistic.view.*
 
+/**
+ *
+ */
 class StatsAdapter(
     private val statistics: MutableList<Statistic>,
     private val context: Context)
@@ -42,8 +45,8 @@ class StatsAdapter(
             popup.inflate(R.menu.options_menu)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.option_move_one_up -> {}
-                    R.id.option_move_one_down -> {}
+                    R.id.option_move_one_up -> { optionClickListener.onMoveUpClick(position) }
+                    R.id.option_move_one_down -> { optionClickListener.onMoveDownClick(position) }
                     R.id.option_nullify_record -> { holder.nullifyRecordDialog() }
                     R.id.option_remove_exercise -> { optionClickListener.onRemoveOptionClick(position) }
                 }
