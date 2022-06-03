@@ -8,6 +8,7 @@
     <string name="end_training_prompt">Do you want to end the training?</string>
     <string name="cancel_editing_prompt">Do you want to cancel editing?</string>
     <string name="nullify_record_prompt">Do you want to nullify the record?</string>
+    <string name="remove_exercise_prompt">Completely remove exercise?</string>
     <string name="save_plan_prompt">Save training plan configuration?</string>
     <string name="delete_plan_prompt">Delete plan:&#160;</string>
     <!--  Simple Strings  -->
@@ -40,6 +41,7 @@
     <string name="cannot_train_msg">Cannot train while editing</string>
     <string name="cannot_add_msg">Cannot add new exercise while editing</string>
     <string name="stay_on_tab_msg">Please don\'t switch tabs before saving or you will lose all editing progress</string>
+    <string name="remove_exercise_warning_msg">Warning: It will be removed from all training plans. \nYou won\'t be able to add this exercise to a plan</string>
     <!--  Strings used in Records Tab if Exercise never done  -->
     <string name="default_kg">0 kg</string>
     <string name="default_date">dd.MM.yyyy</string>

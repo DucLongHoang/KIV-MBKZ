@@ -35,7 +35,7 @@ class PlansDatabaseHelper(
         const val COL_EX_REPS: String = "reps"
         const val COL_EX_KGS: String = "kgs"
         const val COL_EX_SC: String = "shortcut"
-        // order column cannot be named 'order', WTF!!!
+        // order column cannot be named 'order', WTF?!
         const val COL_ORDER: String = "order_number"
         const val COL_DATE: String = "date"
     }
@@ -157,9 +157,9 @@ class PlansDatabaseHelper(
     /**
      * Method deletes a [plan] from the DB
      */
-    fun deletePlanFromDb(plan: TrainingPlan) {
+    fun deletePlanFromDb(plan: String) {
         val database: SQLiteDatabase = this.writableDatabase
-        database.delete(TABLE_PLAN, "$COL_PLAN_TITLE=?", arrayOf(plan.Title))
+        database.delete(TABLE_PLAN, "$COL_PLAN_TITLE=?", arrayOf(plan))
     }
 
     /**
@@ -191,13 +191,14 @@ class PlansDatabaseHelper(
     }
 
     /**
-     *
+     * Method returns record kgs for [exercise]
+     * It has to be queried everytime due to multiple record breaks
      */
     @SuppressLint("Range", "Recycle")
-    fun getRecordKgsFromDb(title: String): Int {
+    fun getRecordKgsFromDb(exercise: String): Int {
         val db: SQLiteDatabase = this.readableDatabase
         val c: Cursor = db.query(TABLE_EXERCISE, arrayOf(COL_EX_KGS), "${COL_EX_NAME}=?",
-            arrayOf(title), null, null, null)
+            arrayOf(exercise), null, null, null)
 
         return if(c.moveToFirst())
             c.getInt(c.getColumnIndex(COL_EX_KGS))
@@ -219,7 +220,7 @@ class PlansDatabaseHelper(
     }
 
     /**
-     *
+     * Method nullifies record of [exerciseName] in Database
      */
     fun nullifyRecordInDb(exerciseName: String) {
         val db: SQLiteDatabase = this.writableDatabase
@@ -246,6 +247,17 @@ class PlansDatabaseHelper(
         contentValues.put(COL_DATE, emptyExercise.dateOfRecord)
         contentValues.put(COL_ORDER, newExercise.order)
         database.insert(TABLE_EXERCISE, null, contentValues)
+    }
+
+
+    /**
+     * Method deletes [exercise] from the Database
+     * Also deletes an exercise from a [TrainingPlan]
+     */
+    fun deleteExerciseFromDb(exercise: String) {
+        val database: SQLiteDatabase = this.writableDatabase
+        database.delete(TABLE_EXERCISE, "$COL_EX_NAME=?", arrayOf(exercise))
+        database.delete(TABLE_PLAN_CONFIG, "$COL_EX_NAME=?", arrayOf(exercise))
     }
 
     /**

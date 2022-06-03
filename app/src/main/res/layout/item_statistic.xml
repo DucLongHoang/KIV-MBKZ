@@ -21,7 +21,7 @@
             android:textStyle="bold"
             android:text="Name of Exercise"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="4dp"/>
+            android:layout_marginStart="6dp"/>
 
         <TextView
             android:id="@+id/textViewDate"
@@ -30,7 +30,7 @@
             android:textSize="15sp"
             android:text="Date of new record"
             android:layout_below="@id/textViewExName"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="12dp"/>
 
         <TextView
             android:id="@+id/textViewKgs"

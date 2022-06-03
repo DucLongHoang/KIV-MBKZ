@@ -133,7 +133,7 @@ public class PlansFragment extends Fragment {
      */
     private void deletePlan(int position) {
         TrainingPlan toDelete = trainingPlans.get(position);
-        databaseHelper.deletePlanFromDb(toDelete);
+        databaseHelper.deletePlanFromDb(toDelete.getTitle());
         databaseHelper.deletePlanConfigFromDb(toDelete.getTitle());
         trainingPlans.remove(position);
         adapter.notifyItemRemoved(position);
@@ -196,7 +196,7 @@ public class PlansFragment extends Fragment {
 
         // add layout for fields
         LinearLayout layout = new LinearLayout(getContext());
-        layout.setPadding(4, 0, 4, 0);
+        layout.setPadding(16, 0, 16, 0);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(inputTitle);
         layout.addView(inputDescription);
@@ -252,7 +252,7 @@ public class PlansFragment extends Fragment {
 
         // add layout for fields
         LinearLayout layout = new LinearLayout(getContext());
-        layout.setPadding(4, 0, 4, 0);
+        layout.setPadding(16, 0, 16, 0);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(inputTitle);
         layout.addView(inputDescription);

@@ -88,7 +88,8 @@ class StatsFragment : Fragment() {
             }
 
             override fun onDeleteClick(position: Int) {
-                TODO("Not yet implemented")
+                statistics.removeAt(position)
+                adapter.notifyItemRemoved(position)
             }
         })
     }
@@ -107,7 +108,7 @@ class StatsFragment : Fragment() {
 
         // add layout for fields
         val layout = LinearLayout(context)
-        layout.setPadding(4, 0, 4, 0)
+        layout.setPadding(16, 0, 16, 0)
         layout.orientation = LinearLayout.VERTICAL
         layout.addView(inputName)
         layout.addView(inputShortcut)
