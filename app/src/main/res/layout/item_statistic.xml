@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
@@ -9,8 +10,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp">
+        android:layout_height="wrap_content"
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/textViewExName"
@@ -20,7 +21,7 @@
             android:textStyle="bold"
             android:text="Name of Exercise"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="6dp"/>
+            android:layout_marginStart="4dp"/>
 
         <TextView
             android:id="@+id/textViewDate"
@@ -29,19 +30,31 @@
             android:textSize="15sp"
             android:text="Date of new record"
             android:layout_below="@id/textViewExName"
-            android:layout_marginStart="12dp"/>
-
+            android:layout_marginStart="8dp"/>
 
         <TextView
             android:id="@+id/textViewKgs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="80 kg"
+            android:layout_alignEnd="@+id/statisticOptionMenu"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="30dp"
+            android:text="69 kg"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/statisticOptionMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="6dp"/>
+            android:layout_marginEnd="2dp"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_3_dots"
+            android:scaleType="center"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 

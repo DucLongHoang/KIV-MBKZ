@@ -22,7 +22,7 @@ class PlansDatabaseHelper(
 ) : SQLiteOpenHelper(CONTEXT, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME: String = "plans_database.db"
-        private const val DATABASE_VERSION: Int = 2
+        private const val DATABASE_VERSION: Int = 3
         // Table names
         const val TABLE_PLAN: String = "PLAN"
         const val TABLE_EXERCISE: String = "EXERCISE"
@@ -47,7 +47,18 @@ class PlansDatabaseHelper(
         initExercisesInDb(db)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) { }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_EXERCISE")
+        val createExerciseTableSql: String = "CREATE TABLE $TABLE_EXERCISE (" +
+                "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "$COL_EX_NAME TEXT NOT NULL, " +
+                "$COL_EX_SC TEXT NOT NULL, " +
+                "$COL_EX_KGS INTEGER, " +
+                "$COL_DATE TEXT NOT NULL, " +
+                "$COL_ORDER INTEGER );"
+        db.execSQL(createExerciseTableSql)
+        initExercisesInDb(db)
+    }
 
     /**
      * Method creates tables of the database [db]

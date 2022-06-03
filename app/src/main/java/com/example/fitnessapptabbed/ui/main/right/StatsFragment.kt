@@ -52,6 +52,7 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         buildRecyclerView()
         addNewExerciseFab.setOnClickListener { showAddNewExerciseDialog() }
+        registerForContextMenu(statsRecyclerView)
     }
 
     companion object {
@@ -69,7 +70,7 @@ class StatsFragment : Fragment() {
      * Method builds the RecyclerView
      */
     private fun buildRecyclerView() {
-        adapter = StatsAdapter(statistics)
+        adapter = StatsAdapter(statistics, requireContext())
         statsRecyclerView.layoutManager = LinearLayoutManager(context)
         statsRecyclerView.setHasFixedSize(true)
         statsRecyclerView.adapter = adapter

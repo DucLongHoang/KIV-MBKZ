@@ -2,9 +2,12 @@ package com.example.fitnessapptabbed.ui.main.right
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnessapptabbed.R
@@ -12,7 +15,9 @@ import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener
 import kotlinx.android.synthetic.main.item_statistic.view.*
 
-class StatsAdapter(private val statistics: MutableList<Statistic>)
+class StatsAdapter(
+    private val statistics: MutableList<Statistic>,
+    private val context: Context)
     : RecyclerView.Adapter<StatsAdapter.StatisticViewHolder>() {
     private lateinit var itemClickListener: OnItemClickListener
 
@@ -35,14 +40,30 @@ class StatsAdapter(private val statistics: MutableList<Statistic>)
         holder.exerciseName.text = statistic.exerciseName
         holder.recordKgs.text = statistic.recordKgs.toString() + " kg"
         holder.date.text = statistic.dateOfRecord
+        holder.menuButton.setOnClickListener {
+            val popup = PopupMenu(context, holder.menuButton)
+            popup.inflate(R.menu.options_menu)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.option_move_one_up -> {}
+                    R.id.option_move_one_down -> {}
+                    R.id.option_nullify_record -> {}
+                    R.id.option_remove_exercise -> {}
+                }
+                true
+            }
+            popup.show()
+        }
     }
 
     override fun getItemCount(): Int = statistics.size
 
-    class StatisticViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class StatisticViewHolder(itemView: View)
+        : RecyclerView.ViewHolder(itemView) {
         val exerciseName: TextView = itemView.textViewExName
         var recordKgs: TextView = itemView.textViewKgs
         var date: TextView = itemView.textViewDate
+        var menuButton: ImageButton = itemView.statisticOptionMenu
 
         init {
             // onLongClickListener needs to return a boolean, dunno why - StackOverflow
