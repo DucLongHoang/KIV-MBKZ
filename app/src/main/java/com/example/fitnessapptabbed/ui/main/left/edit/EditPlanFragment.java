@@ -110,6 +110,7 @@ public class EditPlanFragment extends Fragment {
         binding.exercisesRecyclerView.setHasFixedSize(true);
         binding.exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.exercisesRecyclerView.setAdapter(adapter);
+//        binding.exercisesRecyclerView.setItemViewCacheSize(10);
         adapter.setItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) { }
@@ -157,13 +158,9 @@ public class EditPlanFragment extends Fragment {
      */
     private void setSaveButton() {
         binding.saveEditButton.setOnClickListener(view -> {
-            if ( !( (MainActivity)requireActivity() ).canEditPlan() ) {
+            if ( !( (MainActivity)requireActivity() ).canEditPlan() )
                 Toast.makeText(requireContext(), R.string.cannot_edit_msg, Toast.LENGTH_SHORT).show();
-            }
-            else {
-                saveExercises();
-                createDialog(true);
-            }
+            else createDialog(true);
         });
     }
 
@@ -214,7 +211,10 @@ public class EditPlanFragment extends Fragment {
         // setting options
         dialogBuilder.setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel());
         dialogBuilder.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-            if(save) { savePlanConfig(exercisesInPlan); }
+            if(save) {
+                saveExercises();
+                savePlanConfig(exercisesInPlan);
+            }
             NavHostFragment.findNavController(EditPlanFragment.this)
                     .navigate(R.id.action_editPlan_to_plans); });
             ( (MainActivity)requireActivity() ).setCanTrain(true);
@@ -232,5 +232,17 @@ public class EditPlanFragment extends Fragment {
     private void savePlanConfig(List<Exercise> exercises) {
         String title = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
         databaseHelper.updatePlanConfigInDb(title, exercises.subList(0, exercises.size() - 1));
+    }
+
+    /**
+     *
+     * @param rv
+     * @param maxViewTypeId
+     * @param maxPoolSize
+     */
+    private void setMaxViewPoolSize(RecyclerView rv ,int maxViewTypeId, int maxPoolSize) {
+        for (int i = 0; i <= maxViewTypeId; ++i) {
+            rv.getRecycledViewPool().setMaxRecycledViews(i, maxPoolSize);
+        }
     }
 }

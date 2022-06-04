@@ -10,9 +10,9 @@ package com.example.fitnessapptabbed.ui.main.right
 data class Statistic(
     val exerciseName: String,
     val exerciseShortcut: String,
-    val recordKgs: Int,
-    val dateOfRecord: String,
-    val order: Int
+    var recordKgs: Int,
+    var dateOfRecord: String,
+    var order: Int
 ) : Comparable<Statistic> {
     // empty secondary constructor with default values
     constructor() :

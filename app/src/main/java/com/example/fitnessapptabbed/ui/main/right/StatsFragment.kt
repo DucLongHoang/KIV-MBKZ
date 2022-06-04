@@ -20,6 +20,7 @@ import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
 import kotlinx.android.synthetic.main.fragment_stats.*
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -81,7 +82,7 @@ class StatsFragment : Fragment() {
         adapter.setItemClickListener(object : OnOptionClickListener {
             override fun onMoveUpClick(position: Int) { moveExerciseUp(position) }
             override fun onMoveDownClick(position: Int) {}
-            override fun onNullifyRecordClick(position: Int) {}
+            override fun onNullifyRecordClick(position: Int) { nullifyRecordDialog(position) }
             override fun onRemoveOptionClick(position: Int) { removeExerciseDialog(position) }
         })
     }
@@ -159,20 +160,39 @@ class StatsFragment : Fragment() {
 
     private fun moveExerciseUp(position: Int) {
         if (position == 0) return
-
-        for (i in 0 until 6) {
-            println(statistics[i].exerciseName + ": " + i)
-        }
-
-        val toBeMovedUp: Statistic = statistics[position]
-        statistics.removeAt(position)
-        statistics.add(position - 1, toBeMovedUp)
+        Collections.swap(statistics, position, position - 1)
         adapter.notifyItemMoved(position, position - 1)
+    }
 
-        println("-".repeat(5))
-        for (i in 0 until 6) {
-            println(statistics[i].exerciseName + ": " + i)
+    /**
+     * Method displays an [AlertDialog] to confirm record nullification
+     */
+    private fun nullifyRecordDialog(position: Int) {
+        val toBeNullified: Statistic = statistics[position]
+
+        // create dialog
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setTitle(R.string.nullify_record_prompt)
+
+        // setting options
+        dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
+        dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int ->
+            toBeNullified.dateOfRecord = getString(R.string.default_date)
+            toBeNullified.recordKgs = 0
+            nullifyRecord(position)
         }
+
+        // show dialog
+        val dialog = dialogBuilder.create()
+        dialog.show()
+    }
+
+    /**
+     * Method nullifies record in the database
+     */
+    private fun nullifyRecord(position: Int) {
+        databaseHelper.nullifyRecordInDb(statistics[position].exerciseName)
+        adapter.notifyItemChanged(position)
     }
 
     private fun removeExerciseDialog(position: Int) {
