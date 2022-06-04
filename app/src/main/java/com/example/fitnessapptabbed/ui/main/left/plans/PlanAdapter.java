@@ -1,16 +1,13 @@
 package com.example.fitnessapptabbed.ui.main.left.plans;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fitnessapptabbed.R;
+import com.example.fitnessapptabbed.databinding.ItemPlanBinding;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -41,18 +38,32 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @NonNull @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_plan, parent, false);
-        return new PlanViewHolder(view, this.itemClickListener);
+        ItemPlanBinding itemBinding = ItemPlanBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new PlanViewHolder(itemBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        TrainingPlan plan = this.trainingPlans.get(position);
+        TrainingPlan plan = trainingPlans.get(position);
         PlanViewHolder tvh = (PlanViewHolder) holder;
+        ItemPlanBinding ib = tvh.itemBinding;
+        tvh.bind(plan);
 
-        tvh.title.setText(plan.getTitle());
-        tvh.description.setText(plan.getDescription());
+        tvh.itemView.setOnClickListener(view -> {
+            if(tvh.getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
+                itemClickListener.onItemClick(tvh.getAbsoluteAdapterPosition());
+        });
+
+        ib.editPlanFab.setOnClickListener(view -> {
+            if(tvh.getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
+                itemClickListener.onEditClick(tvh.getAbsoluteAdapterPosition());
+        });
+
+        ib.deletePlanFab.setOnClickListener(view -> {
+            if(tvh.getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
+                itemClickListener.onDeleteClick(tvh.getAbsoluteAdapterPosition());
+        });
     }
 
     @Override
@@ -64,35 +75,25 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * PlanViewHolder class - encapsulates TrainingPlan data in a View
      */
     public static class PlanViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, description;
-        public FloatingActionButton deleteFab, editFab;
+        public ItemPlanBinding itemBinding;
 
         /**
          * Constructor for PlanViewHolder
          * @param itemView view of item, used to get references
          * @param listener listener for item clicking events
          */
-        public PlanViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
-            super(itemView);
-            title = itemView.findViewById(R.id.textViewTitle);
-            description = itemView.findViewById(R.id.textViewDescription);
-            deleteFab = itemView.findViewById(R.id.deletePlanFab);
-            editFab = itemView.findViewById(R.id.editPlanFab);
+        public PlanViewHolder(ItemPlanBinding itemBinding) {
+            super(itemBinding.getRoot());
+            this.itemBinding = itemBinding;
+        }
 
-            itemView.setOnClickListener(view -> {
-                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
-                        listener.onItemClick(getAbsoluteAdapterPosition());
-            });
-
-            editFab.setOnClickListener(view -> {
-                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
-                    listener.onEditClick(getAbsoluteAdapterPosition());
-            });
-
-            deleteFab.setOnClickListener(view -> {
-                if(listener != null && getAbsoluteAdapterPosition() != RecyclerView.NO_POSITION)
-                    listener.onDeleteClick(getAbsoluteAdapterPosition());
-            });
+        /**
+         * Method binds a TrainingPlan to TextViews of ViewHolder
+         * @param plan TrainingPlan to be bound
+         */
+        public void bind(TrainingPlan plan) {
+            itemBinding.textViewTitle.setText(plan.getTitle());
+            itemBinding.textViewDescription.setText(plan.getDescription());
         }
     }
 }
