@@ -20,6 +20,7 @@ import com.example.fitnessapptabbed.MainActivity;
 import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
 import com.example.fitnessapptabbed.databinding.FragmentEditPlanBinding;
+import com.example.fitnessapptabbed.databinding.ItemExerciseBinding;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
 import com.example.fitnessapptabbed.ui.main.right.Statistic;
 import com.google.android.material.snackbar.Snackbar;
@@ -53,8 +54,7 @@ public class EditPlanFragment extends Fragment {
         return fragment;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
+    @Override @RequiresApi(api = Build.VERSION_CODES.N)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEditPlanBinding.inflate(inflater, container, false);
@@ -117,13 +117,9 @@ public class EditPlanFragment extends Fragment {
             @Override
             public void onEditClick(int position) { }
             @Override
-            public void onAddClick(int position) {
-                addExercise();
-            }
+            public void onAddClick(int position) { addExercise(); }
             @Override
-            public void onDeleteClick(int position) {
-                deleteExercise(position);
-            }
+            public void onDeleteClick(int position) { deleteExercise(position); }
         });
     }
 
@@ -165,34 +161,27 @@ public class EditPlanFragment extends Fragment {
     }
 
     /**
-     * Method prints all exercises except the last NULL exercise
-     */
-    private void printExercises() {
-        for(int i = 0; i < exercisesInPlan.size() - 1; i++)
-            System.out.println(exercisesInPlan.get(i));
-    }
-
-    /**
      * Method saves exercises from the Recycler View
      * into a List to save them into the database
      */
     private void saveExercises() {
         RecyclerView rv = binding.exercisesRecyclerView;
         ExerciseAdapter.ExerciseViewHolder evh;
+        ItemExerciseBinding ib;
         Exercise exercise; View v;
 
         // List length - 1 because don't want to save invisible default exercise
         for(int i = 0; i < exercisesInPlan.size() - 1; i++) {
             v = rv.getChildAt(i);
             evh = (ExerciseAdapter.ExerciseViewHolder) rv.getChildViewHolder(v);
+            ib = evh.itemBinding;
             exercise = exercisesInPlan.get(i);
 
             // setting exercise from ViewHolder
-            exercise.setName(evh.exerciseSpinner.getSelectedItem().toString());
-            exercise.setSets((int) evh.setsSpinner.getSelectedItem());
-            exercise.setReps((int) evh.repsSpinner.getSelectedItem());
+            exercise.setName(ib.exerciseSpinner.getSelectedItem().toString());
+            exercise.setSets( (int) ib.setsSpinner.getSelectedItem());
+            exercise.setReps( (int) ib.repsSpinner.getSelectedItem());
         }
-//        printExercises();
     }
 
     /**
@@ -232,17 +221,5 @@ public class EditPlanFragment extends Fragment {
     private void savePlanConfig(List<Exercise> exercises) {
         String title = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
         databaseHelper.updatePlanConfigInDb(title, exercises.subList(0, exercises.size() - 1));
-    }
-
-    /**
-     *
-     * @param rv
-     * @param maxViewTypeId
-     * @param maxPoolSize
-     */
-    private void setMaxViewPoolSize(RecyclerView rv ,int maxViewTypeId, int maxPoolSize) {
-        for (int i = 0; i <= maxViewTypeId; ++i) {
-            rv.getRecycledViewPool().setMaxRecycledViews(i, maxPoolSize);
-        }
     }
 }

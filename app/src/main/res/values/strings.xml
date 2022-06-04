@@ -43,7 +43,7 @@
     <string name="stay_on_tab_msg">Please don\'t switch tabs before saving or you will lose all editing progress</string>
     <string name="remove_exercise_warning_msg">Warning: It will be removed from all training plans. \nYou won\'t be able to add this exercise to a plan</string>
     <!--  Strings used in Records Tab if Exercise never done  -->
-    <string name="default_kg">0 kg</string>
+    <string name="default_kg">0</string>
     <string name="default_date">dd.MM.yyyy</string>
     <!--  Strings used on Train Tab  -->
     <string name="input_weight">Input weight</string>

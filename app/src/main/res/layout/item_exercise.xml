@@ -18,16 +18,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:visibility="visible"
-            app:srcCompat="@android:drawable/ic_input_add"
             app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_input_add"
             tools:ignore="ContentDescription,RelativeOverlap" />
 
         <LinearLayout
             android:id="@+id/exerciseLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:weightSum="1">
 
             <Spinner

@@ -72,7 +72,7 @@ class StatsFragment : Fragment() {
     }
 
     /**
-     * Method builds the RecyclerView
+     * Method builds the [statsRecyclerView]
      */
     private fun buildRecyclerView() {
         adapter = StatsAdapter(statistics, requireContext())
@@ -88,7 +88,7 @@ class StatsFragment : Fragment() {
     }
 
     /**
-     * Method shows AlertDialog with the option to create a new TrainingPlan
+     * Method shows [AlertDialog] with the option to create a new TrainingPlan
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private fun showAddNewExerciseDialog() {
@@ -178,7 +178,7 @@ class StatsFragment : Fragment() {
         dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
         dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int ->
             toBeNullified.dateOfRecord = getString(R.string.default_date)
-            toBeNullified.recordKgs = 0
+            toBeNullified.recordKgs = getString(R.string.default_kg).toInt()
             nullifyRecord(position)
         }
 
@@ -188,13 +188,16 @@ class StatsFragment : Fragment() {
     }
 
     /**
-     * Method nullifies record in the database
+     * Method nullifies record of exercise at [position] in the DB
      */
     private fun nullifyRecord(position: Int) {
         databaseHelper.nullifyRecordInDb(statistics[position].exerciseName)
         adapter.notifyItemChanged(position)
     }
 
+    /**
+     * Method shows [AlertDialog] to confirm removal of exercise at [position]
+     */
     private fun removeExerciseDialog(position: Int) {
         // warning text
         val warning = TextView(context)
@@ -220,6 +223,9 @@ class StatsFragment : Fragment() {
         dialog.show()
     }
 
+    /**
+     * Method removes exercise at [position] from the DB
+     */
     private fun removeExercise(position: Int) {
         databaseHelper.deleteExerciseFromDb(statistics[position].exerciseName)
         statistics.removeAt(position)
