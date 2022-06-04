@@ -81,9 +81,10 @@ public class EditPlanFragment extends Fragment {
         setCancelButton();
         setSaveButton();
 
-        Snackbar sb = Snackbar.make(binding.getRoot(), R.string.stay_on_tab_msg, Snackbar.LENGTH_SHORT);
-        sb.setAction(R.string.dismiss, view1 -> sb.dismiss());
-        sb.show();
+//        Snackbar sb = Snackbar.make(binding.getRoot(),
+//                R.string.stay_on_tab_msg, Snackbar.LENGTH_SHORT);
+//        sb.setAction(R.string.dismiss, view1 -> sb.dismiss());
+//        sb.show();
     }
 
     @Override
@@ -155,7 +156,8 @@ public class EditPlanFragment extends Fragment {
     private void setSaveButton() {
         binding.saveEditButton.setOnClickListener(view -> {
             if ( !( (MainActivity)requireActivity() ).canEditPlan() )
-                Toast.makeText(requireContext(), R.string.cannot_edit_msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.cannot_edit_msg,
+                        Toast.LENGTH_SHORT).show();
             else createDialog(true);
         });
     }
@@ -220,6 +222,7 @@ public class EditPlanFragment extends Fragment {
      */
     private void savePlanConfig(List<Exercise> exercises) {
         String title = EditPlanFragmentArgs.fromBundle(getArguments()).getTitle();
-        databaseHelper.updatePlanConfigInDb(title, exercises.subList(0, exercises.size() - 1));
+        List<Exercise> toBeSaved = exercises.subList(0, exercises.size() - 1);
+        databaseHelper.updatePlanConfigInDb(title, toBeSaved);
     }
 }
