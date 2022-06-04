@@ -186,7 +186,7 @@ class StatsFragment : Fragment() {
 
         // setting options
         dialogBuilder.setNegativeButton(R.string.cancel) { dialogInterface, _ -> dialogInterface.cancel() }
-        dialogBuilder.setPositiveButton(R.string.create) { _, _ ->
+        dialogBuilder.setPositiveButton(R.string.edit) { _, _ ->
             val newName = inputName.text.toString()
             val newShortcut = inputShortcut.text.toString()
             editExercise(newName, newShortcut, position)
@@ -349,6 +349,7 @@ class StatsFragment : Fragment() {
                 super.clearView(recyclerView, viewHolder)
                 viewHolder.itemView.alpha = 1.0f
                 statistics.reassignExerciseOrder()
+                statistics.sort()
                 databaseHelper.updateExerciseOrderInDb(statistics)
             }
         }

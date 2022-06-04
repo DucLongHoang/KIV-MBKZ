@@ -10,7 +10,8 @@ import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.databinding.ItemStatisticBinding
 
 /**
- *
+ * [StatsAdapter] that provides ViewHolders to a RecyclerView
+ * @author Long
  */
 class StatsAdapter(
     private val statistics: MutableList<Statistic>,
@@ -41,10 +42,15 @@ class StatsAdapter(
             val popup = PopupMenu(context, holder.itemBinding.optionMenu)
             popup.inflate(R.menu.options_menu)
             popup.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.option_edit_exercise -> { optionClickListener.onEditExerciseClick(position) }
-                    R.id.option_nullify_record -> { optionClickListener.onNullifyRecordClick(position) }
-                    R.id.option_remove_exercise -> { optionClickListener.onRemoveOptionClick(position) }
+                if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+                    when (item.itemId) {
+                        R.id.option_edit_exercise -> optionClickListener
+                            .onEditExerciseClick(holder.absoluteAdapterPosition)
+                        R.id.option_nullify_record -> optionClickListener
+                            .onNullifyRecordClick(holder.absoluteAdapterPosition)
+                        R.id.option_remove_exercise -> optionClickListener
+                            .onRemoveOptionClick(holder.absoluteAdapterPosition)
+                    }
                 }
                 true
             }
@@ -52,15 +58,24 @@ class StatsAdapter(
         }
     }
 
+    /**
+     * Method reflects drag and drop actions in [RecyclerView]
+     */
     fun moveItemInRecyclerViewList(from: Int, to: Int) {
         val movedItem: Statistic = statistics[from]
         statistics.removeAt(from)
         statistics.add(to, movedItem)
     }
 
+    /**
+     * [StatisticViewHolder] class - encapsulates a [Statistic]
+     */
     inner class StatisticViewHolder(val itemBinding: ItemStatisticBinding)
         : RecyclerView.ViewHolder(itemBinding.root) {
 
+        /**
+         * Method binds a [statistic] to a [StatisticViewHolder]
+         */
         @SuppressLint("SetTextI18n")
         fun bind(statistic: Statistic) {
             itemBinding.apply {
