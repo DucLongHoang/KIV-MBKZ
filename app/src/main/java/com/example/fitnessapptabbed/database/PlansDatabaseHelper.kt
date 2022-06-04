@@ -22,7 +22,7 @@ class PlansDatabaseHelper(
 ) : SQLiteOpenHelper(CONTEXT, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME: String = "plans_database.db"
-        private const val DATABASE_VERSION: Int = 3
+        private const val DATABASE_VERSION: Int = 5
         // Table names
         const val TABLE_PLAN: String = "PLAN"
         const val TABLE_EXERCISE: String = "EXERCISE"
@@ -99,15 +99,13 @@ class PlansDatabaseHelper(
         val emptyExercise = Statistic()
         val contentValues = ContentValues()
 
-        var order = 1
-        for (item in namesAndShortcuts) {
+        for ((order, item) in namesAndShortcuts.withIndex()) {
             contentValues.put(COL_EX_NAME, item.name)
             contentValues.put(COL_EX_SC, item.shortcut)
             contentValues.put(COL_EX_KGS, emptyExercise.recordKgs)
             contentValues.put(COL_DATE, emptyExercise.dateOfRecord)
             contentValues.put(COL_ORDER, order)
             db.insert(TABLE_EXERCISE, null, contentValues)
-            ++order
         }
     }
 
@@ -237,7 +235,7 @@ class PlansDatabaseHelper(
     /**
      * Method inserts the [newExercise] into the Database
      */
-    fun insertNewExerciseIntoDb(newExercise: Statistic) {
+    fun insertExerciseIntoDb(newExercise: Statistic) {
         val database: SQLiteDatabase = this.writableDatabase
         val contentValues = ContentValues()
         val emptyExercise = Statistic()
@@ -248,7 +246,6 @@ class PlansDatabaseHelper(
         contentValues.put(COL_ORDER, newExercise.order)
         database.insert(TABLE_EXERCISE, null, contentValues)
     }
-
 
     /**
      * Method deletes [exercise] from the Database
@@ -280,7 +277,47 @@ class PlansDatabaseHelper(
                 result.add(Statistic(exName, exShortcut, recordKgs, date, order))
             } while (c.moveToNext())
         }
+
+        result.sort()
         return result
+    }
+
+    /**
+     * Method updates the order of [statistics] in the Database
+     */
+    fun updateExerciseOrderInDb(statistics: List<Statistic>) {
+        val db: SQLiteDatabase = this.writableDatabase
+        val contentValues = ContentValues()
+
+        for (statistic: Statistic in statistics) {
+            contentValues.put(COL_ORDER, statistic.order)
+            db.update(TABLE_EXERCISE, contentValues,
+                "$COL_EX_NAME=?", arrayOf(statistic.exerciseName))
+            contentValues.clear()
+        }
+    }
+
+    /**
+     * Method updates all records of exercise [oldName] to [newName] and [newShortcut]
+     */
+    fun updateExerciseInDb(newShortcut: String, oldName: String, newName: String = oldName) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COL_EX_SC, newShortcut)
+
+        // update only shortcut
+        db.update(TABLE_EXERCISE, contentValues,
+            "$COL_EX_NAME=?", arrayOf(oldName))
+
+        // update name in exercise table and plan config table
+        if (oldName != newName) {
+            contentValues.clear()
+            contentValues.put(COL_EX_NAME, newName)
+            db.update(TABLE_EXERCISE, contentValues,
+                "$COL_EX_NAME=?", arrayOf(oldName))
+            db.update(TABLE_PLAN_CONFIG, contentValues,
+                "$COL_EX_NAME=?", arrayOf(oldName))
+        }
     }
 
     /**
@@ -288,8 +325,8 @@ class PlansDatabaseHelper(
      */
     private fun getExercisesCursor(): Cursor {
         val db: SQLiteDatabase = this.readableDatabase
-        val selectQuery = "SELECT $COL_EX_NAME, $COL_EX_SC, $COL_EX_KGS, $COL_DATE, $COL_ORDER " +
-                "FROM $TABLE_EXERCISE"
+        val selectQuery = "SELECT $COL_EX_NAME, $COL_EX_SC, $COL_EX_KGS, " +
+                "$COL_DATE, $COL_ORDER FROM $TABLE_EXERCISE"
         return db.rawQuery(selectQuery, null)
     }
 
@@ -352,6 +389,7 @@ class PlansDatabaseHelper(
             contentValues.put(COL_EX_SETS, exercise.sets)
             contentValues.put(COL_EX_REPS, exercise.reps)
             db.insert(TABLE_PLAN_CONFIG, null, contentValues)
+            contentValues.clear()
         }
         db.setTransactionSuccessful()
         db.endTransaction()

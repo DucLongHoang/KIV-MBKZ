@@ -34,6 +34,7 @@
     <string name="create_new_plan_msg">Create a new training plan</string>
     <string name="add_new_exercise_msg">Add a new exercise</string>
     <string name="edit_plan_title_msg">Edit title and description of plan</string>
+    <string name="edit_exercise_msg">Edit name and shortcut of exercise</string>
     <string name="duplicate_plan_name_msg">A training plan with this name already exists!</string>
     <string name="duplicate_exercise_name_msg">An exercise with this name already exists!</string>
     <string name="new_record_msg">New personal best!!!</string>

@@ -24,7 +24,6 @@ import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
 import kotlinx.android.synthetic.main.fragment_stats.*
-import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -61,7 +60,6 @@ class StatsFragment : Fragment() {
 
         databaseHelper = PlansDatabaseHelper(requireContext())
         statistics = databaseHelper.getAllExercisesFromDb()
-        databaseHelper.close()
 
         return binding.root
     }
@@ -89,7 +87,7 @@ class StatsFragment : Fragment() {
         statsRecyclerView.adapter = adapter
         itemTouchHelper.attachToRecyclerView(statsRecyclerView)
         adapter.setItemClickListener(object : OnOptionClickListener {
-            override fun onEditExerciseClick(position: Int) {}
+            override fun onEditExerciseClick(position: Int) { showEditExerciseDialog(position) }
             override fun onNullifyRecordClick(position: Int) { showNullifyRecordDialog(position) }
             override fun onRemoveOptionClick(position: Int) { showRemoveExerciseDialog(position) }
         })
@@ -98,7 +96,6 @@ class StatsFragment : Fragment() {
     /**
      * Method shows [AlertDialog] with the option to create a new TrainingPlan
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private fun showAddNewExerciseDialog() {
         // editable fields
         val inputName = EditText(context)
@@ -153,10 +150,87 @@ class StatsFragment : Fragment() {
      * Method adds a [newExercise] into the Database
      */
     private fun addNewExercise(newExercise: Statistic) {
-        databaseHelper.insertNewExerciseIntoDb(newExercise)
+        databaseHelper.insertExerciseIntoDb(newExercise)
         val index: Int = statistics.size
         statistics.add(index, newExercise)
         adapter.notifyItemInserted(index)
+    }
+
+    /**
+     * Method displays an [AlertDialog] to edit Exercise name and shortcut
+     */
+    private fun showEditExerciseDialog(position: Int) {
+        val toBeRenamed: Statistic = statistics[position]
+        // editable fields
+        val inputName = EditText(context)
+        val inputShortcut = EditText(context)
+        inputName.hint = getString(R.string.name_edit_text)
+        inputShortcut.hint = getString(R.string.shortcut_edit_text)
+        inputName.filters = arrayOf(InputFilter.LengthFilter(MAX_EX_NAME_LENGTH))
+        inputShortcut.filters = arrayOf(InputFilter.LengthFilter(MAX_EX_SC_LENGTH))
+        // use old values
+        inputName.setText(toBeRenamed.exerciseName)
+        inputShortcut.setText(toBeRenamed.exerciseShortcut)
+
+        // add layout for fields
+        val layout = LinearLayout(context)
+        layout.setPadding(16, 0, 16, 0)
+        layout.orientation = LinearLayout.VERTICAL
+        layout.addView(inputName)
+        layout.addView(inputShortcut)
+
+        // create Dialog
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setTitle(getString(R.string.edit_exercise_msg))
+        dialogBuilder.setView(layout)
+
+        // setting options
+        dialogBuilder.setNegativeButton(R.string.cancel) { dialogInterface, _ -> dialogInterface.cancel() }
+        dialogBuilder.setPositiveButton(R.string.create) { _, _ ->
+            val newName = inputName.text.toString()
+            val newShortcut = inputShortcut.text.toString()
+            editExercise(newName, newShortcut, position)
+        }
+
+        // empty Title edit field
+        val dialog = dialogBuilder.create()
+        dialog.show() // has to be in this order - 1.show dialog, 2.disable button
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).isEnabled = false
+
+        // enable create button if Title field not empty
+        inputName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {
+                val enable = !TextUtils.isEmpty(editable.toString().trim { it <= ' ' }) // if empty false, else true
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).isEnabled = enable
+            }
+        })
+    }
+
+    /**
+     * Method changes exercise info at [position] to [newName] and [newShortcut]
+     */
+    private fun editExercise(newName: String, newShortcut: String, position: Int) {
+        val toBeRenamed: Statistic = statistics[position]
+
+        // branch 1 - check if exercise name remains the same
+        if (newName == toBeRenamed.exerciseName) {
+            // check if shortcut is new
+            if (newShortcut != toBeRenamed.exerciseShortcut) {
+                databaseHelper.updateExerciseInDb(newShortcut, toBeRenamed.exerciseName)
+                toBeRenamed.exerciseShortcut = newShortcut
+            }
+            adapter.notifyItemChanged(position)
+            return
+        }
+        // branch 2 - check if new Title already used
+        if (!isDuplicateExerciseName(newName)) {
+            databaseHelper.updateExerciseInDb(newShortcut, toBeRenamed.exerciseName, newName)
+            toBeRenamed.exerciseName = newName
+            toBeRenamed.exerciseShortcut = newShortcut
+            adapter.notifyItemChanged(position)
+        }
     }
 
     /**
@@ -274,11 +348,19 @@ class StatsFragment : Fragment() {
             override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(recyclerView, viewHolder)
                 viewHolder.itemView.alpha = 1.0f
-                println("+".repeat(10))
-                println("Stopped moving")
-                println("+".repeat(10))
+                statistics.reassignExerciseOrder()
+                databaseHelper.updateExerciseOrderInDb(statistics)
             }
         }
         ItemTouchHelper(itemTouchCallback)
+    }
+
+    /**
+     * Method reassigns order of Exercises in the Database
+     */
+    private fun MutableList<Statistic>.reassignExerciseOrder() {
+        for ((newOrder, exercise) in this.withIndex()) {
+            exercise.order = newOrder
+        }
     }
 }

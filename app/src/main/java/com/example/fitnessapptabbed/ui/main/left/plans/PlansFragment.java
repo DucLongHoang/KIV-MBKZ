@@ -140,9 +140,9 @@ public class PlansFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void editPlan(String[] newPlan, TrainingPlan planToBeRenamed, int position) {
-        String newTitle = newPlan[0];
-        String newDesc = newPlan[1];
+    private void editPlan(String[] newPlanInfo, TrainingPlan planToBeRenamed, int position) {
+        String newTitle = newPlanInfo[0];
+        String newDesc = newPlanInfo[1];
 
         // branch 1 - check if Title remains the same
         if (newTitle.equals(planToBeRenamed.getTitle())) {

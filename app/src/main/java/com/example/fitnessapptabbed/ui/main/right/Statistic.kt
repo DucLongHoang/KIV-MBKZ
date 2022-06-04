@@ -8,8 +8,8 @@ package com.example.fitnessapptabbed.ui.main.right
  * @version 1.0
  */
 data class Statistic(
-    val exerciseName: String,
-    val exerciseShortcut: String,
+    var exerciseName: String,
+    var exerciseShortcut: String,
     var recordKgs: Int,
     var dateOfRecord: String,
     var order: Int
