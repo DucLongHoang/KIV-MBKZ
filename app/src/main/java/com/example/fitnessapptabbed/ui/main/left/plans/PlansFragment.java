@@ -295,7 +295,6 @@ public class PlansFragment extends Fragment {
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private boolean isDuplicatePlanName(String name) {
-        // count must be more than 1 because we do not count the same training
         boolean duplicate = trainingPlans.stream().anyMatch(tp -> tp.getTitle().equalsIgnoreCase(name));
         if (duplicate) Toast.makeText(getContext(), R.string.duplicate_plan_name_msg,
                 Toast.LENGTH_SHORT).show();

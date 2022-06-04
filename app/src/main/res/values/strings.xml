@@ -27,7 +27,7 @@
     <!--  EditText - create/rename Plan editTexts  -->
     <string name="title_edit_text">Title (mandatory)</string>
     <string name="description_edit_text">Description (optional)</string>
-    <string name="name_edit_text">Name (mandatory)</string>
+    <string name="name_edit_text">Name (mandatory, max 25 characters)</string>
     <string name="shortcut_edit_text">Shortcut (optional, max 11 characters)</string>
     <!--  Messages - headers of Dialogs, messages of Toasts and SnackBars  -->
     <string name="empty_plan_msg">This training plan is empty!</string>
@@ -35,6 +35,7 @@
     <string name="add_new_exercise_msg">Add a new exercise</string>
     <string name="edit_plan_title_msg">Edit title and description of plan</string>
     <string name="duplicate_plan_name_msg">A training plan with this name already exists!</string>
+    <string name="duplicate_exercise_name_msg">An exercise with this name already exists!</string>
     <string name="new_record_msg">New personal best!!!</string>
     <string name="back_again_to_exit_msg">Press back again to exit app</string>
     <string name="cannot_edit_msg">Cannot edit plan while training</string>

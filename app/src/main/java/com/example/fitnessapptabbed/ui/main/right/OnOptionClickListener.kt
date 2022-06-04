@@ -5,8 +5,7 @@ package com.example.fitnessapptabbed.ui.main.right
  * @author Long
  */
 interface OnOptionClickListener {
-    fun onMoveUpClick(position: Int)
-    fun onMoveDownClick(position: Int)
+    fun onEditExerciseClick(position: Int)
     fun onNullifyRecordClick(position: Int)
     fun onRemoveOptionClick(position: Int)
 }

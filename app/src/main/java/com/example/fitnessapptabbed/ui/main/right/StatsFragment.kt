@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -13,9 +14,12 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnessapptabbed.R
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
@@ -28,6 +32,21 @@ import java.util.*
  * create an instance of this fragment.
  */
 class StatsFragment : Fragment() {
+    // static variables and methods
+    companion object {
+        const val MAX_EX_NAME_LENGTH = 25
+        const val MAX_EX_SC_LENGTH = 11
+
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @return A new instance of fragment StatsFragment.
+         */
+        @JvmStatic
+        fun newInstance() = StatsFragment().apply { arguments = Bundle() }
+    }
+
     private var _binding: FragmentStatsBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -60,17 +79,6 @@ class StatsFragment : Fragment() {
         databaseHelper.close()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment StatsFragment.
-         */
-        @JvmStatic
-        fun newInstance() = StatsFragment().apply { arguments = Bundle() }
-    }
-
     /**
      * Method builds the [statsRecyclerView]
      */
@@ -79,11 +87,11 @@ class StatsFragment : Fragment() {
         statsRecyclerView.layoutManager = LinearLayoutManager(context)
         statsRecyclerView.setHasFixedSize(true)
         statsRecyclerView.adapter = adapter
+        itemTouchHelper.attachToRecyclerView(statsRecyclerView)
         adapter.setItemClickListener(object : OnOptionClickListener {
-            override fun onMoveUpClick(position: Int) { moveExerciseUp(position) }
-            override fun onMoveDownClick(position: Int) {}
-            override fun onNullifyRecordClick(position: Int) { nullifyRecordDialog(position) }
-            override fun onRemoveOptionClick(position: Int) { removeExerciseDialog(position) }
+            override fun onEditExerciseClick(position: Int) {}
+            override fun onNullifyRecordClick(position: Int) { showNullifyRecordDialog(position) }
+            override fun onRemoveOptionClick(position: Int) { showRemoveExerciseDialog(position) }
         })
     }
 
@@ -97,6 +105,8 @@ class StatsFragment : Fragment() {
         val inputShortcut = EditText(context)
         inputName.hint = getString(R.string.name_edit_text)
         inputShortcut.hint = getString(R.string.shortcut_edit_text)
+        inputName.filters = arrayOf(InputFilter.LengthFilter(MAX_EX_NAME_LENGTH))
+        inputShortcut.filters = arrayOf(InputFilter.LengthFilter(MAX_EX_SC_LENGTH))
 
         // add layout for fields
         val layout = LinearLayout(context)
@@ -115,11 +125,12 @@ class StatsFragment : Fragment() {
         dialogBuilder.setPositiveButton(R.string.create) { _, _ ->
             val name = inputName.text.toString()
             val shortcut = inputShortcut.text.toString()
-            var order = statistics.asSequence().map(Statistic::order).maxOrNull()
+            var order = statistics.asSequence()
+                .map(Statistic::order)
+                .maxOrNull() ?: 0
 
-            if (order != null) {
-                addExercise(Statistic(name, shortcut, ++order))
-            }
+            if (!isDuplicateExerciseName(name))
+                addNewExercise(Statistic(name, shortcut, ++order))
         }
 
         // empty Title edit field
@@ -136,38 +147,22 @@ class StatsFragment : Fragment() {
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).isEnabled = enable
             }
         })
-
-//        inputShortcut.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-//            override fun afterTextChanged(field: Editable) {
-//                if (field.length > 11) {
-//                    field.replace(0, field.length, field, 0 ,11)
-//                }
-//            }
-//        })
     }
 
     /**
      * Method adds a [newExercise] into the Database
      */
-    private fun addExercise(newExercise: Statistic) {
+    private fun addNewExercise(newExercise: Statistic) {
         databaseHelper.insertNewExerciseIntoDb(newExercise)
         val index: Int = statistics.size
         statistics.add(index, newExercise)
         adapter.notifyItemInserted(index)
     }
 
-    private fun moveExerciseUp(position: Int) {
-        if (position == 0) return
-        Collections.swap(statistics, position, position - 1)
-        adapter.notifyItemMoved(position, position - 1)
-    }
-
     /**
      * Method displays an [AlertDialog] to confirm record nullification
      */
-    private fun nullifyRecordDialog(position: Int) {
+    private fun showNullifyRecordDialog(position: Int) {
         val toBeNullified: Statistic = statistics[position]
 
         // create dialog
@@ -198,7 +193,7 @@ class StatsFragment : Fragment() {
     /**
      * Method shows [AlertDialog] to confirm removal of exercise at [position]
      */
-    private fun removeExerciseDialog(position: Int) {
+    private fun showRemoveExerciseDialog(position: Int) {
         // warning text
         val warning = TextView(context)
         warning.setText(R.string.remove_exercise_warning_msg)
@@ -230,5 +225,60 @@ class StatsFragment : Fragment() {
         databaseHelper.deleteExerciseFromDb(statistics[position].exerciseName)
         statistics.removeAt(position)
         adapter.notifyItemRemoved(position)
+    }
+
+    /**
+     * Method returns a boolean whether [name] is already used or not
+     * @return true is is duplicate, otherwise false
+     */
+    private fun isDuplicateExerciseName(name: String): Boolean {
+        val duplicate: Boolean = statistics.any { e ->
+            e.exerciseName.equals(name, ignoreCase = true ) }
+        if (duplicate) Toast.makeText(context, R.string.duplicate_exercise_name_msg,
+            Toast.LENGTH_SHORT).show()
+
+        return duplicate
+    }
+
+    /**
+     * This attribute handles drag and drop of statistic items
+     */
+    private val itemTouchHelper by lazy {
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END, 0) {
+
+            // tells when an item is swiped left or right from its position
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+
+            // check if an item has been moved up or down
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
+                val adapter = recyclerView.adapter as StatsAdapter
+                val from = viewHolder.absoluteAdapterPosition
+                val to = target.absoluteAdapterPosition
+
+                adapter.moveItemInRecyclerViewList(from, to)
+                adapter.notifyItemMoved(from, to)
+
+                return true
+            }
+
+            // function called on currently selected item
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG)
+                    viewHolder?.itemView?.alpha = 0.5f
+            }
+
+            // function called on stopping dragging/swiping/moving
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+                viewHolder.itemView.alpha = 1.0f
+                println("+".repeat(10))
+                println("Stopped moving")
+                println("+".repeat(10))
+            }
+        }
+        ItemTouchHelper(itemTouchCallback)
     }
 }

@@ -2,12 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/option_move_one_up"
-        android:title="Move one up" />
-
-    <item
-        android:id="@+id/option_move_one_down"
-        android:title="Move one down" />
+        android:id="@+id/option_edit_exercise"
+        android:title="Edit exercise" />
 
     <item
         android:id="@+id/option_nullify_record"

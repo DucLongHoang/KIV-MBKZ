@@ -34,14 +34,10 @@ class RecordHandler(val fragment: TrainFragment) {
     }
 
     /**
-     * Method makes a Toast [exName], old [recordKgs] and new record [kgs]
+     * Method makes a Toast [exName], old [oldRecord] and new record [newRecord]
      */
-    private fun makeNewRecordToast(exName: String, recordKgs: Int, kgs: Int) {
-        var shortcut: String = exName
-        if (exName.length > 11) shortcut = exName.substring(0, 11)
-
-        val message = fragment.context?.getString(R.string.new_record_msg) +
-                "\n$shortcut: $recordKgs kg -> $kgs kg"
+    private fun makeNewRecordToast(exName: String, oldRecord: Int, newRecord: Int) {
+        val message = fragment.context?.getString(R.string.new_record_msg) + "\n$exName: $oldRecord kg -> $newRecord kg"
         Toast.makeText(fragment.context, message.uppercase(), Toast.LENGTH_LONG).show()
     }
 

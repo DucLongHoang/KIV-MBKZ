@@ -25,6 +25,8 @@ class StatsAdapter(
         this.optionClickListener = onOptionClickListener
     }
 
+    override fun getItemCount(): Int = statistics.size
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatisticViewHolder {
         val itemBinding = ItemStatisticBinding.inflate(
             LayoutInflater.from(parent.context), parent, false)
@@ -40,8 +42,7 @@ class StatsAdapter(
             popup.inflate(R.menu.options_menu)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.option_move_one_up -> { optionClickListener.onMoveUpClick(position) }
-                    R.id.option_move_one_down -> { optionClickListener.onMoveDownClick(position) }
+                    R.id.option_edit_exercise -> { optionClickListener.onEditExerciseClick(position) }
                     R.id.option_nullify_record -> { optionClickListener.onNullifyRecordClick(position) }
                     R.id.option_remove_exercise -> { optionClickListener.onRemoveOptionClick(position) }
                 }
@@ -51,7 +52,11 @@ class StatsAdapter(
         }
     }
 
-    override fun getItemCount(): Int = statistics.size
+    fun moveItemInRecyclerViewList(from: Int, to: Int) {
+        val movedItem: Statistic = statistics[from]
+        statistics.removeAt(from)
+        statistics.add(to, movedItem)
+    }
 
     inner class StatisticViewHolder(val itemBinding: ItemStatisticBinding)
         : RecyclerView.ViewHolder(itemBinding.root) {
