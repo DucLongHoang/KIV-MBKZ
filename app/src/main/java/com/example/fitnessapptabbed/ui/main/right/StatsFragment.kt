@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_stats.*
 class StatsFragment : Fragment() {
     // static variables and methods
     companion object {
-        const val MAX_EX_NAME_LENGTH = 25
+        const val MAX_EX_NAME_LENGTH = 23
         const val MAX_EX_SC_LENGTH = 11
 
         /**

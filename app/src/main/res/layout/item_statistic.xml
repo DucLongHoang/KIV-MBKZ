@@ -13,6 +13,18 @@
         android:layout_height="wrap_content"
         android:padding="4dp">
 
+        <ImageButton
+            android:id="@+id/dragHandle"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="2dp"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_drag_handle"
+            android:scaleType="center"
+            tools:ignore="ContentDescription" />
+
         <TextView
             android:id="@+id/textViewExName"
             android:layout_width="wrap_content"
@@ -21,7 +33,8 @@
             android:textStyle="bold"
             android:text="Name of Exercise"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="6dp"/>
+            android:layout_toEndOf="@+id/dragHandle"
+            android:layout_marginStart="8dp"/>
 
         <TextView
             android:id="@+id/textViewDate"
@@ -30,16 +43,17 @@
             android:textSize="15sp"
             android:text="Date of new record"
             android:layout_below="@id/textViewExName"
-            android:layout_marginStart="12dp"/>
+            android:layout_toEndOf="@+id/dragHandle"
+            android:layout_marginStart="14dp"/>
 
         <TextView
             android:id="@+id/textViewKgs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/optionMenu"
             android:layout_alignParentTop="true"
             android:layout_marginTop="6dp"
-            android:layout_marginEnd="30dp"
+            android:layout_toStartOf="@+id/optionMenu"
+            android:layout_marginEnd="2dp"
             android:text="69 kg"
             android:textSize="24sp"
             android:textStyle="bold" />

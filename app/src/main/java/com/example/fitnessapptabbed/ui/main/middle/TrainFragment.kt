@@ -139,7 +139,6 @@ class TrainFragment: Fragment() {
                 }
             }
         })
-
         imButtonBack.setOnClickListener { handler.moveBack() }
         imButtonNext.setOnClickListener { handler.moveNext(kgInput) }
     }

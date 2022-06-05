@@ -27,7 +27,7 @@
     <!--  EditText - create/rename Plan editTexts  -->
     <string name="title_edit_text">Title (mandatory)</string>
     <string name="description_edit_text">Description (optional)</string>
-    <string name="name_edit_text">Name (mandatory, max 25 characters)</string>
+    <string name="name_edit_text">Name (mandatory, max 23 characters)</string>
     <string name="shortcut_edit_text">Shortcut (optional, max 11 characters)</string>
     <!--  Messages - headers of Dialogs, messages of Toasts and SnackBars  -->
     <string name="empty_plan_msg">This training plan is empty!</string>

@@ -5,6 +5,7 @@ import android.os.Vibrator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fitnessapptabbed.R;
 import com.example.fitnessapptabbed.database.PlansDatabaseHelper;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class TrainingProgressHandler {
     // Constants
+    private static final int MAX_POSSIBLE_WEIGHT = 501; // = Björnsson's deadlift world record
     private static final int SET_VIB_DURATION = 100;
     private static final int EX_VIB_DURATION = 400;
 
@@ -90,6 +92,12 @@ public class TrainingProgressHandler {
      * @param inputKgs weight of the just done exercise
      */
     public void moveNext(int inputKgs) {
+        if (inputKgs > MAX_POSSIBLE_WEIGHT) {
+            Toast.makeText(fragment.getContext(),
+                    "That is too much weight", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         recordHandler.checkIfRecordBroken(currExercise.getName(), inputKgs);
         inputWeightHandler.saveWeight(currExercise, setCounter, inputKgs);
 
@@ -155,7 +163,7 @@ public class TrainingProgressHandler {
         int currRecord = databaseHelper.getRecordKgsFromDb(currExercise.getName());
         tvCurrEx.setText(currExercise.getName().toUpperCase());
         tvSets.setText(setCounter + "/" + currExercise.getSets());
-        tvReps.setText("" + currExercise.getReps());
+        tvReps.setText("" + currExercise.getReps());    // otherwise it looks for String id
         tvRecord.setText(currRecord + " kg");
     }
 
