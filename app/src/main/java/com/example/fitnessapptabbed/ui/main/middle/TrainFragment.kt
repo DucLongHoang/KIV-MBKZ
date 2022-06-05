@@ -68,6 +68,11 @@ class TrainFragment: Fragment() {
         showLastTraining()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        databaseHelper.close()
+    }
+
     /** Method returns a [Vibrator] instance */
     fun getVibrator(): Vibrator = this.vibrator
 

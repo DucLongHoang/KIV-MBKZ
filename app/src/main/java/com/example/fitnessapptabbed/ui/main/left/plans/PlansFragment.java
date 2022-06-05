@@ -72,8 +72,8 @@ public class PlansFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         if(databaseHelper != null) databaseHelper.close();
     }
 
@@ -112,7 +112,7 @@ public class PlansFragment extends Fragment {
         NavHostFragment.findNavController(PlansFragment.this)
                 .navigate(action);
         ( (MainActivity)requireActivity() ).setCanTrain(false);
-        ( (MainActivity)requireActivity() ).setCanAddNewExercise(false);
+        ( (MainActivity)requireActivity() ).setCanEditExercises(false);
     }
 
     /**

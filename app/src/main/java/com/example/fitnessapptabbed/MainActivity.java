@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private SwitchCompat modeSwitch;
-    private boolean canEditPlan, canTrain, canAddNewExercise;
+    private boolean canEditPlan, canTrain, canEditExercises;
     private long backPressedTime;
 
     @Override
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         modeSwitch = findViewById(R.id.nightModeSwitch);
         setNightModeSwitch();
-        canEditPlan = canTrain = canAddNewExercise = true;
+        canEditPlan = canTrain = canEditExercises = true;
     }
 
     @Override
@@ -107,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
         this.canTrain = canTrain;
     }
 
-    public boolean canAddNewExercise() {
-        return canAddNewExercise;
+    public boolean canEditExercises() {
+        return canEditExercises;
     }
 
-    public void setCanAddNewExercise(boolean canAddNewExercise) {
-        this.canAddNewExercise = canAddNewExercise;
+    public void setCanEditExercises(boolean canEditExercises) {
+        this.canEditExercises = canEditExercises;
     }
 }

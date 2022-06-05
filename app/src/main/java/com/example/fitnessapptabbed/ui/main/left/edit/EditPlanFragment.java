@@ -23,7 +23,6 @@ import com.example.fitnessapptabbed.databinding.FragmentEditPlanBinding;
 import com.example.fitnessapptabbed.databinding.ItemExerciseBinding;
 import com.example.fitnessapptabbed.ui.main.left.OnItemClickListener;
 import com.example.fitnessapptabbed.ui.main.right.Statistic;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,8 +87,8 @@ public class EditPlanFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         if(databaseHelper != null) databaseHelper.close();
     }
 
@@ -209,7 +208,7 @@ public class EditPlanFragment extends Fragment {
             NavHostFragment.findNavController(EditPlanFragment.this)
                     .navigate(R.id.action_editPlan_to_plans); });
             ( (MainActivity)requireActivity() ).setCanTrain(true);
-            ( (MainActivity)requireActivity() ).setCanAddNewExercise(true);
+            ( (MainActivity)requireActivity() ).setCanEditExercises(true);
 
         // show dialog
         AlertDialog dialog = dialogBuilder.create();
