@@ -94,7 +94,8 @@ public class TrainingProgressHandler {
     public void moveNext(int inputKgs) {
         if (inputKgs > MAX_POSSIBLE_WEIGHT) {
             Toast.makeText(fragment.getContext(),
-                    "That is too much weight", Toast.LENGTH_SHORT).show();
+                    R.string.too_much_weight_msg, Toast.LENGTH_SHORT).show();
+            vibrator.vibrate(EX_VIB_DURATION);
             return;
         }
 

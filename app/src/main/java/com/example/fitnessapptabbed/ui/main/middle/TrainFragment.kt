@@ -44,7 +44,7 @@ class TrainFragment: Fragment() {
     private lateinit var handler: TrainingProgressHandler
     private var trainingRunning: Boolean = false
 
-    private var running: Boolean = false
+    private var chronometerRunning: Boolean = false
     private var pauseOffset: Long = 0
 
     override fun onCreateView(
@@ -236,7 +236,10 @@ class TrainFragment: Fragment() {
         // prepare values for spinner
         val allPlansPlusChoose: MutableList<String> = ArrayList()
         allPlansPlusChoose.add(getString(R.string.choose_plan))
-        for (plan in allPlans) { allPlansPlusChoose.add(plan.Title + " - " + plan.Description) }
+        for (plan in allPlans) {
+            val description = if (plan.Description.isNotEmpty()) " - ${plan.Description}" else ""
+            allPlansPlusChoose.add(plan.Title + description)
+        }
 
         // set up adapter for spinner
         val adapter: ArrayAdapter<String> = ArrayAdapter(
@@ -266,10 +269,10 @@ class TrainFragment: Fragment() {
      * Method starts the [chronometer] count
      */
     private fun startChronometer() {
-        if(!running) {
+        if(!chronometerRunning) {
             chronometer.base = SystemClock.elapsedRealtime() - pauseOffset
             chronometer.start()
-            running = true
+            chronometerRunning = true
         }
     }
 
@@ -278,10 +281,10 @@ class TrainFragment: Fragment() {
      * app does not support pausing, but this is used in [resetChronometer]
      */
     private fun stopChronometer() {
-        if(running) {
+        if(chronometerRunning) {
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.base
             chronometer.stop()
-            running = false
+            chronometerRunning = false
         }
     }
 
@@ -294,8 +297,8 @@ class TrainFragment: Fragment() {
         stopChronometer()
     }
 
-    /** Method returns [Boolean] of [running] */
-    fun isRunning(): Boolean = running
+    /** Method returns [Boolean] of [chronometerRunning] */
+    fun isRunning(): Boolean = chronometerRunning
 
     companion object {
         /**

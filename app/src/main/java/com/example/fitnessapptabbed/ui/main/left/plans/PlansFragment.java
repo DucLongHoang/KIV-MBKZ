@@ -92,7 +92,7 @@ public class PlansFragment extends Fragment {
             @Override
             public void onItemClick(int position) { navigateToEditPlan(position); }
             @Override
-            public void onDeleteClick(int position) { showDeletePlanDialog(position); }
+            public void onDeleteClick(int position) {showDeletePlanDialog(position); }
             @Override @RequiresApi(api = Build.VERSION_CODES.N)
             public void onEditClick(int position) {
                 showEditTitleDialog(trainingPlans.get(position), position);

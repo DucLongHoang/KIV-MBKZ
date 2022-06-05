@@ -38,6 +38,7 @@
     <string name="duplicate_plan_name_msg">A training plan with this name already exists!</string>
     <string name="duplicate_exercise_name_msg">An exercise with this name already exists!</string>
     <string name="new_record_msg">New personal best!!!</string>
+    <string name="too_much_weight_msg">"That is too much weight!"</string>
     <string name="back_again_to_exit_msg">Press back again to exit app</string>
     <string name="cannot_edit_msg">Cannot edit plan while training</string>
     <string name="cannot_train_msg">Cannot train while editing</string>
