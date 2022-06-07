@@ -347,7 +347,8 @@ class StatsFragment : Fragment() {
     private fun showNullifyRecordDialog(position: Int) {
         // create dialog
         val dialogBuilder = AlertDialog.Builder(context)
-        dialogBuilder.setTitle(R.string.nullify_record_prompt)
+        val title = getString(R.string.nullify_record_prompt) + " ${statistics[position].exerciseName}?"
+        dialogBuilder.setTitle(title)
 
         // setting options
         dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
@@ -385,7 +386,8 @@ class StatsFragment : Fragment() {
 
         // create dialog
         val dialogBuilder = AlertDialog.Builder(context)
-        dialogBuilder.setTitle(R.string.remove_exercise_prompt)
+        val title = getString(R.string.remove_exercise_prompt) + " ${statistics[position].exerciseName}?"
+        dialogBuilder.setTitle(title)
         dialogBuilder.setView(layout)
 
         // setting options

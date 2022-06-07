@@ -7,8 +7,8 @@
     <!--  Prompts - ask user for confirmation  -->
     <string name="end_training_prompt">Do you want to end the training?</string>
     <string name="cancel_editing_prompt">Do you want to cancel editing?</string>
-    <string name="nullify_record_prompt">Do you want to nullify the record?</string>
-    <string name="remove_exercise_prompt">Completely remove exercise?</string>
+    <string name="nullify_record_prompt">Nullify the record of:</string>
+    <string name="remove_exercise_prompt">Remove exercise:</string>
     <string name="save_plan_prompt">Save training plan configuration?</string>
     <string name="delete_plan_prompt">Delete plan:&#160;</string>
     <!--  Simple Strings  -->
