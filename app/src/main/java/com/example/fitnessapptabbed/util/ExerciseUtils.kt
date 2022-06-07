@@ -61,9 +61,6 @@ class ExerciseUtils {
             exNamesShortcuts.add(StringPair("dip", "dip"))
             exNamesShortcuts.add(StringPair("pistol squat", "pis. squat"))
             exNamesShortcuts.add(StringPair("abs exercise", "abs ex"))
-            // old exercises
-            exNamesShortcuts.add(StringPair("shoulder front raise", "front raise"))
-            exNamesShortcuts.add(StringPair("shoulder side raise", "side raise"))
         }
 
         /**

@@ -40,7 +40,7 @@ class StatsAdapter(
         holder.bind(statistic)
         holder.itemBinding.optionMenu.setOnClickListener {
             val popup = PopupMenu(context, holder.itemBinding.optionMenu)
-            popup.inflate(R.menu.options_menu)
+            popup.inflate(R.menu.options_menu_exercise)
             popup.setOnMenuItemClickListener { item ->
                 if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                     when (item.itemId) {
@@ -51,8 +51,7 @@ class StatsAdapter(
                         R.id.option_remove_exercise -> optionClickListener
                             .onRemoveOptionClick(holder.absoluteAdapterPosition)
                     }
-                }
-                true
+                }; true
             }
             popup.show()
         }

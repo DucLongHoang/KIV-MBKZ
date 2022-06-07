@@ -38,13 +38,18 @@
     <string name="duplicate_plan_name_msg">A training plan with this name already exists!</string>
     <string name="duplicate_exercise_name_msg">An exercise with this name already exists!</string>
     <string name="new_record_msg">New personal best!!!</string>
-    <string name="too_much_weight_msg">"That is too much weight!"</string>
+    <string name="too_much_weight_msg">That is too much weight!</string>
     <string name="back_again_to_exit_msg">Press back again to exit app</string>
     <string name="cannot_edit_msg">Cannot edit plan while training</string>
     <string name="cannot_train_msg">Cannot train while editing</string>
     <string name="cannot_add_msg">Cannot add new exercise while editing</string>
     <string name="stay_on_tab_msg">Please don\'t switch tabs before saving or you will lose all editing progress</string>
-    <string name="remove_exercise_warning_msg">Warning: It will be removed from all training plans. \nYou won\'t be able to add this exercise to a plan</string>
+    <string name="remove_exercise_warning_msg">Warning: It will be removed from all training plans.
+        \nYou won\'t be able to add this exercise to a plan</string>
+    <!--  String in option menu of StatsFragment  -->
+    <string name="option_sort_all">Sort all exercises alphabetically</string>
+    <string name="option_nullify_all">Nullify all records</string>
+    <string name="option_remove_all">Remove all exercises</string>
     <!--  Strings used in Records Tab if Exercise never done  -->
     <string name="default_kg">0</string>
     <string name="default_date">dd.MM.yyyy</string>
@@ -59,6 +64,7 @@
     <string name="date_time">Date - Time</string>
     <string name="duration">Duration</string>
     <!--  Miscellaneous  -->
+    <string name="delete_all">DELETE ALL</string>
     <string name="date_short_format">dd.MM.yyyy</string>
     <string name="date_long_format">dd.MM.yyyy - HH:mm</string>
     <string name="night_mode">Night mode</string>

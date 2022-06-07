@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/option_sort_all_exercises"
+        android:title="@string/option_sort_all" />
+
+    <item
+        android:id="@+id/option_nullify_all_records"
+        android:title="@string/option_nullify_all" />
+
+    <item
+        android:id="@+id/option_remove_all_exercises"
+        android:title="@string/option_remove_all" />
+
+
+</menu>

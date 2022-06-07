@@ -11,10 +11,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -33,6 +30,9 @@ import kotlinx.android.synthetic.main.fragment_stats.*
 class StatsFragment : Fragment() {
     // static variables and methods
     companion object {
+        const val OPTION_SORT_ALL = 0
+        const val OPTION_NULLIFY_ALL = 1
+        const val OPTION_REMOVE_ALL = 2
         const val MAX_EX_NAME_LENGTH = 23
         const val MAX_EX_SC_LENGTH = 11
 
@@ -70,11 +70,119 @@ class StatsFragment : Fragment() {
         buildRecyclerView()
         addNewExerciseFab.setOnClickListener { showAddNewExerciseDialog() }
         registerForContextMenu(statsRecyclerView)
+        buildOptionsFab()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         databaseHelper.close()
+    }
+
+    /**
+     * Method shows Option fab and gives it a Popup
+     */
+    private fun buildOptionsFab() {
+        optionsFab.setOnClickListener {
+            val popup = PopupMenu(context, optionsFab)
+            popup.inflate(R.menu.options_menu_all_exercises)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.option_sort_all_exercises ->
+                        showAllExercisesOptionsDialog(OPTION_SORT_ALL)
+                    R.id.option_nullify_all_records ->
+                        showAllExercisesOptionsDialog(OPTION_NULLIFY_ALL)
+                    R.id.option_remove_all_exercises ->
+                        showAllExercisesOptionsDialog(OPTION_REMOVE_ALL)
+                }; true
+            }
+            popup.show()
+        }
+    }
+
+    /**
+     * Method sorts [statistics] in ascending order, also changed in the Db
+     */
+    private fun sortAllExercises() {
+        statistics.sortBy { it.exerciseName }
+        statistics.reassignExerciseOrder()
+        adapter.notifyItemRangeChanged(0, statistics.size)
+    }
+
+    /**
+     * Method nullifies records of all exercises in the Database
+     */
+    private fun nullifyAllRecords() {
+        for (i in statistics.indices) nullifyRecord(i)
+    }
+
+    /**
+     * Method removes all exercises from the Database
+     */
+    private fun removeAllExercises() {
+        val count: Int = statistics.size
+        for (i in 0 until count) removeExercise(0)
+    }
+
+    /**
+     * Method displays an [AlertDialog] to confirm an OPTION:
+     * 1) [OPTION_SORT_ALL] - sorts all exercises in alphabetical order
+     * 2) [OPTION_NULLIFY_ALL] - nullifies records of all exercises
+     * 3) [OPTION_REMOVE_ALL] - removes all exercises
+     */
+    private fun showAllExercisesOptionsDialog(option: Int) {
+        // choose correct option message
+        val message = when (option) {
+            OPTION_SORT_ALL -> getString(R.string.option_sort_all)
+            OPTION_NULLIFY_ALL -> getString(R.string.option_nullify_all)
+            OPTION_REMOVE_ALL -> getString(R.string.option_remove_all)
+            else -> ""
+        }
+
+        // create Dialog
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setTitle("${message}?")
+
+        // remove all option - display confirmation edit text
+        val editTextConfirm = EditText(context)
+        if (option == OPTION_REMOVE_ALL) {
+            editTextConfirm.hint = "Type: \"${getString(R.string.delete_all)}\""
+            val layout = LinearLayout(context)
+            layout.setPadding(16, 0, 16, 0)
+            layout.orientation = LinearLayout.VERTICAL
+            layout.addView(editTextConfirm)
+            dialogBuilder.setView(layout)
+        }
+
+        // setting options
+        dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _ -> dialogInterface.cancel() }
+        dialogBuilder.setPositiveButton(R.string.yes) { _, _ ->
+            when (option) {
+                OPTION_SORT_ALL -> sortAllExercises()
+                OPTION_NULLIFY_ALL -> nullifyAllRecords()
+                OPTION_REMOVE_ALL -> removeAllExercises()
+            }
+        }
+
+        // empty Title edit field
+        val dialog = dialogBuilder.create()
+        dialog.show() // has to be in this order - 1.show dialog, 2.disable button
+
+        // disable button only when remove option
+        if (option == OPTION_REMOVE_ALL) {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).isEnabled = false
+        }
+
+        // remove all option - check if correct text
+        if (option == OPTION_REMOVE_ALL) {
+            editTextConfirm.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(cs: CharSequence, i: Int, i1: Int, i2: Int) {}
+                override fun onTextChanged(cs: CharSequence, i: Int, i1: Int, i2: Int) {}
+                override fun afterTextChanged(editable: Editable) {
+                    val enable = editable.toString().equals(getString(R.string.delete_all), ignoreCase = true)
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).isEnabled = enable
+                }
+            })
+        }
     }
 
     /**
@@ -237,19 +345,13 @@ class StatsFragment : Fragment() {
      * Method displays an [AlertDialog] to confirm record nullification
      */
     private fun showNullifyRecordDialog(position: Int) {
-        val toBeNullified: Statistic = statistics[position]
-
         // create dialog
         val dialogBuilder = AlertDialog.Builder(context)
         dialogBuilder.setTitle(R.string.nullify_record_prompt)
 
         // setting options
         dialogBuilder.setNegativeButton(R.string.no) { dialogInterface, _: Int -> dialogInterface.cancel() }
-        dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int ->
-            toBeNullified.dateOfRecord = getString(R.string.default_date)
-            toBeNullified.recordKgs = getString(R.string.default_kg).toInt()
-            nullifyRecord(position)
-        }
+        dialogBuilder.setPositiveButton(R.string.yes) { _, _: Int -> nullifyRecord(position) }
 
         // show dialog
         val dialog = dialogBuilder.create()
@@ -260,6 +362,9 @@ class StatsFragment : Fragment() {
      * Method nullifies record of exercise at [position] in the DB
      */
     private fun nullifyRecord(position: Int) {
+        val toBeNullified: Statistic = statistics[position]
+        toBeNullified.dateOfRecord = getString(R.string.default_date)
+        toBeNullified.recordKgs = getString(R.string.default_kg).toInt()
         databaseHelper.nullifyRecordInDb(statistics[position].exerciseName)
         adapter.notifyItemChanged(position)
     }
@@ -349,8 +454,6 @@ class StatsFragment : Fragment() {
                 super.clearView(recyclerView, viewHolder)
                 viewHolder.itemView.alpha = 1.0f
                 statistics.reassignExerciseOrder()
-                statistics.sort()
-                databaseHelper.updateExerciseOrderInDb(statistics)
             }
         }
         ItemTouchHelper(itemTouchCallback)
@@ -360,8 +463,9 @@ class StatsFragment : Fragment() {
      * Method reassigns order of Exercises in the Database
      */
     private fun MutableList<Statistic>.reassignExerciseOrder() {
-        for ((newOrder, exercise) in this.withIndex()) {
+        for ((newOrder, exercise) in this.withIndex())
             exercise.order = newOrder
-        }
+        statistics.sort()
+        databaseHelper.updateExerciseOrderInDb(statistics)
     }
 }

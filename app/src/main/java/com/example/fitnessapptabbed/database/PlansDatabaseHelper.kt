@@ -22,7 +22,7 @@ class PlansDatabaseHelper(
 ) : SQLiteOpenHelper(CONTEXT, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME: String = "plans_database.db"
-        private const val DATABASE_VERSION: Int = 5
+        private const val DATABASE_VERSION: Int = 9
         // Table names
         const val TABLE_PLAN: String = "PLAN"
         const val TABLE_EXERCISE: String = "EXERCISE"
