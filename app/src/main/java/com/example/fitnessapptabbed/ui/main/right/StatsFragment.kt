@@ -22,6 +22,7 @@ import com.example.fitnessapptabbed.database.PlansDatabaseHelper
 import com.example.fitnessapptabbed.databinding.FragmentStatsBinding
 import kotlinx.android.synthetic.main.fragment_stats.*
 
+
 /**
  * A simple [Fragment] subclass.
  * Use the [StatsFragment.newInstance] factory method to
@@ -68,7 +69,7 @@ class StatsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         buildRecyclerView()
-        addNewExerciseFab.setOnClickListener { showAddNewExerciseDialog() }
+//        addNewExerciseFab.setOnClickListener { showAddNewExerciseDialog() }
         registerForContextMenu(statsRecyclerView)
         buildOptionsFab()
     }
@@ -87,6 +88,8 @@ class StatsFragment : Fragment() {
             popup.inflate(R.menu.options_menu_all_exercises)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
+                    R.id.option_add_new_exercise ->
+                        showAddNewExerciseDialog()
                     R.id.option_sort_all_exercises ->
                         showAllExercisesOptionsDialog(OPTION_SORT_ALL)
                     R.id.option_nullify_all_records ->
@@ -132,9 +135,9 @@ class StatsFragment : Fragment() {
     private fun showAllExercisesOptionsDialog(option: Int) {
         // choose correct option message
         val message = when (option) {
-            OPTION_SORT_ALL -> getString(R.string.option_sort_all)
-            OPTION_NULLIFY_ALL -> getString(R.string.option_nullify_all)
-            OPTION_REMOVE_ALL -> getString(R.string.option_remove_all)
+            OPTION_SORT_ALL -> getString(R.string.option_sort_exercises)
+            OPTION_NULLIFY_ALL -> getString(R.string.option_nullify_all_records)
+            OPTION_REMOVE_ALL -> getString(R.string.option_remove_all_exercises)
             else -> ""
         }
 
@@ -145,6 +148,7 @@ class StatsFragment : Fragment() {
         // remove all option - display confirmation edit text
         val editTextConfirm = EditText(context)
         if (option == OPTION_REMOVE_ALL) {
+            editTextConfirm.setSingleLine()
             editTextConfirm.hint = "Type: \"${getString(R.string.delete_all)}\""
             val layout = LinearLayout(context)
             layout.setPadding(16, 0, 16, 0)
@@ -208,6 +212,8 @@ class StatsFragment : Fragment() {
         // editable fields
         val inputName = EditText(context)
         val inputShortcut = EditText(context)
+        inputName.setSingleLine()
+        inputShortcut.setSingleLine()
         inputName.hint = getString(R.string.name_edit_text)
         inputShortcut.hint = getString(R.string.shortcut_edit_text)
         inputName.filters = arrayOf(InputFilter.LengthFilter(MAX_EX_NAME_LENGTH))
@@ -222,7 +228,7 @@ class StatsFragment : Fragment() {
 
         // create Dialog
         val dialogBuilder = AlertDialog.Builder(context)
-        dialogBuilder.setTitle(getString(R.string.add_new_exercise_msg))
+        dialogBuilder.setTitle(getString(R.string.option_add_new_exercise))
         dialogBuilder.setView(layout)
 
         // setting options
@@ -272,6 +278,8 @@ class StatsFragment : Fragment() {
         // editable fields
         val inputName = EditText(context)
         val inputShortcut = EditText(context)
+        inputName.setSingleLine()
+        inputShortcut.setSingleLine()
         inputName.hint = getString(R.string.name_edit_text)
         inputShortcut.hint = getString(R.string.shortcut_edit_text)
         inputName.filters = arrayOf(InputFilter.LengthFilter(MAX_EX_NAME_LENGTH))
@@ -347,7 +355,7 @@ class StatsFragment : Fragment() {
     private fun showNullifyRecordDialog(position: Int) {
         // create dialog
         val dialogBuilder = AlertDialog.Builder(context)
-        val title = getString(R.string.nullify_record_prompt) + " ${statistics[position].exerciseName}?"
+        val title = getString(R.string.nullify_record_prompt) + "${statistics[position].exerciseName}?"
         dialogBuilder.setTitle(title)
 
         // setting options
@@ -386,7 +394,7 @@ class StatsFragment : Fragment() {
 
         // create dialog
         val dialogBuilder = AlertDialog.Builder(context)
-        val title = getString(R.string.remove_exercise_prompt) + " ${statistics[position].exerciseName}?"
+        val title = getString(R.string.remove_exercise_prompt) + "${statistics[position].exerciseName}?"
         dialogBuilder.setTitle(title)
         dialogBuilder.setView(layout)
 

@@ -10,13 +10,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="4dp">
+        android:layout_marginVertical="2dp"
+        android:layout_marginHorizontal="1dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addExerciseFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
             android:visibility="visible"
             app:fabSize="mini"
             app:srcCompat="@android:drawable/ic_input_add"
@@ -24,10 +24,19 @@
 
         <LinearLayout
             android:id="@+id/exerciseLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:weightSum="1">
+
+            <ImageButton
+                android:id="@+id/exerciseDragHandle"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@null"
+                app:srcCompat="@drawable/ic_drag_handle"
+                android:scaleType="center"
+                tools:ignore="ContentDescription" />
 
             <Spinner
                 android:id="@+id/exerciseSpinner"
@@ -46,13 +55,13 @@
                 android:id="@+id/repsSpinner"
                 android:spinnerMode="dropdown"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                tools:ignore="SmallSp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/deleteExerciseFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
                 app:fabSize="mini"
                 app:backgroundTint="@color/red"
                 app:srcCompat="@drawable/ic_delete"

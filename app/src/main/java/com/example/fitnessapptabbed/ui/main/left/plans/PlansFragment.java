@@ -190,6 +190,8 @@ public class PlansFragment extends Fragment {
         // editable fields
         final EditText inputTitle = new EditText(getContext());
         final EditText inputDescription = new EditText(getContext());
+        inputTitle.setSingleLine();
+        inputDescription.setSingleLine();
         inputTitle.setHint(R.string.title_edit_text);
         inputDescription.setHint(R.string.description_edit_text);
 
@@ -243,6 +245,8 @@ public class PlansFragment extends Fragment {
         // editable fields
         final EditText inputTitle = new EditText(getContext());
         final EditText inputDescription = new EditText(getContext());
+        inputTitle.setSingleLine();
+        inputDescription.setSingleLine();
         inputTitle.setHint(R.string.title_edit_text);
         inputDescription.setHint(R.string.description_edit_text);
         // use old values

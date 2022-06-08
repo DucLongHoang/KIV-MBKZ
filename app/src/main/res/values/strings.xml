@@ -7,8 +7,8 @@
     <!--  Prompts - ask user for confirmation  -->
     <string name="end_training_prompt">Do you want to end the training?</string>
     <string name="cancel_editing_prompt">Do you want to cancel editing?</string>
-    <string name="nullify_record_prompt">Nullify the record of:</string>
-    <string name="remove_exercise_prompt">Remove exercise:</string>
+    <string name="nullify_record_prompt">Nullify the record of:&#160;</string>
+    <string name="remove_exercise_prompt">Remove exercise:&#160;</string>
     <string name="save_plan_prompt">Save training plan configuration?</string>
     <string name="delete_plan_prompt">Delete plan:&#160;</string>
     <!--  Simple Strings  -->
@@ -32,7 +32,6 @@
     <!--  Messages - headers of Dialogs, messages of Toasts and SnackBars  -->
     <string name="empty_plan_msg">This training plan is empty!</string>
     <string name="create_new_plan_msg">Create a new training plan</string>
-    <string name="add_new_exercise_msg">Add a new exercise</string>
     <string name="edit_plan_title_msg">Edit title and description of plan</string>
     <string name="edit_exercise_msg">Edit name and shortcut of exercise</string>
     <string name="duplicate_plan_name_msg">A training plan with this name already exists!</string>
@@ -47,9 +46,10 @@
     <string name="remove_exercise_warning_msg">Warning: It will be removed from all training plans.
         \nYou won\'t be able to add this exercise to a plan</string>
     <!--  String in option menu of StatsFragment  -->
-    <string name="option_sort_all">Sort all exercises alphabetically</string>
-    <string name="option_nullify_all">Nullify all records</string>
-    <string name="option_remove_all">Remove all exercises</string>
+    <string name="option_add_new_exercise">Add a new exercise</string>
+    <string name="option_sort_exercises">Sort exercises A->Z</string>
+    <string name="option_nullify_all_records">Nullify all records</string>
+    <string name="option_remove_all_exercises">Remove all exercises</string>
     <!--  Strings used in Records Tab if Exercise never done  -->
     <string name="default_kg">0</string>
     <string name="default_date">dd.MM.yyyy</string>

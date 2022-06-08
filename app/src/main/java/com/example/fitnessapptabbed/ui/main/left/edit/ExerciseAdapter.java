@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -180,6 +181,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 exerciseSpinner.setSelection(i);
+                ((TextView) view).setTextSize(15);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }

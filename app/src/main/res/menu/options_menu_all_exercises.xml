@@ -2,16 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/option_add_new_exercise"
+        android:title="@string/option_add_new_exercise" />
+
+    <item
         android:id="@+id/option_sort_all_exercises"
-        android:title="@string/option_sort_all" />
+        android:title="@string/option_sort_exercises" />
 
     <item
         android:id="@+id/option_nullify_all_records"
-        android:title="@string/option_nullify_all" />
+        android:title="@string/option_nullify_all_records" />
 
     <item
         android:id="@+id/option_remove_all_exercises"
-        android:title="@string/option_remove_all" />
+        android:title="@string/option_remove_all_exercises" />
 
 
 </menu>

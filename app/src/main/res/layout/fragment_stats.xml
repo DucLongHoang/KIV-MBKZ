@@ -14,29 +14,29 @@
         android:layout_marginTop="1dp"
         android:layout_marginBottom="@dimen/fab_margin"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/addNewExerciseFab" />
+        app:layout_constraintBottom_toTopOf="@+id/optionsFab" />
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/optionsFab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@color/teal_200"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:src="@drawable/ic_3_dots"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        tools:ignore="ContentDescription" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/optionsFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/teal_200"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_3_dots"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        tools:ignore="ContentDescription" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addNewExerciseFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="16dp"
