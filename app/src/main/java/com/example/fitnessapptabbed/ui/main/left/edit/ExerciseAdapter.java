@@ -189,6 +189,17 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     /**
+     * Method moves item in RecyclerView from FROM to TO
+     * @param from initial index
+     * @param to target index
+     */
+    public void moveItemInRecyclerViewList(int from, int to) {
+        Exercise movedItem = exercisesInPlan.get(from);
+        exercisesInPlan.remove(movedItem);
+        exercisesInPlan.add(to, movedItem);
+    }
+
+    /**
      * ExerciseViewHolder class - encapsulates Exercise data in a View
      */
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {

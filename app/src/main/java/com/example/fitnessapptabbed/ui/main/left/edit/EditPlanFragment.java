@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -121,6 +122,54 @@ public class EditPlanFragment extends Fragment {
             @Override
             public void onDeleteClick(int position) { deleteExercise(position); }
         });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(initTouchHelper());
+        itemTouchHelper.attachToRecyclerView(binding.exercisesRecyclerView);
+    }
+
+    /**
+     * Method creates a Callback enabling reordering of exercises
+     * @return Callback instance
+     */
+    private ItemTouchHelper.Callback initTouchHelper() {
+        return new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN
+                        | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {}
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                ExerciseAdapter exAdapter = (ExerciseAdapter) recyclerView.getAdapter();
+                int from = viewHolder.getAbsoluteAdapterPosition();
+                int to = target.getAbsoluteAdapterPosition();
+
+                // disable moving of add fab
+                if (from == exercisesInPlan.size() - 1) return false;
+
+                // exercises cannot be moved to last position - add fab
+                if (to == exercisesInPlan.size() - 1) { --to; }
+
+                assert exAdapter != null;
+                exAdapter.moveItemInRecyclerViewList(from, to);
+                exAdapter.notifyItemMoved(from, to);
+
+                return true;
+            }
+
+            @Override
+            public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+                super.onSelectedChanged(viewHolder, actionState);
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    assert viewHolder != null;
+                    viewHolder.itemView.setAlpha(0.5f);
+                }
+            }
+
+            @Override
+            public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+                viewHolder.itemView.setAlpha(1.0f);
+            }
+        };
     }
 
     /**
